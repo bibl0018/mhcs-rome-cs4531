@@ -1,4 +1,4 @@
-package mhcs.client;
+package mhcs.client.module;
 
 /** 
  * Representation of a Module in the Mars Habitat Configuation System. 
