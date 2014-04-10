@@ -1,5 +1,9 @@
 package mhcs.client.gui;
 
+import mhcs.client.module.Module;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -24,12 +28,12 @@ public class AddModulePopup extends PopupPanel {
 		super(true);
 		
 		// Creates a title for the popup.
-		Label title = new Label("Enter Module Details");
+		final Label title = new Label("Enter Module Details");
 		
 		// Sets the panel for entering the Module code.
-		HorizontalPanel codePanel = new HorizontalPanel();
-		Label codeLabel = new Label("Module Code:");
-		TextBox codeBox = new TextBox();
+		final HorizontalPanel codePanel = new HorizontalPanel();
+		final Label codeLabel = new Label("Module Code:");
+		final TextBox codeBox = new TextBox();
 		codeBox.setWidth(WIDTH);
 		codePanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		codePanel.add(codeLabel);
@@ -37,12 +41,12 @@ public class AddModulePopup extends PopupPanel {
 		setWidget(codePanel);
 		
 		// Set the panels for entering the X and Y coordinates.
-		HorizontalPanel xCoordPanel = new HorizontalPanel();
-		HorizontalPanel yCoordPanel = new HorizontalPanel();
-		Label xLabel = new Label("X:");
-		Label yLabel = new Label("Y:");
-		TextBox xBox = new TextBox();
-		TextBox yBox = new TextBox();
+		final HorizontalPanel xCoordPanel = new HorizontalPanel();
+		final HorizontalPanel yCoordPanel = new HorizontalPanel();
+		final Label xLabel = new Label("X:");
+		final Label yLabel = new Label("Y:");
+		final TextBox xBox = new TextBox();
+		final TextBox yBox = new TextBox();
 		xBox.setWidth(WIDTH);
 		yBox.setWidth(WIDTH);
 		xCoordPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -53,8 +57,8 @@ public class AddModulePopup extends PopupPanel {
 		yCoordPanel.add(yBox);
 		
 		// Creates the panel for the status of the module.
-		HorizontalPanel statusPanel = new HorizontalPanel();
-		Label statusLabel = new Label("Status:");
+		final HorizontalPanel statusPanel = new HorizontalPanel();
+		final Label statusLabel = new Label("Status:");
 		final ListBox statusBox = new ListBox();
 		statusBox.addItem("UNDAMAGED");
 		statusBox.addItem("DAMAGED");
@@ -65,8 +69,8 @@ public class AddModulePopup extends PopupPanel {
 		statusPanel.add(statusBox);
 		
 		// Creates the panel for the number of turns needed for the module.
-		HorizontalPanel turnPanel = new HorizontalPanel();
-		Label turnLabel = new Label("Orientation:");
+		final HorizontalPanel turnPanel = new HorizontalPanel();
+		final Label turnLabel = new Label("Orientation:");
 		final ListBox turnBox = new ListBox();
 		turnBox.addItem("0 TURNS NEEDED");
 		turnBox.addItem("1 TURN NEEDED");
@@ -77,15 +81,52 @@ public class AddModulePopup extends PopupPanel {
 		turnPanel.add(turnBox);
 		
 		// Creates the panel for buttons.
-		HorizontalPanel buttonPanel = new HorizontalPanel();
-		Button addButton = new Button("Add Module");
-		Button cancelButton = new Button("Cancel");
+		final HorizontalPanel buttonPanel = new HorizontalPanel();
+		final Button addButton = new Button("Add Module");
+		final Button cancelButton = new Button("Cancel");
 		buttonPanel.add(addButton);
 		buttonPanel.add(cancelButton);
 		
-		// still need clickHandlers for buttons
+		// Add button click handler. 
+		addButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				int code = Integer.parseInt(codeBox.getText());
+				int xCoord = Integer.parseInt(xBox.getText());
+				int yCoord = Integer.parseInt(yBox.getText());
+				int turns;
+				boolean valid = true;
+				
+				if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("0 TURNS NEEDED")) {
+					turns = 0;
+				} else if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("1 TURN NEEDED")) {
+					turns = 1;
+				} else {
+					turns = 2;
+				}
+				
+				// Tries creating a module from the input given by the user. A alert window appears if an exception is thrown.
+				try {
+					Module module = new Module(code, xCoord, yCoord, turns, statusBox.getItemText(statusBox.getSelectedIndex()));			
+				}
+				catch (IndexOutOfBoundsException e) {
+					Window.alert(e.getMessage());
+					valid = false;
+				}
+				
+				// If the module was successfully created, try adding it to the module list.
+				if (valid == true) {
+					
+					// add the module to the list
+				}
+			}			
+		});
 		
-		
+		// Popup is hidden when cancel button is clicked.
+		cancelButton.addClickHandler(new ClickHandler () {
+			public void onClick(ClickEvent event) {
+				hide();
+			}
+		});
 		
 		// Puts each panel into a main vertical panel.
 		VerticalPanel mainPanel = new VerticalPanel();
