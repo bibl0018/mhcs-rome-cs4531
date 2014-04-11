@@ -22,10 +22,15 @@ public class GUI implements EntryPoint {
 				Window.alert("You selected a menu item!");
 			}
 		};
+		Command addModulePopupCmd = new Command() {
+			public void execute() {
+				new AddModulePopup().show();
+			}
+		};
 		
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
-		theMenu.addItem("Add module", cmd);
+		theMenu.addItem("Add module", addModulePopupCmd);
 		theMenu.addItem("Minumum resource path", cmd);
 		theMenu.addItem("Calculate habitats", cmd);
 		theMenu.addSeparator();
