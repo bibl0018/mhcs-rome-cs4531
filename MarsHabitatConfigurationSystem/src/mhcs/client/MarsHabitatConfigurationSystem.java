@@ -10,7 +10,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		// TODO Auto-generated method stub
-		
+		new GUI(); // just testing this
 	}
 	
 }
