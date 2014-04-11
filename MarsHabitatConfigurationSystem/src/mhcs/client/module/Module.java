@@ -12,16 +12,18 @@ public class Module {
 	 * @param xcoord The X coordinate;   range TBD
 	 * @param ycoord The Y coordinate;   range TBD
 	 * @param turns The number of turns required for the Module to be upright;   0-2
-	 * @param status The status of the Module;   0-No Repairs Needed, 1-Repairs Needed, 2-Not Repairable
+	 * @param status The status of the Module
 	 * @throws IndexOutOfBoundsException if any parameters is not within the ranges stated above
 	 */
-	public Module(int code, int xcoord, int ycoord, int turns, Status status) throws IndexOutOfBoundsException {
+	public Module(int code, int xcoord, int ycoord, int turns, String status) throws IndexOutOfBoundsException {
 		
 		// Checks that each parameter is within its range
-		if (code < 1 || code > 190
-			|| turns < 0 || turns > 2)
-			throw new IndexOutOfBoundsException("Parameter out of bounds in Module constructor");
-	 
+		if (code < 1 || code > 190) {
+			throw new IndexOutOfBoundsException("Invalid module code");
+		} else if (turns < 0 || turns > 2) {
+			throw new IndexOutOfBoundsException("Invalid turns value");
+		}
+		
 		this.code = code;
 		this.xCoord = xcoord;
 		this.yCoord = ycoord;
@@ -50,7 +52,7 @@ public class Module {
 		} else if (code > 180 && code <= 184) {
 			type = Type.MEDICAL;
 		} else {
-			throw new IndexOutOfBoundsException("Type not yet determined");
+			throw new IndexOutOfBoundsException("Invalid module code; Type not yet determined");
 		}
 	}
 	
@@ -70,7 +72,7 @@ public class Module {
 		return turns;
 	}
 	
-	public Status getStatus() {
+	public String getStatus() {
 		return status;
 	}
 	
@@ -83,14 +85,12 @@ public class Module {
 				xCoord,
 				yCoord,
 				turns;
-	private Status status;
+	private String status;
 	private Type type;
 	
-	public enum Status {
-		UNDAMAGED,
-		DAMAGED,
-		UNUSABLE
-	};
+	public static String UNDAMAGED = "UNDAMAGED";
+	public static String DAMAGED = "DAMAGED";
+	public static String UNCERTAIN = "UNCERTAIN";
 	
 	public enum Type {
 		PLAIN,

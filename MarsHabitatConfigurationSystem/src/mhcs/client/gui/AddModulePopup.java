@@ -1,6 +1,8 @@
 package mhcs.client.gui;
 
 import mhcs.client.module.Module;
+import mhcs.client.module.ModuleList;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -24,8 +26,10 @@ public class AddModulePopup extends PopupPanel {
 	 * Constructor for Popup. Creates a horizontal panel for each set of
 	 * labels and textboxes.
 	 */
-	public AddModulePopup() {
+	public AddModulePopup(ModuleList modules) {
 		super(true);
+		
+		moduleList = modules;
 		
 		// Creates a title for the popup.
 		final Label title = new Label("Enter Module Details");
@@ -86,6 +90,7 @@ public class AddModulePopup extends PopupPanel {
 		final Button cancelButton = new Button("Cancel");
 		buttonPanel.add(addButton);
 		buttonPanel.add(cancelButton);
+		buttonPanel.setSpacing(10);
 		
 		// Add button click handler. 
 		addButton.addClickHandler(new ClickHandler() {
@@ -107,16 +112,19 @@ public class AddModulePopup extends PopupPanel {
 				// Tries creating a module from the input given by the user. A alert window appears if an exception is thrown.
 				try {
 					Module module = new Module(code, xCoord, yCoord, turns, statusBox.getItemText(statusBox.getSelectedIndex()));			
+					moduleList.addModule(module);
 				}
 				catch (IndexOutOfBoundsException e) {
 					Window.alert(e.getMessage());
 					valid = false;
 				}
+				catch (IllegalArgumentException e) {
+					Window.alert(e.getMessage());
+					valid = false;
+				}
 				
-				// If the module was successfully created, try adding it to the module list.
-				if (valid == true) {
-					
-					// add the module to the list
+				if (valid) {
+					hide();
 				}
 			}			
 		});
@@ -142,12 +150,13 @@ public class AddModulePopup extends PopupPanel {
 		
 		mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		mainPanel.add(buttonPanel);
+		mainPanel.setSpacing(5);
 		
 		
 		setWidget(mainPanel);
 	}
     
-    
+	private ModuleList moduleList;
     private static String WIDTH= "10em";
     private static String listBoxWidth = "11em";
 }
