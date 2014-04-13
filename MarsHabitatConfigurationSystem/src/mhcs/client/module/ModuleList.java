@@ -88,7 +88,7 @@ public class ModuleList {
 				String key = "MHCS.Module." + Integer.toString(i);
 				String value = store.getItem(key);
 				
-				if (value != null); {
+				if (value != null) {
 					JSONArray array = (JSONArray) JSONParser.parseLenient(value);
 					JSONNumber number;
 					JSONString string;
@@ -96,7 +96,7 @@ public class ModuleList {
 					String status;
 					
 					for (int k = 0; k < array.size(); k++) {
-						JSONObject object = (JSONObject) array.get(i);
+						JSONObject object = (JSONObject) array.get(k);
 						number = (JSONNumber) object.get("code");
 						code = (int) number.doubleValue();
 						
