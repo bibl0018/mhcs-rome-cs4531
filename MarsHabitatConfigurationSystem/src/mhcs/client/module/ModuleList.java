@@ -1,5 +1,10 @@
 package mhcs.client.module;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.storage.client.Storage;
 
 /**
@@ -28,7 +33,7 @@ public class ModuleList {
 	 */
 	public Module getModule(int code) throws IndexOutOfBoundsException {
 		if (code < 1 || code > 190) {
-			throw new IndexOutOfBoundsException("Invalid code parameter for ModuleList::getModule()");
+			throw new IndexOutOfBoundsException("Invalid code parameter");
 		}
 		
 		return modules[code];
@@ -41,7 +46,7 @@ public class ModuleList {
 	 */
 	public void addModule(Module module) throws IllegalArgumentException {
 		if (modules[module.getCode()] != null) {
-			throw new IllegalArgumentException("Module already exists in ModuleList during ModuleList::addModule()");
+			throw new IllegalArgumentException("Module already exists");
 		}
 		
 		modules[module.getCode()] = module;
@@ -56,12 +61,19 @@ public class ModuleList {
 	 */
 	public void deleteModule(int code) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (code < 1 || code > 190) {
-			throw new IndexOutOfBoundsException("Invalid code parameter for ModuleList::deleteModule()");
+			throw new IndexOutOfBoundsException("Invalid code parameter");
 		} else if (modules[code] == null) {
-			throw new IllegalArgumentException("Module does not exists in ModuleList during ModuleList::deleteModule()");
+			throw new IllegalArgumentException("Module does not exists");
 		}
 		
 		modules[code] = null;
+		
+		Storage store = Storage.getLocalStorageIfSupported();
+		String key = "MHCS.Module." + Integer.toString(code);
+		
+		if (store != null) {
+			store.removeItem(key);
+		}
 	}
 	
 	/**
@@ -74,7 +86,35 @@ public class ModuleList {
 		if (store != null) {
 			for (int i = 1; i <= 190; i++) {
 				String key = "MHCS.Module." + Integer.toString(i);
+				String value = store.getItem(key);
 				
+				if (value != null); {
+					JSONArray array = (JSONArray) JSONParser.parseLenient(value);
+					JSONNumber number;
+					JSONString string;
+					int code, xCoord, yCoord, turns;
+					String status;
+					
+					for (int k = 0; k < array.size(); k++) {
+						JSONObject object = (JSONObject) array.get(i);
+						number = (JSONNumber) object.get("code");
+						code = (int) number.doubleValue();
+						
+						string = (JSONString) object.get("status");
+						status = string.stringValue();
+						
+						number = (JSONNumber) object.get("turns");
+						turns = (int) number.doubleValue();
+						
+						number = (JSONNumber) object.get("X");
+						xCoord = (int) number.doubleValue();
+						
+						number = (JSONNumber) object.get("Y");
+						yCoord = (int) number.doubleValue();
+						
+						addModule(new Module(code, xCoord, yCoord, turns, status));
+					}
+				}
 			}
 		}
 	}
