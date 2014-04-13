@@ -95,22 +95,26 @@ public class AddModulePopup extends PopupPanel {
 		// Add button click handler. 
 		addButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				int code = Integer.parseInt(codeBox.getText());
-				int xCoord = Integer.parseInt(xBox.getText());
-				int yCoord = Integer.parseInt(yBox.getText());
-				int turns;
 				boolean valid = true;
 				
-				if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("0 TURNS NEEDED")) {
-					turns = 0;
-				} else if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("1 TURN NEEDED")) {
-					turns = 1;
-				} else {
-					turns = 2;
-				}
-				
-				// Tries creating a module from the input given by the user. A alert window appears if an exception is thrown.
 				try {
+				
+					int code = Integer.parseInt(codeBox.getText());
+					int xCoord = Integer.parseInt(xBox.getText());
+					int yCoord = Integer.parseInt(yBox.getText());
+					int turns;
+				
+				
+					if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("0 TURNS NEEDED")) {
+						turns = 0;
+					} else if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("1 TURN NEEDED")) {
+						turns = 1;
+					} else {
+						turns = 2;
+					}
+				
+					// Tries creating a module from the input given by the user. A alert window appears if an exception is thrown.
+				
 					Module module = new Module(code, xCoord, yCoord, turns, statusBox.getItemText(statusBox.getSelectedIndex()));			
 					moduleList.addModule(module);
 				}
