@@ -2,12 +2,15 @@ package mhcs.client;
 
 import mhcs.client.gui.AddModulePopup;
 import mhcs.client.module.ModuleList;
+import mhcs.client.moduleMap.ModuleMap;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -42,6 +45,9 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				});
 			}
 		};
+		
+		ModuleMap modMap = new ModuleMap();
+		//modMap.onModuleLoad(modList);
 
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
@@ -56,10 +62,11 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		menu.addItem("Menu", theMenu);
 
 		TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
-		configTabs.add(new HTML(""), "1");
-		configTabs.add(new HTML(""), "2");
-		configTabs.add(new HTML(""), "3");
-		configTabs.add(new HTML(""), "4");
+		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "1");
+		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "2");
+		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "3");
+		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "4");
+		configTabs.insert(, 0);
 		configTabs.setHeight("650px");
 
 		rootPanel.add(menu);
