@@ -1,6 +1,8 @@
 package mhcs.client;
 
 import mhcs.client.gui.AddModulePopup;
+import mhcs.client.module.ModuleList;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
@@ -12,13 +14,14 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * Creates the GUI for the MHCS.
  */
 public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		// TODO Auto-generated method stub
+		final ModuleList modList = new ModuleList();
+		
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize("995px", "650px");
 
@@ -29,8 +32,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		};
 		Command addModulePopupCmd = new Command() {
 			public void execute() {
-				//new AddModulePopup(null).show();
-				final AddModulePopup popup = new AddModulePopup(null);
+				final AddModulePopup popup = new AddModulePopup(modList);
 				popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 					public void setPosition(int offsetWidth, int offsetHeight) {
 						int left = (Window.getClientWidth() - offsetWidth) / 3;
