@@ -12,10 +12,12 @@ import mhcs.client.module.Module;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 
-public class ModuleMap implements EntryPoint{
+public class ModuleMap implements IsWidget{
 	ModuleList modList;
 	
 	/**
@@ -28,8 +30,9 @@ public class ModuleMap implements EntryPoint{
 	/**
 	 * Constructs the grid and loads all modules on to the grid.
 	 * @param moduleList The list of pre-sorted modules.
+	 * @return 
 	 */
-	public void onModuleLoad(){
+	public Widget asWidget(){
 		Grid g = new Grid(50,50);
 		
 		//For every module in the module list
@@ -53,7 +56,8 @@ public class ModuleMap implements EntryPoint{
 			}
 		}
 		
-		RootPanel.get().add(g);		
+		//RootPanel.get().add(g);
+		return g;		
 	}
 
 	/**
