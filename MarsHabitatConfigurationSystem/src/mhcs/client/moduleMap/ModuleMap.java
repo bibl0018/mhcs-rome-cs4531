@@ -8,11 +8,13 @@ package mhcs.client.moduleMap;
 
 import mhcs.client.module.ModuleList;
 import mhcs.client.module.Module;
+
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 
 
-public class ModuleMap{
+public abstract class ModuleMap implements EntryPoint{
 	
 	/**
 	 * Constructs the grid and loads all modules on to the grid.
