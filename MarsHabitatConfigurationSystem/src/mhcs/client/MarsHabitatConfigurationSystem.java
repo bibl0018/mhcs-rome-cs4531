@@ -61,11 +61,12 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		menu.addItem("Menu", theMenu);
 
 		TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
+		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "Module Map");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "1");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "2");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "3");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "4");
-		configTabs.insert(modMap, 1);
+		configTabs.insert(modMap, 0);
 		configTabs.setHeight("650px");
 
 		rootPanel.add(menu);
