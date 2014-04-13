@@ -46,8 +46,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 		
-		ModuleMap modMap = new ModuleMap();
-		//modMap.onModuleLoad(modList);
+		ModuleMap modMap = new ModuleMap(modList);
 
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
@@ -66,7 +65,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "2");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "3");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "4");
-		configTabs.insert(, 0);
+		configTabs.insert(modMap, 0);
 		configTabs.setHeight("650px");
 
 		rootPanel.add(menu);
