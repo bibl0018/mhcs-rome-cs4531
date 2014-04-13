@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 
@@ -20,7 +21,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// TODO Auto-generated method stub
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize("995px", "650px");
-		
+
 		Command cmd = new Command() {
 			public void execute() {
 				Window.alert("You selected a menu item!");
@@ -28,10 +29,18 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		};
 		Command addModulePopupCmd = new Command() {
 			public void execute() {
-				new AddModulePopup(null).show();
+				//new AddModulePopup(null).show();
+				final AddModulePopup popup = new AddModulePopup(null);
+				popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+					public void setPosition(int offsetWidth, int offsetHeight) {
+						int left = (Window.getClientWidth() - offsetWidth) / 3;
+						int top = (Window.getClientHeight() - offsetHeight) / 3;
+						popup.setPopupPosition(left, top);
+					}
+				});
 			}
 		};
-		
+
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
 		theMenu.addItem("Add module", addModulePopupCmd);
@@ -39,20 +48,20 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		theMenu.addItem("Calculate habitats", cmd);
 		theMenu.addSeparator();
 		theMenu.addItem("Log off", cmd);
-		
+
 		MenuBar menu = new MenuBar();
 		menu.setAnimationEnabled(true);
 		menu.addItem("Menu", theMenu);
-		
+
 		TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
-	    configTabs.add(new HTML(""), "1");
-	    configTabs.add(new HTML(""), "2");
-	    configTabs.add(new HTML(""), "3");
-	    configTabs.add(new HTML(""), "4");
-	    configTabs.setHeight("650px");
-	    
+		configTabs.add(new HTML(""), "1");
+		configTabs.add(new HTML(""), "2");
+		configTabs.add(new HTML(""), "3");
+		configTabs.add(new HTML(""), "4");
+		configTabs.setHeight("650px");
+
 		rootPanel.add(menu);
 		rootPanel.add(configTabs);
 	}
-	
+
 }
