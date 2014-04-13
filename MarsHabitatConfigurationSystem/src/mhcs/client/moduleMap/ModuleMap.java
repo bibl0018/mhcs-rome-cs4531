@@ -3,16 +3,13 @@ package mhcs.client.moduleMap;
 
 import mhcs.client.module.ModuleList;
 import mhcs.client.module.Module;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RootPanel;
 
 
 public class ModuleMap{
 	
 	public void onModuleLoad(ModuleList moduleList){
-		RootPanel rp = RootPanel.get();
 		Grid g = new Grid(50,50);
 		
 		for(int i = 1; i < 191; i++ ){
@@ -22,12 +19,12 @@ public class ModuleMap{
 			int yCoord = module.getYCoord();
 
 			if(module != null){
+				g.getCellFormatter().setWidth(xCoord, yCoord, "25px");
+				g.getCellFormatter().setHeight(xCoord, yCoord, "25px");
 				g = setImage(g, xCoord, yCoord, module);
 			}
 		}
-		
-		rp.add(g);
-		
+				
 	}
 
 	
