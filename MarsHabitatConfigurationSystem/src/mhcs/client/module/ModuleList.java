@@ -1,5 +1,7 @@
 package mhcs.client.module;
 
+import com.google.gwt.storage.client.Storage;
+
 /**
  * A container for all Modules in the MHCS.
  * @author Ryan Stowell
@@ -15,6 +17,7 @@ public class ModuleList {
 		for (int i = 0; i < SIZE; i++) {
 			modules[i] = null;
 		}
+		loadModules();
 	}
 	
 	/**
@@ -42,6 +45,7 @@ public class ModuleList {
 		}
 		
 		modules[module.getCode()] = module;
+		saveModule(module);
 	}
 	
 	/**
@@ -58,6 +62,41 @@ public class ModuleList {
 		}
 		
 		modules[code] = null;
+	}
+	
+	/**
+	 * Loads all Modules from HTML5 local storage into this module list.
+	 */
+	private void loadModules() {
+		Storage store = null;
+		store = Storage.getLocalStorageIfSupported();
+		
+		if (store != null) {
+			for (int i = 1; i <= 190; i++) {
+				String key = "MHCS.Module." + Integer.toString(i);
+				
+			}
+		}
+	}
+	
+	/**
+	 * Stores a Module from the ModuleList to the HTML5 local storage.
+	 * @param Module the Module to be saved.
+	 */
+	private void saveModule(Module module) {
+		Storage store = null;
+		store = Storage.getLocalStorageIfSupported();
+		
+		final String value = "[{code:" + Integer.toString(module.getCode()) +
+							 ",status:\"" + module.getStatus() + "\",turns:" +
+							 Integer.toString(module.getTurns()) + ",X:" +
+							 Integer.toString(module.getXCoord()) + ",Y:" +
+							 Integer.toString(module.getYCoord()) + "}]";
+		final String key = "MHCS.Module." + Integer.toString(module.getCode());
+		
+		if (store != null) {
+			store.setItem(key, value);
+		}
 	}
 	
 	private Module[] modules;
