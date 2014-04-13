@@ -15,21 +15,23 @@ public class ModuleMap{
 		RootPanel rp = RootPanel.get();
 		Grid g = new Grid(50,50);
 		
-		//for every module in the list. Need to figure out how to parse module list
-		//	get module
-		Module module = moduleList.getModule(0);
-		//	get coords, xcoord = row, ycoord = col
-		int xCoord = module.getXCoord();
-		int yCoord = module.getYCoord();
-		//	get Type
-		//Type type = module.getType();
-		//	setImage
-		setImage(g, xCoord, yCoord, module);
+		for(int i = 1; i < 191; i++ ){
+			Module module = moduleList.getModule(i);
+			
+			int xCoord = module.getXCoord();
+			int yCoord = module.getYCoord();
+
+			if(module != null){
+				g = setImage(g, xCoord, yCoord, module);
+			}
+		}
 		
+		rp.add(g);
 		
 	}
 
-	public void setImage(Grid g, int row, int col, Module module){
+	
+	public Grid setImage(Grid g, int row, int col, Module module){
 		if (module.getType().equals("PLAIN")){
 			g.setWidget(row, col, new Image("images/Plain.jpg"));
 		}
@@ -57,6 +59,7 @@ public class ModuleMap{
 		else if (module.getType().equals("MEDICAL")){
 			g.setWidget(row, col, new Image ("images/Medical.jpg"));
 		}
+		return g;
 		
 	}
 	
