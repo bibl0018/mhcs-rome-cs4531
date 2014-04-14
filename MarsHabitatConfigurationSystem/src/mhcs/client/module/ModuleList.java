@@ -140,5 +140,5 @@ public class ModuleList {
 	}
 	
 	private Module[] modules;
-	private static int SIZE = 190;
+	private static int SIZE = 191;
 }
