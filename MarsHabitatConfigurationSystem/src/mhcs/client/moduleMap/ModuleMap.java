@@ -55,7 +55,7 @@ public class ModuleMap implements IsWidget{
 				//g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
 				//g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
 				
-				g.getElement().getStyle().setHeight(19, Style.Unit.PX);
+				g.getElement().getStyle().setHeight(13, Style.Unit.PX);
 				g.getElement().getStyle().setWidth(19, Style.Unit.PX);
 				
 
