@@ -1,6 +1,7 @@
 package mhcs.client;
 
 import mhcs.client.gui.AddModulePopup;
+import mhcs.client.gui.Login;
 import mhcs.client.module.ModuleList;
 import mhcs.client.moduleMap.ModuleMap;
 
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TabBar.Tab;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 
 /**
@@ -27,12 +29,20 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
-		rootPanel.setSize("995px", "650px");
+		rootPanel.setSize(width, height);
 
 		// Default command for menu items.
 		Command cmd = new Command() {
 			public void execute() {
 				Window.alert("You selected a menu item!");
+			}
+		};
+		
+		// Command to show login.
+		Command loginCmd = new Command() {
+			public void execute() {
+				final Login login = new Login();
+				login.show();
 			}
 		};
 
@@ -60,12 +70,13 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		theMenu.addItem("Minumum resource path", cmd);
 		theMenu.addItem("Calculate habitats", cmd);
 		theMenu.addSeparator();
-		theMenu.addItem("Log off", cmd);
+		theMenu.addItem("Log off", loginCmd);
 
 		// Creates the menu bar and adds the menu to itself.
 		MenuBar menu = new MenuBar();
 		menu.setAnimationEnabled(true);
 		menu.addItem("Menu", theMenu);
+		menu.setWidth(width);
 
 		// Creates the tabs for the various configurations and module map.
 		TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
@@ -74,12 +85,21 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "2");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "3");
 		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "4");
-		configTabs.insert(modMap, 0);
-		configTabs.setHeight("650px");
+		//configTabs.(modMap);
+		configTabs.setHeight(height);
+		configTabs.setWidth(width);
 
 		// Adds everything to the root panel.
 		rootPanel.add(menu);
 		rootPanel.add(configTabs);
+		
+		// Show login after module has loaded.
+		Login initialLogin = new Login();
+		initialLogin.show();
+		
+		rootPanel.addStyleName("rootPanel");
 	}
 
+	private String width = "995px";
+	private String height = "650px";
 }

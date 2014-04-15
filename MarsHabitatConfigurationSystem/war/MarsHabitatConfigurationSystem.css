@@ -1,6 +1,30 @@
 /** Add css rules here for your application. */
 
 
+.title {
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: xx-large;
+	text-shadow: 5px 5px 10px black;
+	margin: auto;
+	width: 70%;
+	position: fixed;
+	top: 100px;
+	font-weight: bold;
+}
+
+.loginPanel {
+	font-family: Arial,Helvetica,sans-serif;
+	border-style: ridge;
+}
+
+.rootPanel {
+	border-style: solid;
+}
+
+.panel {
+	border-style: groove;
+}
+
 /** Example rules used by the template application (remove for your app) */
 h1 {
   font-size: 2em;
