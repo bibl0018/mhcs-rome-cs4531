@@ -10,6 +10,7 @@ import mhcs.client.module.ModuleList;
 import mhcs.client.module.Module;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -43,16 +44,21 @@ public class ModuleMap implements IsWidget{
 			if(module != null){
 				int xCoord = module.getXCoord();
 				int yCoord = module.getYCoord();
-				
-				//Set the height and width of each cell in the grid,
-				//can be changed if we need to fit it on a smaller screen.
-				g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
-				g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
-				
+			
 				//Passes the module and coordinates into the setImage function, 
 				//which will change the image at the correct grid coordinate then 
 				//return a new grid with the image changed.
 				g = setImage(g, xCoord, yCoord, module);
+				
+				//Set the height and width of each cell in the grid,
+				//can be changed if we need to fit it on a smaller screen.
+				//g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
+				//g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
+				
+				g.getElement().getStyle().setHeight(19, Style.Unit.PX);
+				g.getElement().getStyle().setWidth(19, Style.Unit.PX);
+				
+
 			}
 		}
 		
