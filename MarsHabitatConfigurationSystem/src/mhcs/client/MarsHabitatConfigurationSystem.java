@@ -9,7 +9,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -79,12 +79,11 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the tabs for the various configurations and module map.
 		TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
-		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "Module Map");
-		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "1");
-		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "2");
-		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "3");
-		configTabs.add(new Image("images/MarsModuleLandingArea.jpg"), "4");
-		//configTabs.(modMap);
+		configTabs.add(modMap, "Module Map");
+		configTabs.add(new HTML(""), "1");
+		configTabs.add(new HTML(""), "2");
+		configTabs.add(new HTML(""), "3");
+		configTabs.add(new HTML(""), "4");
 		configTabs.setHeight(height);
 		configTabs.setWidth(width);
 
