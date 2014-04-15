@@ -35,16 +35,26 @@ public class ModuleMap implements IsWidget{
 	 */
 	public Widget asWidget(){
 		Grid g = new Grid(50,50);
+		int xCoord;
+		int yCoord;
+		
+		//Set the height and width of each cell in the grid,
+		//can be changed if we need to fit it on a smaller screen.
+	    for(xCoord = 0; xCoord < 50; ++xCoord){
+	    	for(yCoord = 0; yCoord < 10; ++yCoord){
+	    		g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
+				g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
+	    	}
+	    }
 		
 		//For every module in the module list
 		for(int i = 1; i < 191; i++ ){
 			Module module = modList.getModule(i);
-			int xCoord = module.getXCoord();
-			int yCoord = module.getYCoord();
 			
 			//If module is actually a module and not just an empty space.
 			if(module != null){
-
+				xCoord = module.getXCoord();
+				yCoord = module.getYCoord();
 			
 				//Passes the module and coordinates into the setImage function, 
 				//which will change the image at the correct grid coordinate then 
@@ -59,8 +69,8 @@ public class ModuleMap implements IsWidget{
 			
 			//Set the height and width of each cell in the grid,
 			//can be changed if we need to fit it on a smaller screen.
-			g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
-			g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
+			//g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
+			//g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
 			
 		}
 		
