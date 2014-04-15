@@ -7,7 +7,7 @@
 	text-shadow: 5px 5px 10px black;
 	margin: auto;
 	width: 70%;
-	position: fixed;
+	position: relative;
 	top: 100px;
 	font-weight: bold;
 }
