@@ -72,31 +72,31 @@ public class ModuleMap implements IsWidget{
 	public Grid setImage(Grid g, int row, int col, Module module){
 		
 		//Detects module type, changes image at coordinate accordingly.
-		if (module.getType().equals("PLAIN")){
+		if (module.getType().equals(Module.Type.PLAIN)){
 			g.setWidget(row, col, new Image("images/Plain.jpg"));
 		}
-		else if (module.getType().equals("DORMITORY")){
+		else if (module.getType().equals(Module.Type.DORMITORY)){
 			g.setWidget(row, col, new Image("images/Dormitory.jpg"));
 		}
-		else if (module.getType().equals("SANITATION")){
+		else if (module.getType().equals(Module.Type.SANITATION)){
 			g.setWidget(row, col, new Image ("images/Sanitation.jpg"));
 		}
-		else if (module.getType().equals("FOOD_WATER")){
+		else if (module.getType().equals(Module.Type.FOOD_WATER)){
 			g.setWidget(row, col, new Image ("images/Food.jpg"));
 		}
-		else if (module.getType().equals("GYM_RELAXATION")){
+		else if (module.getType().equals(Module.Type.GYM_RELAXATION)){
 			g.setWidget(row, col, new Image ("images/Gym.jpg"));
 		}
-		else if (module.getType().equals("CANTEEN")){
+		else if (module.getType().equals(Module.Type.CANTEEN)){
 			g.setWidget(row, col, new Image ("images/Canteen.jpg"));
 		}
-		else if (module.getType().equals("POWER")){
+		else if (module.getType().equals(Module.Type.POWER)){
 			g.setWidget(row, col, new Image ("images/Power.jpg"));
 		}
-		else if (module.getType().equals("CONTROL")){
+		else if (module.getType().equals(Module.Type.CONTROL)){
 			g.setWidget(row, col, new Image ("images/Control.jpg"));
 		}
-		else if (module.getType().equals("MEDICAL")){
+		else if (module.getType().equals(Module.Type.MEDICAL)){
 			g.setWidget(row, col, new Image ("images/Medical.jpg"));
 		}
 		return g;
