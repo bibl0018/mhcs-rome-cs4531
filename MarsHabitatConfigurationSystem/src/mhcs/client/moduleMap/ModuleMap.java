@@ -46,8 +46,8 @@ public class ModuleMap implements IsWidget{
 				
 				//Set the height and width of each cell in the grid,
 				//can be changed if we need to fit it on a smaller screen.
-				g.getCellFormatter().setWidth(xCoord, yCoord, "25px");
-				g.getCellFormatter().setHeight(xCoord, yCoord, "25px");
+				g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
+				g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
 				
 				//Passes the module and coordinates into the setImage function, 
 				//which will change the image at the correct grid coordinate then 
