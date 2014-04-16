@@ -2,9 +2,11 @@ package mhcs.client.gui;
 
 import mhcs.client.module.Module;
 import mhcs.client.module.ModuleList;
+import mhcs.client.AddEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -26,7 +28,7 @@ public class AddModulePopup extends PopupPanel {
 	 * Constructor for Popup. Creates a horizontal panel for each set of
 	 * labels and textboxes.
 	 */
-	public AddModulePopup(ModuleList modules) {
+	public AddModulePopup(ModuleList modules, final SimpleEventBus bus) {
 		super(true);
 		
 		moduleList = modules;
@@ -128,6 +130,7 @@ public class AddModulePopup extends PopupPanel {
 				}
 				
 				if (valid) {
+					bus.fireEvent(new AddEvent());
 					hide();
 				}
 			}			

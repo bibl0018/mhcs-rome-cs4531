@@ -7,6 +7,7 @@ import mhcs.client.moduleMap.ModuleMap;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
@@ -45,10 +46,11 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 
+		
 		// Command to show the add module popup.
 		Command addModulePopupCmd = new Command() {
 			public void execute() {
-				final AddModulePopup popup = new AddModulePopup(modList);
+				final AddModulePopup popup = new AddModulePopup(modList, bus);
 				popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 					public void setPosition(int offsetWidth, int offsetHeight) {
 						int left = (Window.getClientWidth() - offsetWidth) / 3;
@@ -60,8 +62,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		};
 
 		// Creates the module map.
-		ModuleMap modMap = new ModuleMap(modList);
-
+		final ModuleMap modMap = new ModuleMap(modList);
+				
 		// Creates the menu for the menu bar.
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
@@ -78,26 +80,35 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		menu.setWidth(width);
 
 		// Creates the tabs for the various configurations and module map.
-		TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
-		configTabs.add(modMap, "Module Map");
+		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
+		configTabs.add(modMap.asWidget(), "Module Map");
 		configTabs.add(new HTML(""), "1");
 		configTabs.add(new HTML(""), "2");
 		configTabs.add(new HTML(""), "3");
 		configTabs.add(new HTML(""), "4");
 		configTabs.setHeight(height);
 		configTabs.setWidth(width);
-
+		
 		// Adds everything to the root panel.
 		rootPanel.add(menu);
 		rootPanel.add(configTabs);
 		
 		// Show login after module has loaded.
-		Login initialLogin = new Login();
+		final Login initialLogin = new Login();
 		initialLogin.show();
+		
+		// Set handler for EventBus.
+		bus.addHandler(AddEvent.TYPE, new AddEventHandler() {
+			public void onEvent(AddEvent event) {
+				
+				
+			}
+		});
 		
 		rootPanel.addStyleName("rootPanel");
 	}
 
+	private final SimpleEventBus bus = new SimpleEventBus();
 	private String width = "995px";
 	private String height = "650px";
 }

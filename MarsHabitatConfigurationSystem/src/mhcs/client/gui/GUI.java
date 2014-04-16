@@ -24,7 +24,7 @@ public class GUI implements EntryPoint {
 		};
 		Command addModulePopupCmd = new Command() {
 			public void execute() {
-				new AddModulePopup(null).show();
+				//new AddModulePopup(null).show();
 			}
 		};
 		
