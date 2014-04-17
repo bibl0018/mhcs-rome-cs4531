@@ -40,12 +40,12 @@ public class ModuleMap implements IsWidget{
 		
 		//Set the height and width of each cell in the grid,
 		//can be changed if we need to fit it on a smaller screen.
-//	    for(xCoord = 0; xCoord < 50; ++xCoord){
-//	    	for(yCoord = 0; yCoord < 10; ++yCoord){
-//	    		g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
-//				g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
-//	    	}
-//	    }
+	    for(xCoord = 0; xCoord < 50; ++xCoord){
+	    	for(yCoord = 0; yCoord < 50; ++yCoord){
+	    		g.getCellFormatter().setWidth(xCoord, yCoord, "19px");
+				g.getCellFormatter().setHeight(xCoord, yCoord, "13px");
+	    	}
+	    }
 		
 		//For every module in the module list
 		for(int i = 1; i < 191; i++ ){
