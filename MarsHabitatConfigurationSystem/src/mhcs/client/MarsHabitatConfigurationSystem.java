@@ -81,7 +81,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the tabs for the various configurations and module map.
 		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
-		configTabs.add(modMap.asWidget(), "Module Map");
+		configTabs.add(modMap, "Module Map");
 		configTabs.add(new HTML(""), "1");
 		configTabs.add(new HTML(""), "2");
 		configTabs.add(new HTML(""), "3");
@@ -101,7 +101,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		bus.addHandler(AddEvent.TYPE, new AddEventHandler() {
 			public void onEvent(AddEvent event) {
 				
-				
+				// "Refreshes" the module map by removing and re-adding the tab
+				configTabs.remove(0);
+				configTabs.insert(modMap, "Module Map", 0);
+				configTabs.selectTab(0);
 			}
 		});
 		

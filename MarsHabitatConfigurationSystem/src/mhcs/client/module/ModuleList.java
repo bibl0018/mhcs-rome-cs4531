@@ -46,7 +46,15 @@ public class ModuleList {
 	 */
 	public void addModule(Module module) throws IllegalArgumentException {
 		if (modules[module.getCode()] != null) {
-			throw new IllegalArgumentException("Module already exists");
+			throw new IllegalArgumentException("Module with code:" + Integer.toString(module.getCode()) + " already exists");
+		}
+		
+		for (int i = 1; i < SIZE; i++) {
+			if (modules[i] != null && 
+				(modules[i].getXCoord() == module.getXCoord() ||
+				modules[i].getYCoord() == module.getYCoord()) ) {
+				throw new IllegalArgumentException("Module already exists at that location");
+			}
 		}
 		
 		modules[module.getCode()] = module;
