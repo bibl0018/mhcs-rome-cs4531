@@ -51,8 +51,8 @@ public class ModuleList {
 		
 		for (int i = 1; i < SIZE; i++) {
 			if (modules[i] != null && 
-				(modules[i].getXCoord() == module.getXCoord() ||
-				modules[i].getYCoord() == module.getYCoord()) ) {
+				modules[i].getXCoord() == module.getXCoord() &&
+				modules[i].getYCoord() == module.getYCoord() ) {
 				throw new IllegalArgumentException("Module already exists at that location");
 			}
 		}
