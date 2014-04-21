@@ -20,6 +20,17 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
  * Creates the GUI for the MHCS.
  */
 public class MarsHabitatConfigurationSystem implements EntryPoint {
+	
+	public static final int MAGIC_NUMBER = 3;
+	public static final SimpleEventBus BUS = new SimpleEventBus();
+	public static final String MODULE_MAP_STRING = "Module Map";
+
+	private String width = "995px";
+	private String height = "650px";
+	
+	public MarsHabitatConfigurationSystem() {
+		
+	}
 
 	@Override
 	public void onModuleLoad() {
@@ -29,7 +40,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
-		rootPanel.setSize(width, height);
+		rootPanel.setSize(this.width, this.height);
 
 		// Default command for menu items.
 		Command cmd = new Command() {
@@ -50,11 +61,11 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command to show the add module popup.
 		Command addModulePopupCmd = new Command() {
 			public void execute() {
-				final AddModulePopup popup = new AddModulePopup(modList, bus);
+				final AddModulePopup popup = new AddModulePopup(modList, BUS);
 				popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-					public void setPosition(int offsetWidth, int offsetHeight) {
-						int left = (Window.getClientWidth() - offsetWidth) / 3;
-						int top = (Window.getClientHeight() - offsetHeight) / 3;
+					public void setPosition(final int offsetWidth, final int offsetHeight) {
+						int left = (Window.getClientWidth() - offsetWidth) / MAGIC_NUMBER;
+						int top = (Window.getClientHeight() - offsetHeight) / MAGIC_NUMBER;
 						popup.setPopupPosition(left, top);
 					}
 				});
@@ -77,17 +88,17 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		MenuBar menu = new MenuBar();
 		menu.setAnimationEnabled(true);
 		menu.addItem("Menu", theMenu);
-		menu.setWidth(width);
+		menu.setWidth(this.width);
 
 		// Creates the tabs for the various configurations and module map.
 		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
-		configTabs.add(modMap, "Module Map");
+		configTabs.add(modMap, MODULE_MAP_STRING);
 		configTabs.add(new HTML(""), "1");
 		configTabs.add(new HTML(""), "2");
 		configTabs.add(new HTML(""), "3");
 		configTabs.add(new HTML(""), "4");
-		configTabs.setHeight(height);
-		configTabs.setWidth(width);
+		configTabs.setHeight(this.height);
+		configTabs.setWidth(this.width);
 		
 		// Adds everything to the root panel.
 		rootPanel.add(menu);
@@ -98,12 +109,12 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		initialLogin.show();
 		
 		// Set handler for EventBus.
-		bus.addHandler(AddEvent.TYPE, new AddEventHandler() {
-			public void onEvent(AddEvent event) {
+		BUS.addHandler(AddEvent.TYPE, new AddEventHandler() {
+			public void onEvent(final AddEvent event) {
 				
 				// "Refreshes" the module map by removing and re-adding the tab
 				configTabs.remove(0);
-				configTabs.insert(modMap, "Module Map", 0);
+				configTabs.insert(modMap, MODULE_MAP_STRING, 0);
 				configTabs.selectTab(0);
 			}
 		});
@@ -111,7 +122,4 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		rootPanel.addStyleName("rootPanel");
 	}
 
-	private final SimpleEventBus bus = new SimpleEventBus();
-	private String width = "995px";
-	private String height = "650px";
 }

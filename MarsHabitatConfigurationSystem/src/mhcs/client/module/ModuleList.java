@@ -120,7 +120,7 @@ public class ModuleList {
 						number = (JSONNumber) object.get("Y");
 						yCoord = (int) number.doubleValue();
 						
-						addModule(new Module(code, xCoord, yCoord, turns, status));
+						this.addModule(new Module(code, xCoord, yCoord, turns, status));
 					}
 				}
 			}
@@ -131,7 +131,7 @@ public class ModuleList {
 	 * Stores a Module from the ModuleList to the HTML5 local storage.
 	 * @param Module the Module to be saved.
 	 */
-	private void saveModule(Module module) {
+	private void saveModule(final Module module) {
 		Storage store = null;
 		store = Storage.getLocalStorageIfSupported();
 		
