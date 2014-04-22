@@ -6,6 +6,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * A container for all Modules in the MHCS.
@@ -14,6 +15,17 @@ import com.google.gwt.storage.client.Storage;
 public class ModuleList {
 
 	private Module[] modules;
+	private int plain;
+	private int dormitory;
+	private int canteen;
+	private int control;
+	private int sanitation;
+	private int water;
+	private int gym;
+	private int power;
+	private int airlock;
+	private int medical;
+	
 	final private int SIZE = 191;
 	final private String invalid = "Invalid code parameter";
 	
@@ -61,6 +73,37 @@ public class ModuleList {
 			}
 		}
 		
+		if (module.getType().equals(Module.Type.PLAIN)){
+			this.plain += 1;
+		}
+		else if (module.getType().equals(Module.Type.DORMITORY)){
+			this.dormitory += 1;
+		}
+		else if (module.getType().equals(Module.Type.SANITATION)){
+			this.sanitation += 1;
+		}
+		else if (module.getType().equals(Module.Type.FOOD_WATER)){
+			this.water += 1;
+		}
+		else if (module.getType().equals(Module.Type.GYM_RELAXATION)){
+			this.gym += 1;
+		}
+		else if (module.getType().equals(Module.Type.CANTEEN)){
+			this.canteen += 1;
+		}
+		else if (module.getType().equals(Module.Type.POWER)){
+			this.power += 1;
+		}
+		else if (module.getType().equals(Module.Type.CONTROL)){
+			this.control += 1;
+		}
+		else if (module.getType().equals(Module.Type.MEDICAL)){
+			this.medical += 1;
+		}
+		else if (module.getType().equals(Module.Type.AIRLOCK)) {
+			this.airlock += 1;
+		}
+		
 		this.modules[module.getCode()] = module;
 		saveModule(module);
 	}
@@ -87,6 +130,47 @@ public class ModuleList {
 			store.removeItem(key);
 		}
 	}
+	
+	public int getNumOfPlain() {
+		return this.plain;
+	}
+	
+	public int getNumOfControl() {
+		return this.control;
+	}
+	
+	public int getNumOfAirlock() {
+		return this.airlock;
+	}
+	
+	public int getNumOfDormitory() {
+		return this.dormitory;
+	}
+	
+	public int getNumOfSanitation() {
+		return this.sanitation;
+	}
+	
+	public int getNumOfCanteen() {
+		return this.canteen;
+	}
+	
+	public int getNumOfPower() {
+		return this.power;
+	}
+	
+	public int getNumOfMedical() {
+		return this.medical;
+	}
+	
+	public int getNumOfGym() {
+		return this.gym;
+	}
+	
+	public int getNumOfWater() {
+		return this.water;
+	}
+	
 	
 	/**
 	 * Loads all Modules from HTML5 local storage into this module list.
