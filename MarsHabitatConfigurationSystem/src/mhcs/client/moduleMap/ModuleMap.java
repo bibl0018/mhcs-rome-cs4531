@@ -128,6 +128,11 @@ public class ModuleMap implements IsWidget{
 			image.setPixelSize(50, 50);
 			g.setWidget(row, col, image);
 		}
+		else if (module.getType().equals(Module.Type.AIRLOCK)){
+			Image image = new Image("images/Airlock.jpg");
+			image.setPixelSize(50, 50);
+			g.setWidget(row, col, image);
+		}
 		return g;
 		
 	}
