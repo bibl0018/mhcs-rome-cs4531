@@ -3,10 +3,7 @@
 .login {
 	Position: absolute;
 	z-index: 999;
-}
-
-.tenDayAlertPanel {
-	
+	border-style: solid;
 }
 
 .title {
@@ -22,15 +19,11 @@
 
 .loginPanel {
 	font-family: Arial,Helvetica,sans-serif;
-	border-style: ridge;
-}
-
-.rootPanel {
 	border-style: solid;
 }
 
 .panel {
-	border-style: groove;
+	border-style: solid;
 }
 
 .gwt-TabLayoutPanel {

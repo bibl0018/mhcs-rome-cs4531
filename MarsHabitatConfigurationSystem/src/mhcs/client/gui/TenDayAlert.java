@@ -17,6 +17,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class TenDayAlert extends PopupPanel {
 
+	/**
+	 * Change to 864000000 for 10 days.
+	 */
+	protected static final int ALERT_TIME = 10000;
+	
+	/**
+	 * 
+	 */
+	private static final int MAGIC_NUMBER_10 = 5;
+	
+	/**
+	 * 
+	 */
+	private static final int MAGIC_NUMBER_5 = 5;
+
 	public TenDayAlert() {
 		super(true);
 
@@ -31,9 +46,7 @@ public class TenDayAlert extends PopupPanel {
 					}
 				};
 				
-				t.schedule(10000);
-				// Uncomment below for 10 days
-				//t.schedule(864000000);
+				t.schedule(ALERT_TIME);
 			}
 		};
 		
@@ -48,13 +61,13 @@ public class TenDayAlert extends PopupPanel {
 		final Button cancelButton = new Button("Cancel", cancelHandler);
 		buttonPanel.add(calibrateButton);
 		buttonPanel.add(cancelButton);
-		buttonPanel.setSpacing(10);
+		buttonPanel.setSpacing(MAGIC_NUMBER_10);
 		
 		VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		mainPanel.add(title);
 		mainPanel.add(buttonPanel);
-		mainPanel.setSpacing(5);
+		mainPanel.setSpacing(MAGIC_NUMBER_5);
 		
 		setWidget(mainPanel);
 		setAutoHideEnabled(false);
