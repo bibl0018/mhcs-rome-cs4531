@@ -29,9 +29,9 @@ public class Module {
 	public Module(final int newCode, final int xcoord, final int ycoord, final int newTurns, final String newStatus) {
 
 		// Checks that each parameter is within its range
-		if (this.code < 1 || this.code > 190) {
+		if (newCode < 1 || newCode > 190) {
 			throw new IndexOutOfBoundsException("Invalid module code");
-		} else if (this.turns < 0 || this.turns > 2) {
+		} else if (newTurns < 0 || newTurns > 2) {
 			throw new IndexOutOfBoundsException("Invalid turns value");
 		}
 
