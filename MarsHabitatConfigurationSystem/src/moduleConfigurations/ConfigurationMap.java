@@ -1,4 +1,4 @@
-package minimumConfigurations;
+package moduleConfigurations;
 
 import java.util.Iterator;
 
