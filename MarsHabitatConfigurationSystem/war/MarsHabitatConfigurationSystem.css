@@ -1,5 +1,13 @@
 /** Add css rules here for your application. */
 
+.login {
+	Position: absolute;
+	z-index: 999;
+}
+
+.tenDayAlertPanel {
+	
+}
 
 .title {
 	font-family: Arial,Helvetica,sans-serif;

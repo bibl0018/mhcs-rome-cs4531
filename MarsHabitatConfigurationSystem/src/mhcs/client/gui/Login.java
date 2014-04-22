@@ -18,6 +18,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class Login extends PopupPanel {
 	
 	/**
+	 * Default password for the MHCS.
+	 */
+	private static final String PASS = "CS4531";
+	
+	/**
+	 * Default user for the MHCS.
+	 */
+	private static final String USER = "Rome";
+	
+	/**
 	 * Constructor for login popup.
 	 */
 	public Login() {
@@ -32,9 +42,9 @@ public class Login extends PopupPanel {
 		final TextBox tb = new TextBox();
 		
 		ClickHandler handler = new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				if (ptb.getText().equals(pass) &&
-					tb.getText().equals(user))
+			public void onClick(final ClickEvent event) {
+				if (ptb.getText().equals(PASS) &&
+					tb.getText().equals(USER))
 				hide();
 			}
 		};
@@ -59,15 +69,7 @@ public class Login extends PopupPanel {
 		
 		setWidget(panel);
 		setAutoHideEnabled(false);
+		addStyleName("login");
 	}
 
-	/**
-	 * Default password for the MHCS.
-	 */
-	private String pass = "CS4531";
-	
-	/**
-	 * Default user for the MHCS.
-	 */
-	private String user = "Rome";
 }
