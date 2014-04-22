@@ -28,6 +28,7 @@
 
 .gwt-TabLayoutPanel {
 	background-image: url("images/MarsModuleLandingArea.jpg");
+	background-repeat: no-repeat;
 }
 
 /** Example rules used by the template application (remove for your app) */
