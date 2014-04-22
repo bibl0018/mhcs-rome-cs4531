@@ -1,11 +1,22 @@
 package mhcs.client.module;
 
-/** 
+/**
  * Representation of a Module in the Mars Habitat Configuation System. 
  * @author Ryan Stowell
  */
 public class Module {
 
+	public static String UNDAMAGED = "UNDAMAGED";
+	public static String DAMAGED = "DAMAGED";
+	public static String UNCERTAIN = "UNCERTAIN";
+	
+	private int code;
+	private int xCoord;
+	private int yCoord;
+	private int turns;
+	private String status;
+	private Type type;
+	
 	/**
 	 * Default constructor.
 	 * @param code The Module's number;   1-190
@@ -15,41 +26,41 @@ public class Module {
 	 * @param status The status of the Module
 	 * @throws IndexOutOfBoundsException if any parameters is not within the ranges stated above
 	 */
-	public Module(final int code, final int xcoord, final int ycoord, final int turns, final String status) throws IndexOutOfBoundsException {
+	public Module(final int newCode, final int xcoord, final int ycoord, final int newTurns, final String newStatus) {
 
 		// Checks that each parameter is within its range
-		if (code < 1 || code > 190) {
+		if (this.code < 1 || this.code > 190) {
 			throw new IndexOutOfBoundsException("Invalid module code");
-		} else if (turns < 0 || turns > 2) {
+		} else if (this.turns < 0 || this.turns > 2) {
 			throw new IndexOutOfBoundsException("Invalid turns value");
 		}
 
-		this.code = code;
+		this.code = newCode;
 		this.xCoord = xcoord;
 		this.yCoord = ycoord;
-		this.turns = turns;
-		this.status = status;
+		this.turns = newTurns;
+		this.status = newStatus;
 
 		// Sets the type based on the code
-		if (code > 0 && code <= 40) {
+		if (this.code > 0 && this.code <= 40) {
 			this.type = Type.PLAIN;
-		} else if (code > 60 && code <= 80) {
+		} else if (this.code > 60 && this.code <= 80) {
 			this.type = Type.DORMITORY;
-		} else if (code > 90 && code <= 100) {
+		} else if (this.code > 90 && this.code <= 100) {
 			this.type = Type.SANITATION;
-		} else if (code > 110 && code <= 120) {
+		} else if (this.code > 110 && this.code <= 120) {
 			this.type = Type.FOOD_WATER;
-		} else if (code > 130 && code <= 134) {
+		} else if (this.code > 130 && this.code <= 134) {
 			this.type = Type.GYM_RELAXATION;
-		} else if (code > 140 && code <= 144) {
+		} else if (this.code > 140 && this.code <= 144) {
 			this.type = Type.CANTEEN;
-		} else if (code > 150 && code <= 154) {
+		} else if (this.code > 150 && this.code <= 154) {
 			this.type = Type.POWER;
-		} else if (code > 160 && code <= 164) {
+		} else if (this.code > 160 && this.code <= 164) {
 			this.type = Type.CONTROL;
-		} else if (code > 170 && code <= 174) {
+		} else if (this.code > 170 && this.code <= 174) {
 			this.type = Type.AIRLOCK;
-		} else if (code > 180 && code <= 184) {
+		} else if (this.code > 180 && this.code <= 184) {
 			this.type = Type.MEDICAL;
 		} else {
 			throw new IndexOutOfBoundsException("Invalid module code; Type not yet determined");
@@ -80,12 +91,6 @@ public class Module {
 		return this.type;
 	}
 
-	// Instance fields
-
-	public static String UNDAMAGED = "UNDAMAGED";
-	public static String DAMAGED = "DAMAGED";
-	public static String UNCERTAIN = "UNCERTAIN";
-
 	public enum Type {
 		PLAIN,
 		DORMITORY,
@@ -98,10 +103,4 @@ public class Module {
 		AIRLOCK,
 		MEDICAL
 	};
-	private int code,
-	xCoord,
-	yCoord,
-	turns;
-	private String status;
-	private Type type;
 }

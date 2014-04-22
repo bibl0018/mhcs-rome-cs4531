@@ -13,14 +13,18 @@ import com.google.gwt.storage.client.Storage;
  */
 public class ModuleList {
 
-	/**
+	private Module[] modules;
+	final private int SIZE = 191;
+	final private String invalid = "Invalid code parameter";
+	
+    /**
 	 * Default constructor. Initializes each Module in list to null.
 	 */
 	public ModuleList() {
-		modules = new Module[SIZE];
+		this.modules = new Module[this.SIZE];
 		
-		for (int i = 0; i < SIZE; i++) {
-			modules[i] = null;
+		for (int i = 0; i < this.SIZE; i += 1) {
+			this.modules[i] = null;
 		}
 		loadModules();
 	}
@@ -31,12 +35,12 @@ public class ModuleList {
 	 * @return The Module at index code, null if the Module is not found
 	 * @throws IndexOutOfBoundsException if code is not between 1-190
 	 */
-	public Module getModule(int code) throws IndexOutOfBoundsException {
+	public Module getModule(final int code) {
 		if (code < 1 || code > 190) {
-			throw new IndexOutOfBoundsException("Invalid code parameter");
+			throw new IndexOutOfBoundsException(this.invalid);
 		}
 		
-		return modules[code];
+		return this.modules[code];
 	}
 	
 	/**
@@ -44,20 +48,20 @@ public class ModuleList {
 	 * @param module The Module to be added.
 	 * @throws IllegalArgumentException if a Module with the same code already exists in the list
 	 */
-	public void addModule(Module module) throws IllegalArgumentException {
-		if (modules[module.getCode()] != null) {
+	public void addModule(final Module module) {
+		if (this.modules[module.getCode()] != null) {
 			throw new IllegalArgumentException("Module with code:" + Integer.toString(module.getCode()) + " already exists");
 		}
 		
-		for (int i = 1; i < SIZE; i++) {
-			if (modules[i] != null && 
-				modules[i].getXCoord() == module.getXCoord() &&
-				modules[i].getYCoord() == module.getYCoord() ) {
+		for (int i = 1; i < this.SIZE; i += 1) {
+			if (this.modules[i] != null && 
+				this.modules[i].getXCoord() == module.getXCoord() &&
+				this.modules[i].getYCoord() == module.getYCoord() ) {
 				throw new IllegalArgumentException("Module already exists at that location");
 			}
 		}
 		
-		modules[module.getCode()] = module;
+		this.modules[module.getCode()] = module;
 		saveModule(module);
 	}
 	
@@ -67,17 +71,17 @@ public class ModuleList {
 	 * @throws IllegalArgumentException if there is no Module with code number "code"
 	 * @throws IndexOutOfBoundsException if code is not between 1-190
 	 */
-	public void deleteModule(int code) throws IllegalArgumentException, IndexOutOfBoundsException {
+	public void deleteModule(final int code) {
 		if (code < 1 || code > 190) {
-			throw new IndexOutOfBoundsException("Invalid code parameter");
-		} else if (modules[code] == null) {
+			throw new IndexOutOfBoundsException(this.invalid);
+		} else if (this.modules[code] == null) {
 			throw new IllegalArgumentException("Module does not exists");
 		}
 		
-		modules[code] = null;
+		this.modules[code] = null;
 		
 		Storage store = Storage.getLocalStorageIfSupported();
-		String key = "MHCS.Module." + Integer.toString(code);
+		final String key = "MHCS.Module." + Integer.toString(code);
 		
 		if (store != null) {
 			store.removeItem(key);
@@ -92,7 +96,7 @@ public class ModuleList {
 		store = Storage.getLocalStorageIfSupported();
 		
 		if (store != null) {
-			for (int i = 1; i <= 190; i++) {
+			for (int i = 1; i <= 190; i += 1) {
 				String key = "MHCS.Module." + Integer.toString(i);
 				String value = store.getItem(key);
 				
@@ -100,10 +104,13 @@ public class ModuleList {
 					JSONArray array = (JSONArray) JSONParser.parseLenient(value);
 					JSONNumber number;
 					JSONString string;
-					int code, xCoord, yCoord, turns;
+					int code;
+					int xCoord;
+					int yCoord;
+					int turns;
 					String status;
 					
-					for (int k = 0; k < array.size(); k++) {
+					for (int k = 0; k < array.size(); k += 1) {
 						JSONObject object = (JSONObject) array.get(k);
 						number = (JSONNumber) object.get("code");
 						code = (int) number.doubleValue();
@@ -146,7 +153,4 @@ public class ModuleList {
 			store.setItem(key, value);
 		}
 	}
-	
-	private Module[] modules;
-	private static int SIZE = 191;
 }

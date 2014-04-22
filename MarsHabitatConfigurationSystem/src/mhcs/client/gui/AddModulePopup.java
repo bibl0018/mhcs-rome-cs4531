@@ -24,14 +24,22 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class AddModulePopup extends PopupPanel {
 
+	final private ModuleList moduleList;
+	final private int space = 5;
+	final private String WIDTH= "10em";
+	final private String listBoxWidth = "11em";
+	final private String zeroTurns = "0 TURNS NEEDED";
+	final private String oneTurns = "1 TURN NEEDED";
+	final private String twoTurns = "2 TURNS NEEDED";
+	
 	/**
 	 * Constructor for Popup. Creates a horizontal panel for each set of
 	 * labels and textboxes.
 	 */
-	public AddModulePopup(ModuleList modules, final SimpleEventBus bus) {
+	public AddModulePopup(final ModuleList modules, final SimpleEventBus bus) {
 		super(true);
 		
-		moduleList = modules;
+		this.moduleList = modules;
 		
 		// Creates a title for the popup.
 		final Label title = new Label("Enter Module Details");
@@ -40,7 +48,7 @@ public class AddModulePopup extends PopupPanel {
 		final HorizontalPanel codePanel = new HorizontalPanel();
 		final Label codeLabel = new Label("Module Code:");
 		final TextBox codeBox = new TextBox();
-		codeBox.setWidth(WIDTH);
+		codeBox.setWidth(this.WIDTH);
 		codePanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		codePanel.add(codeLabel);
 		codePanel.add(codeBox);
@@ -53,8 +61,8 @@ public class AddModulePopup extends PopupPanel {
 		final Label yLabel = new Label("Y:");
 		final TextBox xBox = new TextBox();
 		final TextBox yBox = new TextBox();
-		xBox.setWidth(WIDTH);
-		yBox.setWidth(WIDTH);
+		xBox.setWidth(this.WIDTH);
+		yBox.setWidth(this.WIDTH);
 		xCoordPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		yCoordPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		xCoordPanel.add(xLabel);
@@ -69,7 +77,7 @@ public class AddModulePopup extends PopupPanel {
 		statusBox.addItem("UNDAMAGED");
 		statusBox.addItem("DAMAGED");
 		statusBox.addItem("UNCERTAIN");
-		statusBox.setWidth(listBoxWidth);
+		statusBox.setWidth(this.listBoxWidth);
 		statusPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		statusPanel.add(statusLabel);
 		statusPanel.add(statusBox);
@@ -78,10 +86,10 @@ public class AddModulePopup extends PopupPanel {
 		final HorizontalPanel turnPanel = new HorizontalPanel();
 		final Label turnLabel = new Label("Orientation:");
 		final ListBox turnBox = new ListBox();
-		turnBox.addItem("0 TURNS NEEDED");
-		turnBox.addItem("1 TURN NEEDED");
-		turnBox.addItem("2 TURNS NEEDED");
-		turnBox.setWidth(listBoxWidth);
+		turnBox.addItem(this.zeroTurns);
+		turnBox.addItem(this.oneTurns);
+		turnBox.addItem(this.twoTurns);
+		turnBox.setWidth(this.listBoxWidth);
 		turnPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		turnPanel.add(turnLabel);
 		turnPanel.add(turnBox);
@@ -96,7 +104,7 @@ public class AddModulePopup extends PopupPanel {
 		
 		// Add button click handler. 
 		addButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+			public void onClick(final ClickEvent event) {
 				boolean valid = true;
 				
 				try {
@@ -107,9 +115,9 @@ public class AddModulePopup extends PopupPanel {
 					int turns;
 				
 				
-					if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("0 TURNS NEEDED")) {
+					if (turnBox.getItemText(turnBox.getSelectedIndex()).equals(zeroTurns)) {
 						turns = 0;
-					} else if (turnBox.getItemText(turnBox.getSelectedIndex()).equals("1 TURN NEEDED")) {
+					} else if (turnBox.getItemText(turnBox.getSelectedIndex()).equals(oneTurns)) {
 						turns = 1;
 					} else {
 						turns = 2;
@@ -138,7 +146,7 @@ public class AddModulePopup extends PopupPanel {
 		
 		// Popup is hidden when cancel button is clicked.
 		cancelButton.addClickHandler(new ClickHandler () {
-			public void onClick(ClickEvent event) {
+			public void onClick(final ClickEvent event) {
 				hide();
 			}
 		});
@@ -157,13 +165,9 @@ public class AddModulePopup extends PopupPanel {
 		
 		mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		mainPanel.add(buttonPanel);
-		mainPanel.setSpacing(5);
+		mainPanel.setSpacing(this.space);
 		
 		
 		setWidget(mainPanel);
 	}
-    
-	private ModuleList moduleList;
-    private static String WIDTH= "10em";
-    private static String listBoxWidth = "11em";
 }
