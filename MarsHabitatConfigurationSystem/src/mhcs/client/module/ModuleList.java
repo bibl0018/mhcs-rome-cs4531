@@ -6,7 +6,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * A container for all Modules in the MHCS.
@@ -14,6 +13,10 @@ import com.google.gwt.user.client.ui.Image;
  */
 public class ModuleList {
 
+	public static final int SIZE = 191;
+	public static final String invalid = "Invalid code parameter";
+	public static final String KEY = "MHCS.Module.";
+	
 	private Module[] modules;
 	private int plain;
 	private int dormitory;
@@ -26,16 +29,13 @@ public class ModuleList {
 	private int airlock;
 	private int medical;
 	
-	final private int SIZE = 191;
-	final private String invalid = "Invalid code parameter";
-	
     /**
 	 * Default constructor. Initializes each Module in list to null.
 	 */
 	public ModuleList() {
-		this.modules = new Module[this.SIZE];
+		this.modules = new Module[SIZE];
 		
-		for (int i = 0; i < this.SIZE; i += 1) {
+		for (int i = 0; i < SIZE; i += 1) {
 			this.modules[i] = null;
 		}
 		loadModules();
@@ -48,8 +48,8 @@ public class ModuleList {
 	 * @throws IndexOutOfBoundsException if code is not between 1-190
 	 */
 	public Module getModule(final int code) {
-		if (code < 1 || code > 190) {
-			throw new IndexOutOfBoundsException(this.invalid);
+		if (code < 1 || code >= SIZE) {
+			throw new IndexOutOfBoundsException(invalid);
 		}
 		
 		return this.modules[code];
@@ -65,7 +65,7 @@ public class ModuleList {
 			throw new IllegalArgumentException("Module with code:" + Integer.toString(module.getCode()) + " already exists");
 		}
 		
-		for (int i = 1; i < this.SIZE; i += 1) {
+		for (int i = 1; i < SIZE; i += 1) {
 			if (this.modules[i] != null && 
 				this.modules[i].getXCoord() == module.getXCoord() &&
 				this.modules[i].getYCoord() == module.getYCoord() ) {
@@ -73,35 +73,37 @@ public class ModuleList {
 			}
 		}
 		
-		if (module.getType().equals(Module.Type.PLAIN)){
-			this.plain += 1;
-		}
-		else if (module.getType().equals(Module.Type.DORMITORY)){
-			this.dormitory += 1;
-		}
-		else if (module.getType().equals(Module.Type.SANITATION)){
-			this.sanitation += 1;
-		}
-		else if (module.getType().equals(Module.Type.FOOD_WATER)){
-			this.water += 1;
-		}
-		else if (module.getType().equals(Module.Type.GYM_RELAXATION)){
-			this.gym += 1;
-		}
-		else if (module.getType().equals(Module.Type.CANTEEN)){
-			this.canteen += 1;
-		}
-		else if (module.getType().equals(Module.Type.POWER)){
-			this.power += 1;
-		}
-		else if (module.getType().equals(Module.Type.CONTROL)){
-			this.control += 1;
-		}
-		else if (module.getType().equals(Module.Type.MEDICAL)){
-			this.medical += 1;
-		}
-		else if (module.getType().equals(Module.Type.AIRLOCK)) {
-			this.airlock += 1;
+		if (!module.getStatus().equals(Module.DAMAGED)) {
+			if (module.getType().equals(Module.Type.PLAIN)){
+				this.plain += 1;
+			}
+			else if (module.getType().equals(Module.Type.DORMITORY)){
+				this.dormitory += 1;
+			}
+			else if (module.getType().equals(Module.Type.SANITATION)){
+				this.sanitation += 1;
+			}
+			else if (module.getType().equals(Module.Type.FOOD_WATER)){
+				this.water += 1;
+			}
+			else if (module.getType().equals(Module.Type.GYM_RELAXATION)){
+				this.gym += 1;
+			}
+			else if (module.getType().equals(Module.Type.CANTEEN)){
+				this.canteen += 1;
+			}
+			else if (module.getType().equals(Module.Type.POWER)){
+				this.power += 1;
+			}
+			else if (module.getType().equals(Module.Type.CONTROL)){
+				this.control += 1;
+			}
+			else if (module.getType().equals(Module.Type.MEDICAL)){
+				this.medical += 1;
+			}
+			else if (module.getType().equals(Module.Type.AIRLOCK)) {
+				this.airlock += 1;
+			}
 		}
 		
 		this.modules[module.getCode()] = module;
@@ -115,8 +117,8 @@ public class ModuleList {
 	 * @throws IndexOutOfBoundsException if code is not between 1-190
 	 */
 	public void deleteModule(final int code) {
-		if (code < 1 || code > 190) {
-			throw new IndexOutOfBoundsException(this.invalid);
+		if (code < 1 || code >= SIZE) {
+			throw new IndexOutOfBoundsException(invalid);
 		} else if (this.modules[code] == null) {
 			throw new IllegalArgumentException("Module does not exists");
 		}
@@ -124,7 +126,7 @@ public class ModuleList {
 		this.modules[code] = null;
 		
 		Storage store = Storage.getLocalStorageIfSupported();
-		final String key = "MHCS.Module." + Integer.toString(code);
+		final String key = KEY + Integer.toString(code);
 		
 		if (store != null) {
 			store.removeItem(key);
@@ -180,8 +182,8 @@ public class ModuleList {
 		store = Storage.getLocalStorageIfSupported();
 		
 		if (store != null) {
-			for (int i = 1; i <= 190; i += 1) {
-				String key = "MHCS.Module." + Integer.toString(i);
+			for (int i = 1; i < SIZE; i += 1) {
+				String key = KEY + Integer.toString(i);
 				String value = store.getItem(key);
 				
 				if (value != null) {
@@ -231,7 +233,7 @@ public class ModuleList {
 							 Integer.toString(module.getTurns()) + ",X:" +
 							 Integer.toString(module.getXCoord()) + ",Y:" +
 							 Integer.toString(module.getYCoord()) + "}]";
-		final String key = "MHCS.Module." + Integer.toString(module.getCode());
+		final String key = KEY + Integer.toString(module.getCode());
 		
 		if (store != null) {
 			store.setItem(key, value);

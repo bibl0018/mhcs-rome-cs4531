@@ -24,13 +24,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class AddModulePopup extends PopupPanel {
 
-	final private ModuleList moduleList;
-	final private int space = 5;
-	final private String WIDTH= "10em";
-	final private String listBoxWidth = "11em";
-	final private String zeroTurns = "0 TURNS NEEDED";
-	final private String oneTurns = "1 TURN NEEDED";
-	final private String twoTurns = "2 TURNS NEEDED";
+	private static final int MAIN_SPACE = 5;
+	private static final int BUTTON_SPACE = 10;
+	private static final String WIDTH= "10em";
+	private static final String LIST_BOX_WIDTH = "11em";
+	private static final String ZERO_TURNS = "0 TURNS NEEDED";
+	private static final String ONE_TURN = "1 TURN NEEDED";
+	private static final String TWO_TURNS = "2 TURNS NEEDED";
 	
 	/**
 	 * Constructor for Popup. Creates a horizontal panel for each set of
@@ -39,8 +39,6 @@ public class AddModulePopup extends PopupPanel {
 	public AddModulePopup(final ModuleList modules, final SimpleEventBus bus) {
 		super(true);
 		
-		this.moduleList = modules;
-		
 		// Creates a title for the popup.
 		final Label title = new Label("Enter Module Details");
 		
@@ -48,7 +46,7 @@ public class AddModulePopup extends PopupPanel {
 		final HorizontalPanel codePanel = new HorizontalPanel();
 		final Label codeLabel = new Label("Module Code:");
 		final TextBox codeBox = new TextBox();
-		codeBox.setWidth(this.WIDTH);
+		codeBox.setWidth(WIDTH);
 		codePanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		codePanel.add(codeLabel);
 		codePanel.add(codeBox);
@@ -61,8 +59,8 @@ public class AddModulePopup extends PopupPanel {
 		final Label yLabel = new Label("Y:");
 		final TextBox xBox = new TextBox();
 		final TextBox yBox = new TextBox();
-		xBox.setWidth(this.WIDTH);
-		yBox.setWidth(this.WIDTH);
+		xBox.setWidth(WIDTH);
+		yBox.setWidth(WIDTH);
 		xCoordPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		yCoordPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		xCoordPanel.add(xLabel);
@@ -77,7 +75,7 @@ public class AddModulePopup extends PopupPanel {
 		statusBox.addItem("UNDAMAGED");
 		statusBox.addItem("DAMAGED");
 		statusBox.addItem("UNCERTAIN");
-		statusBox.setWidth(this.listBoxWidth);
+		statusBox.setWidth(LIST_BOX_WIDTH);
 		statusPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		statusPanel.add(statusLabel);
 		statusPanel.add(statusBox);
@@ -86,10 +84,10 @@ public class AddModulePopup extends PopupPanel {
 		final HorizontalPanel turnPanel = new HorizontalPanel();
 		final Label turnLabel = new Label("Orientation:");
 		final ListBox turnBox = new ListBox();
-		turnBox.addItem(this.zeroTurns);
-		turnBox.addItem(this.oneTurns);
-		turnBox.addItem(this.twoTurns);
-		turnBox.setWidth(this.listBoxWidth);
+		turnBox.addItem(ZERO_TURNS);
+		turnBox.addItem(ONE_TURN);
+		turnBox.addItem(TWO_TURNS);
+		turnBox.setWidth(LIST_BOX_WIDTH);
 		turnPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		turnPanel.add(turnLabel);
 		turnPanel.add(turnBox);
@@ -100,7 +98,7 @@ public class AddModulePopup extends PopupPanel {
 		final Button cancelButton = new Button("Cancel");
 		buttonPanel.add(addButton);
 		buttonPanel.add(cancelButton);
-		buttonPanel.setSpacing(10);
+		buttonPanel.setSpacing(BUTTON_SPACE);
 		
 		// Add button click handler. 
 		addButton.addClickHandler(new ClickHandler() {
@@ -115,9 +113,9 @@ public class AddModulePopup extends PopupPanel {
 					int turns;
 				
 				
-					if (turnBox.getItemText(turnBox.getSelectedIndex()).equals(zeroTurns)) {
+					if (turnBox.getItemText(turnBox.getSelectedIndex()).equals(ZERO_TURNS)) {
 						turns = 0;
-					} else if (turnBox.getItemText(turnBox.getSelectedIndex()).equals(oneTurns)) {
+					} else if (turnBox.getItemText(turnBox.getSelectedIndex()).equals(ONE_TURN)) {
 						turns = 1;
 					} else {
 						turns = 2;
@@ -126,7 +124,7 @@ public class AddModulePopup extends PopupPanel {
 					// Tries creating a module from the input given by the user. A alert window appears if an exception is thrown.
 				
 					Module module = new Module(code, xCoord, yCoord, turns, statusBox.getItemText(statusBox.getSelectedIndex()));			
-					moduleList.addModule(module);
+					modules.addModule(module);
 				}
 				catch (IndexOutOfBoundsException e) {
 					Window.alert(e.getMessage());
@@ -165,7 +163,7 @@ public class AddModulePopup extends PopupPanel {
 		
 		mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		mainPanel.add(buttonPanel);
-		mainPanel.setSpacing(this.space);
+		mainPanel.setSpacing(MAIN_SPACE);
 		
 		
 		setWidget(mainPanel);

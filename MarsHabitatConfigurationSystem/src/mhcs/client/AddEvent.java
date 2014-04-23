@@ -6,13 +6,17 @@ public class AddEvent extends GwtEvent<AddEventHandler> {
 
 	public static Type<AddEventHandler> TYPE = new Type<AddEventHandler>();
 
+	public AddEvent() {
+		
+	}
+	
 	@Override
 	public Type<AddEventHandler> getAssociatedType() {
 		return TYPE;
 	}
 
 	@Override
-	protected void dispatch(AddEventHandler handler) {
+	protected void dispatch(final AddEventHandler handler) {
 		handler.onEvent(this);
 	}
 	

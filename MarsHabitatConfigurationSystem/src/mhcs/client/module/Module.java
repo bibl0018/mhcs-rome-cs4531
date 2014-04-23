@@ -6,9 +6,29 @@ package mhcs.client.module;
  */
 public class Module {
 
-	public static String UNDAMAGED = "UNDAMAGED";
-	public static String DAMAGED = "DAMAGED";
-	public static String UNCERTAIN = "UNCERTAIN";
+	public static final String UNDAMAGED = "UNDAMAGED";
+	public static final String REPAIRABLE = "REPAIRABLE";
+	public static final String DAMAGED = "DAMAGED";
+	public static final int SIZE = 190;
+	public static final int PLAIN_UPPER = 40;
+	public static final int DORM_LOWER = 60;
+	public static final int DORM_UPPER = 80;
+	public static final int SAN_LOWER = 90;
+	public static final int SAN_UPPER = 100;
+	public static final int FOOD_LOWER = 110;
+	public static final int FOOD_UPPER = 120;
+	public static final int GYM_LOWER = 130;
+	public static final int GYM_UPPER = 134;
+	public static final int CANTEEN_LOWER = 140;
+	public static final int CANTEEN_UPPER = 144;
+	public static final int POWER_LOWER = 150;
+	public static final int POWER_UPPER = 154;
+	public static final int CONTROL_LOWER = 160;
+	public static final int CONTROL_UPPER = 164;
+	public static final int AIRLOCK_LOWER = 170;
+	public static final int AIRLOCK_UPPER = 174;
+	public static final int MEDICAL_LOWER = 180;
+	public static final int MEDICAL_UPPER = 184;
 	
 	private int code;
 	private int xCoord;
@@ -29,7 +49,7 @@ public class Module {
 	public Module(final int newCode, final int xcoord, final int ycoord, final int newTurns, final String newStatus) {
 
 		// Checks that each parameter is within its range
-		if (newCode < 1 || newCode > 190) {
+		if (newCode < 1 || newCode > SIZE) {
 			throw new IndexOutOfBoundsException("Invalid module code");
 		} else if (newTurns < 0 || newTurns > 2) {
 			throw new IndexOutOfBoundsException("Invalid turns value");
@@ -42,25 +62,25 @@ public class Module {
 		this.status = newStatus;
 
 		// Sets the type based on the code
-		if (this.code > 0 && this.code <= 40) {
+		if (this.code > 0 && this.code <= PLAIN_UPPER) {
 			this.type = Type.PLAIN;
-		} else if (this.code > 60 && this.code <= 80) {
+		} else if (this.code > DORM_LOWER && this.code <= DORM_UPPER) {
 			this.type = Type.DORMITORY;
-		} else if (this.code > 90 && this.code <= 100) {
+		} else if (this.code > SAN_LOWER && this.code <= SAN_UPPER) {
 			this.type = Type.SANITATION;
-		} else if (this.code > 110 && this.code <= 120) {
+		} else if (this.code > FOOD_LOWER && this.code <= FOOD_UPPER) {
 			this.type = Type.FOOD_WATER;
-		} else if (this.code > 130 && this.code <= 134) {
+		} else if (this.code > GYM_LOWER && this.code <= GYM_UPPER) {
 			this.type = Type.GYM_RELAXATION;
-		} else if (this.code > 140 && this.code <= 144) {
+		} else if (this.code > CANTEEN_LOWER && this.code <= CANTEEN_UPPER) {
 			this.type = Type.CANTEEN;
-		} else if (this.code > 150 && this.code <= 154) {
+		} else if (this.code > POWER_LOWER && this.code <= POWER_UPPER) {
 			this.type = Type.POWER;
-		} else if (this.code > 160 && this.code <= 164) {
+		} else if (this.code > CONTROL_LOWER && this.code <= CONTROL_UPPER) {
 			this.type = Type.CONTROL;
-		} else if (this.code > 170 && this.code <= 174) {
+		} else if (this.code > AIRLOCK_LOWER && this.code <= AIRLOCK_UPPER) {
 			this.type = Type.AIRLOCK;
-		} else if (this.code > 180 && this.code <= 184) {
+		} else if (this.code > MEDICAL_LOWER && this.code <= MEDICAL_UPPER) {
 			this.type = Type.MEDICAL;
 		} else {
 			throw new IndexOutOfBoundsException("Invalid module code; Type not yet determined");
