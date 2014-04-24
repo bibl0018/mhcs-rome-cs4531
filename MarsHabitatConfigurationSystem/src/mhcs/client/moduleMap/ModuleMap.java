@@ -21,6 +21,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class ModuleMap implements IsWidget{
 	ModuleList modList;
 	
+	public static final int ROWS = 50;
+	public static final int COLUMNS = 100;
+	public static final int IMAGE_SIZE = 12;
+	
 	/**
 	 * Default constructor of a module map.
 	 */
@@ -34,14 +38,14 @@ public class ModuleMap implements IsWidget{
 	 * @return 
 	 */
 	public Widget asWidget(){
-		Grid g = new Grid(50,50);
+		Grid g = new Grid(ROWS, COLUMNS);
 		int xCoord;
 		int yCoord;
 		
 		//Set the height and width of each cell in the grid,
 		//can be changed if we need to fit it on a smaller screen.
-	    for(xCoord = 0; xCoord < 50; ++xCoord){
-	    	for(yCoord = 0; yCoord < 50; ++yCoord){
+	    for(xCoord = 0; xCoord < ROWS; ++xCoord){
+	    	for(yCoord = 0; yCoord < COLUMNS; ++yCoord){
 	    		
 	    		//Sets the default size for all cells.
 	    		g.getCellFormatter().setStyleName(xCoord,yCoord,"tableCell");
@@ -85,57 +89,56 @@ public class ModuleMap implements IsWidget{
 		//Detects module type, changes image and image size at coordinate accordingly.
 		if (module.getType().equals(Module.Type.PLAIN)){
 			Image image = new Image("images/Plain.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.DORMITORY)){
 			Image image = new Image("images/Dormitory.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.SANITATION)){
 			Image image = new Image("images/Sanitation.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.FOOD_WATER)){
 			Image image = new Image("images/Food.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.GYM_RELAXATION)){
 			Image image = new Image("images/Gym.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.CANTEEN)){
 			Image image = new Image("images/Canteen.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.POWER)){
 			Image image = new Image("images/Power.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.CONTROL)){
 			Image image = new Image("images/Control.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.MEDICAL)){
 			Image image = new Image("images/Medical.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.AIRLOCK)){
 			Image image = new Image("images/Airlock.jpg");
-			image.setPixelSize(50, 50);
+			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		return g;
 		
 	}
-	
 	
 }

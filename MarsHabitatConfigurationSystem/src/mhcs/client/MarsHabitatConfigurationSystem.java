@@ -4,6 +4,7 @@ import mhcs.client.gui.AddModulePopup;
 import mhcs.client.gui.Login;
 import mhcs.client.gui.TenDayAlert;
 import mhcs.client.module.ModuleList;
+import mhcs.client.moduleConfigurations.ConfigurationMap;
 import mhcs.client.moduleMap.ModuleMap;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -26,8 +27,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
 
-	private String width = "995px";
-	private String height = "650px";
+	private String width = "1200px";
+	private String height = "720px";
 
 	public MarsHabitatConfigurationSystem() {
 
@@ -106,10 +107,15 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		menu.addItem("Menu", theMenu);
 		menu.setWidth(this.width);
 
+		/**
+		 * Added a configuration map to the first tab.
+		 */
+		final ConfigurationMap configMap = new ConfigurationMap(modList);
+		
 		// Creates the tabs for the various configurations and module map.
 		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
 		configTabs.add(modMap, MODULE_MAP_STRING);
-		configTabs.add(new HTML(""), "1");
+		configTabs.add(configMap, "1");
 		configTabs.add(new HTML(""), "2");
 		configTabs.add(new HTML(""), "3");
 		configTabs.add(new HTML(""), "4");
