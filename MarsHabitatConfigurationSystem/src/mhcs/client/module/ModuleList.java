@@ -73,7 +73,9 @@ public class ModuleList {
 			}
 		}
 		
-		if (!module.getStatus().equals(Module.DAMAGED)) {
+		// Module is not damaged and does not lie out of the landing zone the number of
+		// usable modules is incremented.
+		if (!module.getStatus().equals(Module.DAMAGED) ) {
 			if (module.getType().equals(Module.Type.PLAIN)){
 				this.plain += 1;
 			}

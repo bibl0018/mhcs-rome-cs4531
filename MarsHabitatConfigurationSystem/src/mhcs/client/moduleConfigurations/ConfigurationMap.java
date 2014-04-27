@@ -2,13 +2,17 @@ package mhcs.client.moduleConfigurations;
 
 import mhcs.client.module.Module.Type;
 import mhcs.client.module.ModuleList;
+import mhcs.client.moduleConfigurations.ModuleConfiguration.Coordinates;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 
-public class ConfigurationMap implements IsWidget {
+/**
+ * Calculates the full configuration of the mars habitat when given a module list.
+ * Also stores the two minimum configurations.
+ * @author Ryan Stowell
+ */
+public class ConfigurationMap {
 
 	public static final int CENTER = 12;
 	public static final int SIZE = 25;
@@ -34,11 +38,24 @@ public class ConfigurationMap implements IsWidget {
 	public static final int EIGHTEEN = 18;
 	public static final int NINETEEN = 19;
 	
+	public static final int ROWS = 50;
+	public static final int COLUMNS = 100;
+	public static final int IMAGE_SIZE = 12;
+	public static final String STYLE = "tableCell";
+	
+	/**
+	 * Default constructor of a module map.
+	 */
+	public ConfigurationMap(){
+
+	}
+	
 	//Function for constructing a configuration. This will probably not be in this class.
-	public Type[][] calculateConfiguration(final ModuleList modules) {
+	public ModuleConfiguration calculateConfiguration(final ModuleList modules) {
 		
 		Type[][] config = new Type[SIZE][SIZE];
-		modules.populateList();
+		// For testing, fills module list with every module
+		// modules.populateList();
 		int plain = modules.getNumOfPlain();
 		int airlock = modules.getNumOfAirlock();
 		int power = modules.getNumOfPower();
@@ -53,6 +70,13 @@ public class ConfigurationMap implements IsWidget {
 		int southTip = 0;
 		int eastTip = 0;
 		int westTip = 0;
+		
+		// Check for minimum module requirement
+		// 1 Airlock, 1 Control, 1 Power, 1 Food & water storage, 1 Dormitory, 1 Canteen, 1 Sanitation, and 3 Plain.
+		if (airlock < 1 || control < 1 || power < 1 || water < 1 || dormitory < 1 || canteen < 1 ||
+			sanitation < 1 || plain < THREE) {
+			return null;
+		}
 		
 		/*
 		 * Places all modules in this formation:
@@ -163,7 +187,7 @@ public class ConfigurationMap implements IsWidget {
 			} else if (i == TWO && (southTip + 1) < CENTER){
 				config[southTip + 1][CENTER + 1] = Type.POWER;
 			} else if (i == THREE && (westTip + 1) > WEST_LIMIT) {
-				config[CENTER + 1][westTip + 1] = Type.POWER;
+				config[CENTER - 1][westTip + 1] = Type.POWER;
 			}
 		}
 		
@@ -210,11 +234,11 @@ public class ConfigurationMap implements IsWidget {
 			if (i == 0 && (northTip - 2) > CENTER) {
 				config[northTip - 2][CENTER + 1] = Type.GYM_RELAXATION;
 			} else if (i == 1 && (eastTip - SIX) > EAST_LIMIT){
-				config[CENTER - 1][eastTip - SIX] = Type.GYM_RELAXATION;
+				config[CENTER + 1][eastTip - SIX] = Type.GYM_RELAXATION;
 			} else if (i == TWO && (southTip + 2) < CENTER){
 				config[southTip + 2][CENTER - 1] = Type.GYM_RELAXATION;
 			} else if (i == THREE && (westTip + SIX) < WEST_LIMIT) {
-				config[CENTER - 1][westTip + SIX] = Type.GYM_RELAXATION;
+				config[CENTER + 1][westTip + SIX] = Type.GYM_RELAXATION;
 			}
 		}
 		
@@ -270,7 +294,7 @@ public class ConfigurationMap implements IsWidget {
 			} else if (i == ELEVEN && (eastTip - FIVE) > EAST_LIMIT) {
 				config[CENTER - 1][eastTip - FIVE] = Type.DORMITORY;
 			} else if (i == TWELVE && (northTip - FIVE) > CENTER){
-				config[northTip - FIVE][CENTER - 1] = Type.DORMITORY;
+				config[northTip - FIVE][CENTER + 1] = Type.DORMITORY;
 			} else if (i == THIRTEEN && (southTip + FIVE) < CENTER) {
 				config[southTip + FIVE][CENTER - 1] = Type.DORMITORY;
 			} else if (i == FOURTEEN && (northTip - SIX) > CENTER){
@@ -286,31 +310,51 @@ public class ConfigurationMap implements IsWidget {
 			} else if (i == NINETEEN && (southTip + SEVEN) < CENTER) {
 				config[southTip + SEVEN][CENTER - 1] = Type.DORMITORY;
 			}
-		}	
+		}
 		
-		return config;
+		// Place calculated configuration into a ModuleConfiguration object.
+		ModuleConfiguration configuration = new ModuleConfiguration();
+		for (int i = 0; i < SIZE; i += 1) {
+			for (int k = 0; k < SIZE; k += 1) {
+				Type type = config[i][k];
+				
+				if (type.equals(Type.AIRLOCK)) {
+					configuration.addAirlock(i, k);
+				} else if (type.equals(Type.CANTEEN)) {
+					configuration.addCanteen(i, k);
+				} else if (type.equals(Type.CONTROL)) {
+					configuration.addControl(i, k);
+				} else if (type.equals(Type.DORMITORY)) {
+					configuration.addDormitory(i, k);
+				} else if (type.equals(Type.FOOD_WATER)) {
+					configuration.addFoodAndWater(i, k);
+				} else if (type.equals(Type.GYM_RELAXATION)) {
+					configuration.addGymAndRelaxation(i, k);
+				} else if (type.equals(Type.MEDICAL)) {
+					configuration.addMedical(i, k);
+				} else if (type.equals(Type.PLAIN)) {
+					configuration.addPlain(i, k);
+				} else if (type.equals(Type.POWER)) {
+					configuration.addPower(i, k);
+				} else if (type.equals(Type.SANITATION)) {
+					configuration.addSanitation(i, k);
+				}
+			}
+		}
+
+		return configuration;
 	}
 
-	
-	private final ModuleList modList;
-	
-	public static final int ROWS = 50;
-	public static final int COLUMNS = 100;
-	public static final int IMAGE_SIZE = 12;
-	
-	/**
-	 * Default constructor of a module map.
-	 */
-	public ConfigurationMap(ModuleList moduleList){
-		modList = moduleList;
-	}
-	
 	/**
 	 * Constructs the grid and loads all modules on to the grid.
-	 * @param moduleList The list of pre-sorted modules.
-	 * @return 
+	 * @param config A module configuration that will be loaded to the grid.
+	 * @return The module configuration as a Grid.
 	 */
-	public Widget asWidget() {
+	public Grid getConfigurationGrid(final ModuleConfiguration config) {
+		if (config == null) {
+	    	return null;
+	    }
+		
 		Grid g = new Grid(ROWS, COLUMNS);
 		int xCoord;
 		int yCoord;
@@ -321,26 +365,62 @@ public class ConfigurationMap implements IsWidget {
 	    	for(yCoord = 0; yCoord < COLUMNS; ++yCoord){
 	    		
 	    		//Sets the default size for all cells.
-	    		g.getCellFormatter().setStyleName(xCoord,yCoord,"tableCell");
+	    		g.getCellFormatter().setStyleName(xCoord, yCoord, STYLE);
 	    	}
 	    }
 		
-	    Type[][] config = calculateConfiguration(modList);
-		//For every type in the configuration
-		for(int i = 0; i < 25; i++ ) {
-			for (int k = 0; k < 25; k++) {
-				
-				
-				//Passes the module and coordinates into the setImage function, 
-				//which will change the image at the correct grid coordinate then 
-				//return a new grid with the image changed.
-				g = setImage(g, i, k, config[i][k]);
-				
-				//Resizes the cell after the image has been placed.
-				g.getCellFormatter().setStyleName(i, k, "tableCell");						
-			}
-		}
-		
+	    
+	    for (int i = 0; i < config.airlockModules.size(); i += 1) {
+	    	Coordinates coord = config.airlockModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.AIRLOCK);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.canteenModules.size(); i += 1) {
+	    	Coordinates coord = config.canteenModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.CANTEEN);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.controlModules.size(); i += 1) {
+	    	Coordinates coord = config.controlModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.CONTROL);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.dormitoryModules.size(); i += 1) {
+	    	Coordinates coord = config.dormitoryModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.DORMITORY);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.foodAndWaterModules.size(); i += 1) {
+	    	Coordinates coord = config.foodAndWaterModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.FOOD_WATER);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.gymAndRelaxationModules.size(); i += 1) {
+	    	Coordinates coord = config.gymAndRelaxationModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.GYM_RELAXATION);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.medicalModules.size(); i += 1) {
+	    	Coordinates coord = config.medicalModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.MEDICAL);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.plainModules.size(); i += 1) {
+	    	Coordinates coord = config.plainModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.PLAIN);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.powerModules.size(); i += 1) {
+	    	Coordinates coord = config.powerModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.POWER);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    for (int i = 0; i < config.sanitationModules.size(); i += 1) {
+	    	Coordinates coord = config.sanitationModules.get(i);
+	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.SANITATION);	
+			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    }
+	    
 		//RootPanel.get().add(g);
 		return g;		
 	}
@@ -354,7 +434,7 @@ public class ConfigurationMap implements IsWidget {
 	 * @param module The module to be added to the grid.
 	 * @return g A copy of the previous grid with the new module added.
 	 */
-	public Grid setImage(Grid g, int row, int col, Type type){
+	public Grid setImage(final Grid g, final int row, final int col, final Type type){
 		
 		//Detects module type, changes image and image size at coordinate accordingly.
 		if (type != null) {
@@ -410,6 +490,5 @@ public class ConfigurationMap implements IsWidget {
 			}
 		}
 		return g;
-		
 	}
 }

@@ -12,11 +12,13 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Creates the GUI for the MHCS.
@@ -29,7 +31,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 	private String width = "1200px";
 	private String height = "720px";
-
+	
 	public MarsHabitatConfigurationSystem() {
 
 	}
@@ -39,7 +41,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the module list.
 		final ModuleList modList = new ModuleList();
-
+		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
+		
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize(this.width, this.height);
@@ -87,6 +90,21 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				});
 			}
 		};
+		
+		// Command to calculate full configurations and add to new tabs.
+		Command configurationCmd = new Command() {
+			public void execute() {
+				final ConfigurationMap configMap = new ConfigurationMap();
+				final Grid map = configMap.getConfigurationGrid(configMap.calculateConfiguration(modList));
+				if (map != null) {
+					
+					configTabs.add(map, "Full Configuration");
+					configTabs.selectTab(1);
+				} else {
+					Window.alert("Minimum module requirements not met!");
+				}
+			}
+		};
 
 		// Creates the module map.
 		final ModuleMap modMap = new ModuleMap(modList);
@@ -96,7 +114,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		theMenu.setAnimationEnabled(true);
 		theMenu.addItem("Add Module", addModulePopupCmd);
 		theMenu.addItem("Minumum Resource Path", cmd);
-		theMenu.addItem("Calculate Habitats", cmd);
+		theMenu.addItem("Calculate Habitats", configurationCmd);
 		theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
 		theMenu.addSeparator();
 		theMenu.addItem("Log off", loginCmd);
@@ -107,18 +125,12 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		menu.addItem("Menu", theMenu);
 		menu.setWidth(this.width);
 
-		/**
-		 * Added a configuration map to the first tab.
-		 */
-		final ConfigurationMap configMap = new ConfigurationMap(modList);
-		
 		// Creates the tabs for the various configurations and module map.
-		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
 		configTabs.add(modMap, MODULE_MAP_STRING);
-		configTabs.add(configMap, "1");
-		configTabs.add(new HTML(""), "2");
-		configTabs.add(new HTML(""), "3");
-		configTabs.add(new HTML(""), "4");
+//		configTabs.add(configMap, "1");
+//		configTabs.add(new HTML(""), "2");
+//		configTabs.add(new HTML(""), "3");
+//		configTabs.add(new HTML(""), "4");
 		configTabs.setHeight(this.height);
 		configTabs.setWidth(this.width);
 
