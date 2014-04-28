@@ -9,27 +9,26 @@ package mhcs.client.moduleMap;
 import mhcs.client.module.ModuleList;
 import mhcs.client.module.Module;
 
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 
 public class ModuleMap implements IsWidget{
-	ModuleList modList;
 	
 	public static final int ROWS = 50;
 	public static final int COLUMNS = 100;
 	public static final int IMAGE_SIZE = 12;
+	public static final String STYLE = "tableCell";
+	
+	private ModuleList modList;
 	
 	/**
 	 * Default constructor of a module map.
 	 */
-	public ModuleMap(ModuleList moduleList){
-		modList = moduleList;
+	public ModuleMap(final ModuleList moduleList){
+		this.modList = moduleList;
 	}
 	
 	/**
@@ -48,13 +47,13 @@ public class ModuleMap implements IsWidget{
 	    	for(yCoord = 0; yCoord < COLUMNS; ++yCoord){
 	    		
 	    		//Sets the default size for all cells.
-	    		g.getCellFormatter().setStyleName(xCoord,yCoord,"tableCell");
+	    		g.getCellFormatter().setStyleName(xCoord, yCoord, STYLE);
 	    	}
 	    }
 		
 		//For every module in the module list
-		for(int i = 1; i < 191; i++ ){
-			Module module = modList.getModule(i);
+		for(int i = 1; i < Module.SIZE; i += 1 ){
+			Module module = this.modList.getModule(i);
 			
 			//If module is actually a module and not just an empty space.
 			if(module != null){
@@ -67,7 +66,7 @@ public class ModuleMap implements IsWidget{
 				g = setImage(g, xCoord, yCoord, module);
 				
 				//Resizes the cell after the image has been placed.
-				g.getCellFormatter().setStyleName(xCoord,yCoord,"tableCell");						
+				g.getCellFormatter().setStyleName(xCoord, yCoord, STYLE);						
 			}	
 		}
 		
@@ -84,7 +83,7 @@ public class ModuleMap implements IsWidget{
 	 * @param module The module to be added to the grid.
 	 * @return g A copy of the previous grid with the new module added.
 	 */
-	public Grid setImage(Grid g, int row, int col, Module module){
+	public Grid setImage(final Grid g, final int row, final int col, final Module module){
 		
 		//Detects module type, changes image and image size at coordinate accordingly.
 		if (module.getType().equals(Module.Type.PLAIN)){

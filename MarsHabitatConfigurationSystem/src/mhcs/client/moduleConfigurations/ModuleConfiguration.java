@@ -7,9 +7,6 @@ package mhcs.client.moduleConfigurations;
 
 import java.util.ArrayList;
 
-import mhcs.client.module.Module;
-import mhcs.client.module.Module.Type;
-
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -19,6 +16,10 @@ import com.google.gwt.storage.client.Storage;
 
 
 public class ModuleConfiguration{
+	
+	private static final String KEY = "MHCS.Configuration.";
+	private static final String COMMA_Y = ",Y:";
+	private static final String END_BRACKET = "},";
 	
 	/**
 	 * An array list for each module type. This allows Array List 
@@ -35,21 +36,20 @@ public class ModuleConfiguration{
 	public ArrayList<Coordinates> airlockModules;
 	public ArrayList<Coordinates> medicalModules;
 
-	private static final String KEY = "MHCS.Configuration.";
 	/**
 	 * Default constructor.
 	 */
 	public ModuleConfiguration(){
-		plainModules = new ArrayList();
-		dormitoryModules = new ArrayList();
-		sanitationModules = new ArrayList();
-		controlModules = new ArrayList();
-		foodAndWaterModules = new ArrayList();
-		gymAndRelaxationModules = new ArrayList();
-		canteenModules = new ArrayList();
-		powerModules = new ArrayList();
-		airlockModules = new ArrayList();
-		medicalModules = new ArrayList();
+		this.plainModules = new ArrayList<Coordinates>();
+		this.dormitoryModules = new ArrayList<Coordinates>();
+		this.sanitationModules = new ArrayList<Coordinates>();
+		this.controlModules = new ArrayList<Coordinates>();
+		this.foodAndWaterModules = new ArrayList<Coordinates>();
+		this.gymAndRelaxationModules = new ArrayList<Coordinates>();
+		this.canteenModules = new ArrayList<Coordinates>();
+		this.powerModules = new ArrayList<Coordinates>();
+		this.airlockModules = new ArrayList<Coordinates>();
+		this.medicalModules = new ArrayList<Coordinates>();
 	}
 	
 	/**
@@ -57,52 +57,52 @@ public class ModuleConfiguration{
 	 * @param x The X coordinate.
 	 * @param y The Y coordinate.
 	 */
-	public void addPlain(int x, int y){
+	public void addPlain(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.plainModules.add(coord);
 	}
 	
-	public void addDormitory(int x, int y){
+	public void addDormitory(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.dormitoryModules.add(coord);
 	}
 	
-	public void addSanitation(int x, int y){
+	public void addSanitation(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.sanitationModules.add(coord);
 	}
 	
-	public void addControl(int x, int y){
+	public void addControl(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.controlModules.add(coord);
 	}
 	
-	public void addFoodAndWater(int x, int y){
+	public void addFoodAndWater(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.foodAndWaterModules.add(coord);
 	}
 	
-	public void addGymAndRelaxation(int x, int y){
+	public void addGymAndRelaxation(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.gymAndRelaxationModules.add(coord);
 	}
 	
-	public void addCanteen(int x, int y){
+	public void addCanteen(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.canteenModules.add(coord);
 	}
 	
-	public void addPower(int x, int y){
+	public void addPower(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.powerModules.add(coord);
 	}
 	
-	public void addAirlock(int x, int y){
+	public void addAirlock(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.airlockModules.add(coord);
 	}
 	
-	public void addMedical(int x, int y){
+	public void addMedical(final int x, final int y){
 		Coordinates coord = new Coordinates(x,y);
 		this.medicalModules.add(coord);
 	}
@@ -116,9 +116,9 @@ public class ModuleConfiguration{
 		int xCoord;
 		int yCoord;
 		
-		public Coordinates(int x, int y){
-			xCoord = x;
-			yCoord = y;
+		public Coordinates(final int x, final int y){
+			this.xCoord = x;
+			this.yCoord = y;
 		}
 	}	
 	
@@ -136,43 +136,43 @@ public class ModuleConfiguration{
 		
 		for (int i = 0; i < this.airlockModules.size(); i += 1) {
 			value = value + "{type:\"airlock\",X:" + Integer.toString(this.airlockModules.get(i).xCoord) +
-							",Y:" + Integer.toString(this.airlockModules.get(i).yCoord) + "},";
+							COMMA_Y + Integer.toString(this.airlockModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.canteenModules.size(); i += 1) {
 	    	value = value + "{type:\"canteen\",X:" + Integer.toString(this.canteenModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.canteenModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.canteenModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.controlModules.size(); i += 1) {	
 	    	value = value + "{type:\"control\",X:" + Integer.toString(this.controlModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.controlModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.controlModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.dormitoryModules.size(); i += 1) {
 	    	value = value + "{type:\"dormitory\",X:" + Integer.toString(this.dormitoryModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.dormitoryModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.dormitoryModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.foodAndWaterModules.size(); i += 1) {
 	    	value = value + "{type:\"foodAndWater\",X:" + Integer.toString(this.foodAndWaterModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.foodAndWaterModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.foodAndWaterModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.gymAndRelaxationModules.size(); i += 1) {
 	    	value = value + "{type:\"gymAndRelaxation\",X:" + Integer.toString(this.gymAndRelaxationModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.gymAndRelaxationModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.gymAndRelaxationModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.medicalModules.size(); i += 1) {
 	    	value = value + "{type:\"medical\",X:" + Integer.toString(this.medicalModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.medicalModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.medicalModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.plainModules.size(); i += 1) {
 	    	value = value + "{type:\"plain\",X:" + Integer.toString(this.plainModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.plainModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.plainModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.powerModules.size(); i += 1) {
 	    	value = value + "{type:\"power\",X:" + Integer.toString(this.powerModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.powerModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.powerModules.get(i).yCoord) + END_BRACKET;
 	    }
 	    for (int i = 0; i < this.sanitationModules.size(); i += 1) {
 	    	value = value + "{type:\"sanitation\",X:" + Integer.toString(this.sanitationModules.get(i).xCoord) +
-					",Y:" + Integer.toString(this.sanitationModules.get(i).yCoord) + "},";
+					COMMA_Y + Integer.toString(this.sanitationModules.get(i).yCoord) + END_BRACKET;
 	    }
 		
 	    // Removes the final ',' placed by the loops.
