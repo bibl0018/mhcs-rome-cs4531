@@ -19,8 +19,10 @@ public class ModuleMap implements IsWidget{
 	
 	public static final int ROWS = 50;
 	public static final int COLUMNS = 100;
-	public static final int IMAGE_SIZE = 12;
+	public static final int HOR_IMAGE_SIZE = 12;
+	public static final int VER_IMAGE_SIZE = 12;
 	public static final String STYLE = "tableCell";
+	public static final String GRID_STYLE = "grid";
 	
 	private ModuleList modList;
 	
@@ -40,6 +42,8 @@ public class ModuleMap implements IsWidget{
 		Grid g = new Grid(ROWS, COLUMNS);
 		int xCoord;
 		int yCoord;
+		
+		g.setStyleName(GRID_STYLE);
 		
 		//Set the height and width of each cell in the grid,
 		//can be changed if we need to fit it on a smaller screen.
@@ -63,10 +67,10 @@ public class ModuleMap implements IsWidget{
 				//Passes the module and coordinates into the setImage function, 
 				//which will change the image at the correct grid coordinate then 
 				//return a new grid with the image changed.
-				g = setImage(g, xCoord, yCoord, module);
+				g = setImage(g, (ROWS - 1) - (yCoord - 1), xCoord - 1, module);
 				
 				//Resizes the cell after the image has been placed.
-				g.getCellFormatter().setStyleName(xCoord, yCoord, STYLE);						
+				//g.getCellFormatter().setStyleName(yCoord, xCoord, STYLE);						
 			}	
 		}
 		
@@ -88,52 +92,53 @@ public class ModuleMap implements IsWidget{
 		//Detects module type, changes image and image size at coordinate accordingly.
 		if (module.getType().equals(Module.Type.PLAIN)){
 			Image image = new Image("images/Plain.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
+			//image.setStyleName(STYLE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.DORMITORY)){
 			Image image = new Image("images/Dormitory.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.SANITATION)){
 			Image image = new Image("images/Sanitation.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.FOOD_WATER)){
 			Image image = new Image("images/Food.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.GYM_RELAXATION)){
 			Image image = new Image("images/Gym.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.CANTEEN)){
 			Image image = new Image("images/Canteen.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.POWER)){
 			Image image = new Image("images/Power.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.CONTROL)){
 			Image image = new Image("images/Control.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.MEDICAL)){
 			Image image = new Image("images/Medical.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		else if (module.getType().equals(Module.Type.AIRLOCK)){
 			Image image = new Image("images/Airlock.jpg");
-			image.setPixelSize(IMAGE_SIZE, IMAGE_SIZE);
+			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
 		}
 		return g;

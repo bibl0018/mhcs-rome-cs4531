@@ -64,7 +64,7 @@ public class Login extends PopupPanel {
 		panel.add(title);
 		panel.add(loginPanel);
 		panel.setSpacing(2);
-		panel.setSize("1200px", "750px");
+		panel.setSize("1300px", "930px");
 		panel.addStyleName("panel");
 		
 		setWidget(panel);

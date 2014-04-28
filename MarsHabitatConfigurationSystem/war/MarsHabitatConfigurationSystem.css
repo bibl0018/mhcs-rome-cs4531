@@ -29,7 +29,7 @@
 .gwt-TabLayoutPanel {
 	background-image: url("images/MarsModuleLandingArea.jpg");
 	background-repeat: no-repeat;
-	background-size: 1200px 720px;
+	background-size: 1200px 900px;
 }
 
 /** Example rules used by the template application (remove for your app) */
@@ -64,12 +64,16 @@ h1 {
 .tableCell{
 	border: 1px solid black;
 	height: 12px;
-	max-height: 12px;
 	width: 12px;
+	max-height: 12px;
 	max-width: 12px;
+	resize: none;
 }
 
-
+.grid {
+	width: 1200px;
+	height: 600px;
+}
 
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
