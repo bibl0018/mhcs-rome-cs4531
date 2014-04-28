@@ -16,6 +16,8 @@ public class ModuleList {
 	public static final int SIZE = 191;
 	public static final String invalid = "Invalid code parameter";
 	public static final String KEY = "MHCS.Module.";
+	public static final int LOWER_BOUND = 40;
+	public static final int UPPER_BOUND = 50;
 	
 	private Module[] modules;
 	private int plain;
@@ -73,9 +75,11 @@ public class ModuleList {
 			}
 		}
 		
-		// Module is not damaged and does not lie out of the landing zone the number of
+		// If Module is not damaged and does not lie out of the landing zone the number of
 		// usable modules is incremented.
-		if (!module.getStatus().equals(Module.DAMAGED) ) {
+		if (!module.getStatus().equals(Module.DAMAGED) || 
+		    (module.getXCoord() >= LOWER_BOUND && module.getXCoord() <= UPPER_BOUND && 
+		     module.getYCoord() >= LOWER_BOUND && module.getYCoord() <= UPPER_BOUND) ) {
 			if (module.getType().equals(Module.Type.PLAIN)){
 				this.plain += 1;
 			}
@@ -121,8 +125,6 @@ public class ModuleList {
 	public void deleteModule(final int code) {
 		if (code < 1 || code >= SIZE) {
 			throw new IndexOutOfBoundsException(invalid);
-		} else if (this.modules[code] == null) {
-			throw new IllegalArgumentException("Module does not exists");
 		}
 		
 		this.modules[code] = null;
@@ -243,8 +245,25 @@ public class ModuleList {
 	}
 	
 	/**
-	 * Fills the module list with every module. For testing the configuration map.
+	 * Clears the module list and local storage.
 	 */
+	public void clearList() {
+		
+		for (int i = 1; i < SIZE; i += 1) {
+			this.deleteModule(i);
+		}
+		
+		Storage store = Storage.getLocalStorageIfSupported();
+		
+		if (store != null) {
+			store.clear();
+		}
+		
+	}
+	
+	/**
+	 * Fills the module list with every module. For testing the configuration map.
+	 *
 	public void populateList() {
 		for (int i = 1; i <= 40; i++) {
 			addModule(new Module(i, i, 1, 0, Module.UNDAMAGED));
@@ -277,5 +296,5 @@ public class ModuleList {
 			addModule(new Module(180 + i, i, 10, 0, Module.UNDAMAGED));
 		}
 		
-	}
-}
+	} */
+} 

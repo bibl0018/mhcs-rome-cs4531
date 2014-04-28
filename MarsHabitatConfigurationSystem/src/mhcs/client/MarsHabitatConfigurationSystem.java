@@ -28,7 +28,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final int MAGIC_NUMBER = 3;
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
-
+	private static boolean MINIMUM_CONFIG_REACHED;
+	
 	private String width = "1200px";
 	private String height = "720px";
 	
@@ -42,7 +43,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Creates the module list.
 		final ModuleList modList = new ModuleList();
 		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
-		
+
+		// Creates the module map.
+		final ModuleMap modMap = new ModuleMap(modList);
+				
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize(this.width, this.height);
@@ -96,18 +100,26 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			public void execute() {
 				final ConfigurationMap configMap = new ConfigurationMap();
 				final Grid map = configMap.getConfigurationGrid(configMap.calculateConfiguration(modList));
-				if (map != null) {
+				if (map != null && MINIMUM_CONFIG_REACHED) {
 					
-					configTabs.add(map, "Full Configuration");
+					configTabs.insert(map, "Full Configuration", 2);
 					configTabs.selectTab(1);
 				} else {
 					Window.alert("Minimum module requirements not met!");
 				}
 			}
 		};
-
-		// Creates the module map.
-		final ModuleMap modMap = new ModuleMap(modList);
+		
+		// Command for clearing the module list and configurations
+		Command clearCmd = new Command() {
+			public void execute() {
+				modList.clearList();
+				
+				configTabs.clear();
+				configTabs.insert(modMap, MODULE_MAP_STRING, 0);
+				configTabs.selectTab(0);
+			}
+		};
 
 		// Creates the menu for the menu bar.
 		MenuBar theMenu = new MenuBar(true);
@@ -116,6 +128,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		theMenu.addItem("Minumum Resource Path", cmd);
 		theMenu.addItem("Calculate Habitats", configurationCmd);
 		theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
+		theMenu.addItem("Clear Modules and Configuration", clearCmd);
 		theMenu.addSeparator();
 		theMenu.addItem("Log off", loginCmd);
 
@@ -150,6 +163,21 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				configTabs.remove(0);
 				configTabs.insert(modMap, MODULE_MAP_STRING, 0);
 				configTabs.selectTab(0);
+				
+				// Checks to see if requirements are met for the minimum configuration.
+				// If they are met, the minimum configuration tabs are created and an alert is issued.
+				if (!MINIMUM_CONFIG_REACHED) {
+					if (modList.getNumOfAirlock() > 0 && modList.getNumOfCanteen() > 0 && modList.getNumOfControl() > 0 &&
+						modList.getNumOfDormitory() > 0 && modList.getNumOfPlain() > 2 && modList.getNumOfPower() > 0 &&
+						modList.getNumOfSanitation() > 0 && modList.getNumOfWater() > 0) {
+						MINIMUM_CONFIG_REACHED = true;
+						
+						/**
+						 * Need to add minimum configuration tabs here.
+						 */
+						
+					}
+				}
 			}
 		});
 

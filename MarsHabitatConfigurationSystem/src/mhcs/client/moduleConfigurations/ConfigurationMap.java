@@ -318,26 +318,28 @@ public class ConfigurationMap {
 			for (int k = 0; k < SIZE; k += 1) {
 				Type type = config[i][k];
 				
-				if (type.equals(Type.AIRLOCK)) {
-					configuration.addAirlock(i, k);
-				} else if (type.equals(Type.CANTEEN)) {
-					configuration.addCanteen(i, k);
-				} else if (type.equals(Type.CONTROL)) {
-					configuration.addControl(i, k);
-				} else if (type.equals(Type.DORMITORY)) {
-					configuration.addDormitory(i, k);
-				} else if (type.equals(Type.FOOD_WATER)) {
-					configuration.addFoodAndWater(i, k);
-				} else if (type.equals(Type.GYM_RELAXATION)) {
-					configuration.addGymAndRelaxation(i, k);
-				} else if (type.equals(Type.MEDICAL)) {
-					configuration.addMedical(i, k);
-				} else if (type.equals(Type.PLAIN)) {
-					configuration.addPlain(i, k);
-				} else if (type.equals(Type.POWER)) {
-					configuration.addPower(i, k);
-				} else if (type.equals(Type.SANITATION)) {
-					configuration.addSanitation(i, k);
+				if (type != null) {
+					if (type.equals(Type.AIRLOCK)) {
+						configuration.addAirlock(i, k);
+					} else if (type.equals(Type.CANTEEN)) {
+						configuration.addCanteen(i, k);
+					} else if (type.equals(Type.CONTROL)) {
+						configuration.addControl(i, k);
+					} else if (type.equals(Type.DORMITORY)) {
+						configuration.addDormitory(i, k);
+					} else if (type.equals(Type.FOOD_WATER)) {
+						configuration.addFoodAndWater(i, k);
+					} else if (type.equals(Type.GYM_RELAXATION)) {
+						configuration.addGymAndRelaxation(i, k);
+					} else if (type.equals(Type.MEDICAL)) {
+						configuration.addMedical(i, k);
+					} else if (type.equals(Type.PLAIN)) {
+						configuration.addPlain(i, k);
+					} else if (type.equals(Type.POWER)) {
+						configuration.addPower(i, k);
+					} else if (type.equals(Type.SANITATION)) {
+						configuration.addSanitation(i, k);
+					}
 				}
 			}
 		}
