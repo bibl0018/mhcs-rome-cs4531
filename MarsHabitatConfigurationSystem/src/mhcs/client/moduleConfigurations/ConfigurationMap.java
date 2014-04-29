@@ -352,7 +352,7 @@ public class ConfigurationMap {
 	 * @param config A module configuration that will be loaded to the grid.
 	 * @return The module configuration as a Grid.
 	 */
-	public Grid getConfigurationGrid(final ModuleConfiguration config) {
+	public static Grid getConfigurationGrid(final ModuleConfiguration config) {
 		if (config == null) {
 	    	return null;
 	    }

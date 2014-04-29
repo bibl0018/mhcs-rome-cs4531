@@ -29,6 +29,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final String MODULE_MAP_STRING = "Module Map";
 	private static final String WEATHER_STRING = "Weather";
 	private static boolean MINIMUM_CONFIG_REACHED;
+	private static final int FULL_INDEX = 4;
+	private static final int MAX_TABS = 5;
 	
 	private String width = "3120px";
 	private String height = "1600px";
@@ -51,6 +53,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Creates the weather feed.
 		final Weather weather = new Weather();
 
+		// Creates configuration map.
+		final ConfigurationMap configMap = new ConfigurationMap();
 				
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
@@ -103,12 +107,15 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command to calculate full configurations and add to new tabs.
 		Command configurationCmd = new Command() {
 			public void execute() {
-				final ConfigurationMap configMap = new ConfigurationMap();
-				final Grid map = configMap.getConfigurationGrid(configMap.calculateConfiguration(modList));
+				final Grid map = ConfigurationMap.getConfigurationGrid(configMap.calculateConfiguration(modList));
 				if (map != null && MINIMUM_CONFIG_REACHED) {
 					
-					configTabs.insert(map, "Full Configuration", 2);
-					configTabs.selectTab(1);
+					// Remove the current full configuration if it exists.
+					if (configTabs.getWidgetCount() == MAX_TABS) {
+						configTabs.remove(FULL_INDEX);
+					}
+					configTabs.add(map, "Full Configuration");
+					configTabs.selectTab(FULL_INDEX);
 				} else {
 					Window.alert("Minimum module requirements not met!");
 				}
@@ -121,7 +128,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				modList.clearList();
 				
 				configTabs.clear();
-				configTabs.insert(modMap, MODULE_MAP_STRING, 0);
+				configTabs.add(modMap, MODULE_MAP_STRING);
+				configTabs.add(weather, WEATHER_STRING);
 				configTabs.selectTab(0);
 			}
 		};
@@ -146,10 +154,6 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Creates the tabs for the various configurations and module map.
 		configTabs.add(modMap, MODULE_MAP_STRING);
 		configTabs.add(weather, WEATHER_STRING);
-//		configTabs.add(configMap, "1");
-//		configTabs.add(new HTML(""), "2");
-//		configTabs.add(new HTML(""), "3");
-//		configTabs.add(new HTML(""), "4");
 		configTabs.setHeight(this.height);
 		configTabs.setWidth(this.width);
 
