@@ -40,7 +40,7 @@ public class ConfigurationMap {
 	
 	public static final int ROWS = 50;
 	public static final int COLUMNS = 100;
-	public static final int IMAGE_SIZE = 12;
+	public static final int IMAGE_SIZE = 25;
 	public static final String STYLE = "tableCell";
 	
 	/**
@@ -55,7 +55,7 @@ public class ConfigurationMap {
 		
 		Type[][] config = new Type[SIZE][SIZE];
 		// For testing, fills module list with every module
-		// modules.populateList();
+		//modules.populateList();
 		int plain = modules.getNumOfPlain();
 		int airlock = modules.getNumOfAirlock();
 		int power = modules.getNumOfPower();
@@ -374,52 +374,52 @@ public class ConfigurationMap {
 	    
 	    for (int i = 0; i < config.airlockModules.size(); i += 1) {
 	    	Coordinates coord = config.airlockModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.AIRLOCK);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.AIRLOCK);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.canteenModules.size(); i += 1) {
 	    	Coordinates coord = config.canteenModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.CANTEEN);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.CANTEEN);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.controlModules.size(); i += 1) {
 	    	Coordinates coord = config.controlModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.CONTROL);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.CONTROL);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.dormitoryModules.size(); i += 1) {
 	    	Coordinates coord = config.dormitoryModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.DORMITORY);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.DORMITORY);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.foodAndWaterModules.size(); i += 1) {
 	    	Coordinates coord = config.foodAndWaterModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.FOOD_WATER);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.FOOD_WATER);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.gymAndRelaxationModules.size(); i += 1) {
 	    	Coordinates coord = config.gymAndRelaxationModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.GYM_RELAXATION);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.GYM_RELAXATION);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.medicalModules.size(); i += 1) {
 	    	Coordinates coord = config.medicalModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.MEDICAL);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.MEDICAL);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.plainModules.size(); i += 1) {
 	    	Coordinates coord = config.plainModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.PLAIN);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.PLAIN);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.powerModules.size(); i += 1) {
 	    	Coordinates coord = config.powerModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.POWER);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.POWER);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.sanitationModules.size(); i += 1) {
 	    	Coordinates coord = config.sanitationModules.get(i);
-	    	g = setImage(g, ROWS - coord.xCoord, coord.yCoord, Type.SANITATION);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.SANITATION);	
 			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    
