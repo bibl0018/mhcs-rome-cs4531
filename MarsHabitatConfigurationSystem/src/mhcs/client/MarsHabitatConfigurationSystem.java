@@ -28,10 +28,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final String MODULE_MAP_STRING = "Module Map";
 	private static boolean MINIMUM_CONFIG_REACHED;
 	
-	private static final String ROOT_WIDTH = "1400px";
-	private static final String ROOT_HEIGHT = "900px";
-	private String width = "1200px";
-	private String height = "900px";
+	private String width = "3120px";
+	private String height = "1600px";
 	
 	
 	public MarsHabitatConfigurationSystem() {
@@ -50,7 +48,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
-		rootPanel.setSize(ROOT_WIDTH, ROOT_HEIGHT);
+		rootPanel.setSize(this.width, this.height);
 
 		// Default command for menu items.
 		Command cmd = new Command() {

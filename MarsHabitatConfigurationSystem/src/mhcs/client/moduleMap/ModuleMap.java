@@ -19,10 +19,9 @@ public class ModuleMap implements IsWidget{
 	
 	public static final int ROWS = 50;
 	public static final int COLUMNS = 100;
-	public static final int HOR_IMAGE_SIZE = 12;
-	public static final int VER_IMAGE_SIZE = 12;
+	public static final int HOR_IMAGE_SIZE = 25;
+	public static final int VER_IMAGE_SIZE = 25;
 	public static final String STYLE = "tableCell";
-	public static final String GRID_STYLE = "grid";
 	
 	private ModuleList modList;
 	
@@ -43,7 +42,6 @@ public class ModuleMap implements IsWidget{
 		int xCoord;
 		int yCoord;
 		
-		g.setStyleName(GRID_STYLE);
 		
 		//Set the height and width of each cell in the grid,
 		//can be changed if we need to fit it on a smaller screen.
