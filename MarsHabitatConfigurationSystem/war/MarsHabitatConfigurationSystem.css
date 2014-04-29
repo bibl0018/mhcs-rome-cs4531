@@ -63,10 +63,12 @@ h1 {
 /** Sets the default height and width of each cell, also gives a 1px black border*/
 .tableCell{
 	border: 1px solid black;
-	height: 12px;
-	width: 12px;
-	max-height: 12px;
-	max-width: 12px;
+	height: 50px;
+	width: 50px;
+	min-width: 50px;
+	min-height: 50px;
+	max-height: 50px;
+	max-width: 50px;
 	resize: none;
 }
 
