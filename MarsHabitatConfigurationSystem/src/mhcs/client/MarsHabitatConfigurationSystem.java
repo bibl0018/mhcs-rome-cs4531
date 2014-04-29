@@ -6,6 +6,7 @@ import mhcs.client.gui.TenDayAlert;
 import mhcs.client.module.ModuleList;
 import mhcs.client.moduleConfigurations.ConfigurationMap;
 import mhcs.client.moduleMap.ModuleMap;
+import mhcs.client.weather.Weather;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
@@ -26,6 +27,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final int MAGIC_NUMBER = 3;
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
+	private static final String WEATHER_STRING = "Weather";
 	private static boolean MINIMUM_CONFIG_REACHED;
 	
 	private String width = "3120px";
@@ -45,6 +47,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the module map.
 		final ModuleMap modMap = new ModuleMap(modList);
+		
+		// Creates the weather feed.
+		final Weather weather = new Weather();
+
 				
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
@@ -139,6 +145,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the tabs for the various configurations and module map.
 		configTabs.add(modMap, MODULE_MAP_STRING);
+		configTabs.add(weather, WEATHER_STRING);
 //		configTabs.add(configMap, "1");
 //		configTabs.add(new HTML(""), "2");
 //		configTabs.add(new HTML(""), "3");
