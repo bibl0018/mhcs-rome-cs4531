@@ -3,7 +3,6 @@ package mhcs.client.gui;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -56,15 +55,12 @@ public class Login extends PopupPanel {
 		loginPanel.add(password);
 		loginPanel.add(ptb);
 		loginPanel.add(loginButton);
-		loginPanel.setSpacing(1);
 		loginPanel.addStyleName("loginPanel");
 		
 		VerticalPanel panel = new VerticalPanel();
-		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		panel.add(title);
 		panel.add(loginPanel);
-		panel.setSpacing(2);
-		panel.setSize("1300px", "930px");
+		panel.setSize("3120px", "1600px");
 		panel.addStyleName("panel");
 		
 		setWidget(panel);
