@@ -23,7 +23,7 @@ public class GPSDataTransfer implements EntryPoint{
 
 	
 	public void onModuleLoad() {
-		String proxy = "http://www.d.umn.edu/~wilh0137/Proxy.php?url=";
+		String proxy = "http://www.d.umn.edu/~wilh0137/war/Proxy.php?url=";
 		String url = proxy+"http://www.d.umn.edu/~abrooks/SomeTests.php?q=1";
 		url = URL.encode(url);
 		
@@ -31,14 +31,15 @@ public class GPSDataTransfer implements EntryPoint{
 		
 		try {
 			Request request = builder.sendRequest(null, new RequestCallback() {
+				
 				public void onError(Request request,Throwable exception){
 					Window.alert("onError: Couldn't retrieve JSON");
 				}
 				
 				public void onResponseReceived(Request request, Response response) {
-					if (200 == response.getStatusCode()){
+					if (200 == response.getStatusCode()) {
 						String rt = response.getText();
-						//update(rt);
+						update(rt);
 					} else {
 						Window.alert("Couldn't retrieve JSON (" + response.getStatusText() + ")");
 					}
@@ -59,8 +60,7 @@ public class GPSDataTransfer implements EntryPoint{
 		RootLayoutPanel.get().add(vp);
 		
 		String sAll = rt;
-		JSONArray jA = 
-				(JSONArray) JSONParser.parseLenient(sAll);
+		JSONArray jA = (JSONArray) JSONParser.parseLenient(sAll);
 
 		
 		
