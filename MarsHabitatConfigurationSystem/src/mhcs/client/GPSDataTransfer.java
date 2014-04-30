@@ -43,21 +43,17 @@ public class GPSDataTransfer implements EntryPoint{
 					} else {
 						Window.alert("Couldn't retrieve JSON (" + response.getStatusText() + ")");
 					}
-				}
-				
-				
+				}	
 			});
 		} catch (RequestException e){
 			Window.alert("RequestException: Couldn't retrieve JSON");
 		}
-		
-		
 	}
 
 	public void update(String rt){
-		VerticalPanel vp = new VerticalPanel();
-		vp.add(new Label(rt));
-		RootLayoutPanel.get().add(vp);
+		//VerticalPanel vp = new VerticalPanel();
+		//vp.add(new Label(rt));
+		//RootLayoutPanel.get().add(vp);
 		
 		String sAll = rt;
 		JSONArray jA = (JSONArray) JSONParser.parseLenient(sAll);
@@ -73,27 +69,27 @@ public class GPSDataTransfer implements EntryPoint{
 			JSONObject jO = (JSONObject) jA.get(i);
 			jN = (JSONNumber) jO.get("code");
 			d = jN.doubleValue();
-			vp.add(new Label(Double.toString(d)));
+			//vp.add(new Label(Double.toString(d)));
 			
 			jS = (JSONString) jO.get("status");
 			s = jS.stringValue();
-			vp.add(new Label(s));
+			//vp.add(new Label(s));
 			
 			jN = (JSONNumber) jO.get("turns");
 			d = jN.doubleValue();
-			vp.add(new Label(Double.toString(d)));
+			//vp.add(new Label(Double.toString(d)));
 			
 			jN = (JSONNumber) jO.get("X");
 			d = jN.doubleValue();
-			vp.add(new Label(Double.toString(d)));
+			//vp.add(new Label(Double.toString(d)));
 			
 			jN = (JSONNumber) jO.get("Y");
 			d = jN.doubleValue();
-			vp.add(new Label(Double.toString(d)));
-			vp.add(new HTML("<hr />"));
+			//vp.add(new Label(Double.toString(d)));
+			//vp.add(new HTML("<hr />"));
 		}
 		
-		RootLayoutPanel.get().add(vp);
+		//RootLayoutPanel.get().add(vp);
 	}
 	
 }
