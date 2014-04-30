@@ -236,6 +236,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 						// Adds minimum configuration one to the tab.
 						configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
 						configTabs.selectTab(MIN1_INDEX);
+						
+						// Adds minimum configuration two to the tab.
+						configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN2_CONFIG);
+						configTabs.selectTab(MIN2_INDEX);
 					}
 				}
 			}
