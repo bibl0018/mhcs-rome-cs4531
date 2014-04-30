@@ -640,6 +640,35 @@ public class ModuleConfiguration{
 		this.addSanitation(TWENTYFOUR, TWENTYTHREE);
 	}
 	
+	/**
+	 * Sets the values of this ModuleConfiguration to match that of the second minimum configuration.
+	 */
+	public void setMinimumConfigTwo() {
+		
+		// Clear all lists.
+		this.airlockModules.clear();
+		this.canteenModules.clear();
+		this.controlModules.clear();
+		this.dormitoryModules.clear();
+		this.foodAndWaterModules.clear();
+		this.gymAndRelaxationModules.clear();
+		this.medicalModules.clear();
+		this.plainModules.clear();
+		this.powerModules.clear();
+		this.sanitationModules.clear();
+		
+		// Add coordinates to appropriate module lists.
+		this.addAirlock(TWENTYTHREE, TWENTYTWO);
+		this.addCanteen(TWENTYTHREE, TWENTYFIVE);
+		this.addControl(TWENTYTWO, TWENTYFOUR);
+		this.addDormitory(TWENTYFIVE, TWENTYFOUR);
+		this.addFoodAndWater(TWENTYFOUR, TWENTYFIVE);
+		this.addPlain(TWENTYFOUR, TWENTYFOUR);
+		this.addPlain(TWENTYTHREE, TWENTYFOUR);
+		this.addPlain(TWENTYTHREE, TWENTYTHREE);
+		this.addPower(TWENTYFOUR, TWENTYTHREE);
+		this.addSanitation(TWENTYTWO, TWENTYTHREE);
+	}
 	
 }
 
