@@ -156,9 +156,18 @@ public class ModuleConfiguration{
 	 * Saves this module configuration onto HTML5 local storage.
 	 * @param name The name of this configuration (i.e. "Minimum Configuration 1").
 	 */
-	public void saveConfiguration(final String name) {
+	public boolean saveConfiguration(final String name) {
 		Storage store = null;
 		store = Storage.getLocalStorageIfSupported();
+		boolean valid;
+		
+		// Check that the configuration meets minimum requirements.
+		if (this.airlockModules.size() < 1 || this.controlModules.size() < 1 || this.powerModules.size() < 1 || 
+				this.foodAndWaterModules.size() < 1 || this.dormitoryModules.size() < 1 || this.canteenModules.size() < 1 ||
+				this.sanitationModules.size() < 1 || this.plainModules.size() < THREE) {
+				return false;
+		}
+		
 		
 		String value = "[";
 		final String key = KEY + name;
@@ -210,7 +219,12 @@ public class ModuleConfiguration{
 	    
 		if (store != null) {
 			store.setItem(key, value);
+			valid = true;
+		} else {
+			valid = false;
 		}
+		
+		return valid;
 	}
 	
 	/**

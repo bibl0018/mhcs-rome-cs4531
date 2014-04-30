@@ -9,6 +9,8 @@ import mhcs.client.moduleConfigurations.ModuleConfiguration;
 import mhcs.client.moduleMap.ModuleMap;
 import mhcs.client.weather.Weather;
 
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.SimpleEventBus;
@@ -58,6 +60,15 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Creates configuration map.
 		final ModuleConfiguration fullConfig = new ModuleConfiguration();
 		
+		// Creates sound controller and sounds
+		SoundController soundController = new SoundController();
+		final Sound errorSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+				"sounds/metallic_error.mp3");
+		final Sound successSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+				"sounds/success.mp3");
+		final Sound popSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+				"sounds/popup.mp3");
+		
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize(this.width, this.height);
@@ -80,6 +91,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 						tenDayAlert.setPopupPosition(left, top);
 					}
 				});
+				popSound.play();
 			}
 		};
 
@@ -103,6 +115,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 						popup.setPopupPosition(left, top);
 					}
 				});
+				popSound.play();
 			}
 		};
 		
@@ -119,6 +132,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 					configTabs.add(map, FULL_CONFIG);
 					configTabs.selectTab(FULL_INDEX);
 				} else {
+					errorSound.play();
 					Window.alert("Unable to calculate full configuration!");
 				}
 			}
@@ -139,16 +153,23 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command for saving the full configuration.
 		Command saveConfigCmd = new Command() {
 			public void execute() {
-				fullConfig.saveConfiguration(FULL_CONFIG);
-				Window.alert("Full Configuration saved!");
+				if (fullConfig.saveConfiguration(FULL_CONFIG)) {
+					successSound.play();
+					Window.alert("Full Configuration Saved!");
+				} else {
+					errorSound.play();
+					Window.alert("No Full Configuration Exists!");
+				}
 			}
 		};
 		
 		Command loadConfigCmd = new Command() {
 			public void execute() {
 				if (fullConfig.loadConfiguration(FULL_CONFIG)) {
+					successSound.play();
 					Window.alert("Full Configuration loaded!");
 				} else {
+					errorSound.play();
 					Window.alert("No full configuration found in storage!");
 				}
 			}
@@ -195,6 +216,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				configTabs.remove(0);
 				configTabs.insert(modMap, MODULE_MAP_STRING, 0);
 				configTabs.selectTab(0);
+				popSound.play();
 				
 				// Checks to see if requirements are met for the minimum configuration.
 				// If they are met, the minimum configuration tabs are created and an alert is issued.
