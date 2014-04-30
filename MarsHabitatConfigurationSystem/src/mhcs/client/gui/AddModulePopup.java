@@ -3,6 +3,7 @@ package mhcs.client.gui;
 import mhcs.client.module.Module;
 import mhcs.client.module.ModuleList;
 import mhcs.client.AddEvent;
+import mhcs.client.MarsHabitatConfigurationSystem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -127,10 +128,12 @@ public class AddModulePopup extends PopupPanel {
 					modules.addModule(module);
 				}
 				catch (IndexOutOfBoundsException e) {
+					MarsHabitatConfigurationSystem.errorSound.play();
 					Window.alert(e.getMessage());
 					valid = false;
 				}
 				catch (IllegalArgumentException e) {
+					MarsHabitatConfigurationSystem.errorSound.play();
 					Window.alert(e.getMessage());
 					valid = false;
 				}
