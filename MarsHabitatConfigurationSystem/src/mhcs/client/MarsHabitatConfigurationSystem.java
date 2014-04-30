@@ -5,6 +5,7 @@ import mhcs.client.gui.Login;
 import mhcs.client.gui.TenDayAlert;
 import mhcs.client.module.ModuleList;
 import mhcs.client.moduleConfigurations.ConfigurationMap;
+import mhcs.client.moduleConfigurations.ModuleConfiguration;
 import mhcs.client.moduleMap.ModuleMap;
 import mhcs.client.weather.Weather;
 
@@ -28,12 +29,13 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
 	private static final String WEATHER_STRING = "Weather";
+	private static final String FULL_CONFIG = "Full Configuration";
 	private static boolean MINIMUM_CONFIG_REACHED;
 	private static final int FULL_INDEX = 4;
 	private static final int MAX_TABS = 5;
 	
 	private String width = "3120px";
-	private String height = "1600px";
+	private String height = "1610px";
 	
 	
 	public MarsHabitatConfigurationSystem() {
@@ -54,8 +56,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		final Weather weather = new Weather();
 
 		// Creates configuration map.
-		final ConfigurationMap configMap = new ConfigurationMap();
-				
+		final ModuleConfiguration fullConfig = new ModuleConfiguration();
+		
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize(this.width, this.height);
@@ -107,17 +109,17 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command to calculate full configurations and add to new tabs.
 		Command configurationCmd = new Command() {
 			public void execute() {
-				final Grid map = ConfigurationMap.getConfigurationGrid(configMap.calculateConfiguration(modList));
-				if (map != null && MINIMUM_CONFIG_REACHED) {
-					
+				if (fullConfig.calculateConfiguration(modList)) {	
+					final Grid map = ConfigurationMap.getConfigurationGrid(fullConfig);						
+						
 					// Remove the current full configuration if it exists.
 					if (configTabs.getWidgetCount() == MAX_TABS) {
 						configTabs.remove(FULL_INDEX);
 					}
-					configTabs.add(map, "Full Configuration");
+					configTabs.add(map, FULL_CONFIG);
 					configTabs.selectTab(FULL_INDEX);
 				} else {
-					Window.alert("Minimum module requirements not met!");
+					Window.alert("Unable to calculate full configuration!");
 				}
 			}
 		};
@@ -133,13 +135,33 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				configTabs.selectTab(0);
 			}
 		};
+		
+		// Command for saving the full configuration.
+		Command saveConfigCmd = new Command() {
+			public void execute() {
+				fullConfig.saveConfiguration(FULL_CONFIG);
+				Window.alert("Full Configuration saved!");
+			}
+		};
+		
+		Command loadConfigCmd = new Command() {
+			public void execute() {
+				if (fullConfig.loadConfiguration(FULL_CONFIG)) {
+					Window.alert("Full Configuration loaded!");
+				} else {
+					Window.alert("No full configuration found in storage!");
+				}
+			}
+		};
 
 		// Creates the menu for the menu bar.
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
 		theMenu.addItem("Add Module", addModulePopupCmd);
 		theMenu.addItem("Minumum Resource Path", cmd);
-		theMenu.addItem("Calculate Habitats", configurationCmd);
+		theMenu.addItem("Calculate Full Configuration", configurationCmd);
+		theMenu.addItem("Save Full Configuration", saveConfigCmd);
+		theMenu.addItem("Load Full Configuration", loadConfigCmd);
 		theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
 		theMenu.addItem("Clear Modules and Configuration", clearCmd);
 		theMenu.addSeparator();
