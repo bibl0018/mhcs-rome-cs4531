@@ -44,6 +44,11 @@ public class ModuleConfiguration{
 		public static final int SEVENTEEN = 17;
 		public static final int EIGHTEEN = 18;
 		public static final int NINETEEN = 19;
+		public static final int TWENTYTWO = 22;
+		public static final int TWENTYTHREE = 23;
+		public static final int TWENTYFOUR = 24;
+		public static final int TWENTYFIVE = 25;
+		
 		
 	// Instance fields for the save and load methods.
 	private static final String KEY = "MHCS.Configuration.";
@@ -604,4 +609,37 @@ public class ModuleConfiguration{
 		
 		return value;
 	}
+	
+	/**
+	 * Sets the values of this ModuleConfiguration to match that of the first minimum configuration.
+	 */
+	public void setMinimumConfigOne() {
+		
+		// Clear all lists.
+		this.airlockModules.clear();
+		this.canteenModules.clear();
+		this.controlModules.clear();
+		this.dormitoryModules.clear();
+		this.foodAndWaterModules.clear();
+		this.gymAndRelaxationModules.clear();
+		this.medicalModules.clear();
+		this.plainModules.clear();
+		this.powerModules.clear();
+		this.sanitationModules.clear();
+		
+		// Add coordinates to appropriate module lists.
+		this.addAirlock(TWENTYTWO, TWENTYFOUR);
+		this.addCanteen(TWENTYFOUR, TWENTYFIVE);
+		this.addControl(TWENTYTHREE, TWENTYFIVE);
+		this.addDormitory(TWENTYFIVE, TWENTYTHREE);
+		this.addFoodAndWater(TWENTYFIVE, TWENTYFIVE);
+		this.addPlain(TWENTYTHREE, TWENTYFOUR);
+		this.addPlain(TWENTYFOUR, TWENTYFOUR);
+		this.addPlain(TWENTYFIVE, TWENTYFOUR);
+		this.addPower(TWENTYTHREE, TWENTYTHREE);
+		this.addSanitation(TWENTYFOUR, TWENTYTHREE);
+	}
+	
+	
 }
+

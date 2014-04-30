@@ -32,8 +32,12 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final String MODULE_MAP_STRING = "Module Map";
 	private static final String WEATHER_STRING = "Weather";
 	private static final String FULL_CONFIG = "Full Configuration";
+	private static final String MIN1_CONFIG = "Minimum Configuration 1";
+	private static final String MIN2_CONFIG = "Minimum Configuration 2";
 	private static boolean MINIMUM_CONFIG_REACHED;
 	private static final int FULL_INDEX = 4;
+	private static final int MIN1_INDEX = 2;
+	private static final int MIN2_INDEX = 3;
 	private static final int MAX_TABS = 5;
 	
 	private String width = "3120px";
@@ -59,6 +63,9 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates configuration map.
 		final ModuleConfiguration fullConfig = new ModuleConfiguration();
+		final ModuleConfiguration min1Config = new ModuleConfiguration();
+		final ModuleConfiguration min2Config = new ModuleConfiguration();
+		min1Config.setMinimumConfigOne();
 		
 		// Creates sound controller and sounds
 		SoundController soundController = new SoundController();
@@ -226,10 +233,9 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 						modList.getNumOfSanitation() > 0 && modList.getNumOfWater() > 0) {
 						MINIMUM_CONFIG_REACHED = true;
 						
-						/**
-						 * Need to add minimum configuration tabs here.
-						 */
-						
+						// Adds minimum configuration one to the tab.
+						configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
+						configTabs.selectTab(MIN1_INDEX);
 					}
 				}
 			}
