@@ -1,6 +1,11 @@
 package mhcs.client;
 
-import com.google.gwt.core.client.EntryPoint;
+/**
+ * Takes in modules from a web server using a proxy and adds them to a module 
+ * list. Some code taken from Tech-Talk 4 by Andrew Brooks.
+ * @author Jeremiah Wilhelmy
+ */
+
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -13,18 +18,23 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import mhcs.client.module.Module;
+import mhcs.client.module.ModuleList;
 
 
-public class GPSDataTransfer implements EntryPoint{
+public class GPSDataTransfer {	
+	public ModuleList aModList = new ModuleList();
 
-	
-	public void onModuleLoad() {
-		String proxy = "http://www.d.umn.edu/~wilh0137/war/Proxy.php?url=";
-		String url = proxy+"http://www.d.umn.edu/~abrooks/SomeTests.php?q=1";
+	/**
+	 * Default constructor for the new module list.
+	 * @param modList A module list passed in..
+	 */
+	public GPSDataTransfer(final ModuleList modList) {
+		this.aModList = modList;
+		
+		//Connects to the tests through a proxy.
+		String proxy = "http://www.d.umn.edu/~stowe063/war/Proxy.php?url=";
+		String url = proxy + "http://www.d.umn.edu/~abrooks/SomeTests.php?q=1";
 		url = URL.encode(url);
 		
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
@@ -32,11 +42,12 @@ public class GPSDataTransfer implements EntryPoint{
 		try {
 			Request request = builder.sendRequest(null, new RequestCallback() {
 				
-				public void onError(Request request,Throwable exception){
+				public void onError(final Request request, final Throwable exception) {
 					Window.alert("onError: Couldn't retrieve JSON");
 				}
 				
-				public void onResponseReceived(Request request, Response response) {
+				//Displays an alert with the error code if JSON retrieval is unsuccessful.
+				public void onResponseReceived(final Request request, final Response response) {
 					if (200 == response.getStatusCode()) {
 						String rt = response.getText();
 						update(rt);
@@ -45,51 +56,51 @@ public class GPSDataTransfer implements EntryPoint{
 					}
 				}	
 			});
-		} catch (RequestException e){
+			
+		} catch (RequestException e) {
 			Window.alert("RequestException: Couldn't retrieve JSON");
 		}
 	}
 
-	public void update(String rt){
-		//VerticalPanel vp = new VerticalPanel();
-		//vp.add(new Label(rt));
-		//RootLayoutPanel.get().add(vp);
-		
+	/**
+	 * Converts the string into multiple modules and adds them to the module list.
+	 * @param rt The string received from the web server.
+	 */
+	public void update(final String rt) {
 		String sAll = rt;
 		JSONArray jA = (JSONArray) JSONParser.parseLenient(sAll);
-
-		
 		
 		JSONNumber jN;
 		JSONString jS;
-		double d;
-		String s;
+		int code;
+		String status;
+		int turns;
+		int xCoord;
+		int yCoord;
 		
-		for (int i = 0; i < jA.size(); i++){
+		//Parses each JSON object for values and adds them to temporary variables.
+		for (int i = 0; i < jA.size(); i++) {
 			JSONObject jO = (JSONObject) jA.get(i);
 			jN = (JSONNumber) jO.get("code");
-			d = jN.doubleValue();
-			//vp.add(new Label(Double.toString(d)));
+			code = (int) jN.doubleValue();
 			
 			jS = (JSONString) jO.get("status");
-			s = jS.stringValue();
-			//vp.add(new Label(s));
+			status = jS.stringValue();
 			
 			jN = (JSONNumber) jO.get("turns");
-			d = jN.doubleValue();
-			//vp.add(new Label(Double.toString(d)));
+			turns = (int) jN.doubleValue();
 			
 			jN = (JSONNumber) jO.get("X");
-			d = jN.doubleValue();
-			//vp.add(new Label(Double.toString(d)));
+			xCoord = (int) jN.doubleValue();
 			
 			jN = (JSONNumber) jO.get("Y");
-			d = jN.doubleValue();
-			//vp.add(new Label(Double.toString(d)));
-			//vp.add(new HTML("<hr />"));
-		}
-		
-		//RootLayoutPanel.get().add(vp);
+			yCoord = (int) jN.doubleValue();
+			
+			//A new module is created with the information from the string, 
+			//then added to the module list.
+			Module module = new Module(code, xCoord, yCoord, turns, status);
+			this.aModList.addModule(module);
+		}		
 	}
 	
 }
