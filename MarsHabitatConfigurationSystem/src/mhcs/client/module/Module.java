@@ -6,9 +6,9 @@ package mhcs.client.module;
  */
 public class Module {
 
-	public static final String UNDAMAGED = "UNDAMAGED";
-	public static final String REPAIRABLE = "REPAIRABLE";
-	public static final String DAMAGED = "DAMAGED";
+	public static final String UNDAMAGED = "undamaged";
+	public static final String REPAIRABLE = "repairable";
+	public static final String DAMAGED = "damaged";
 	public static final int SIZE = 190;
 	public static final int PLAIN_UPPER = 40;
 	public static final int DORM_LOWER = 60;

@@ -27,6 +27,15 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
  */
 public class MarsHabitatConfigurationSystem implements EntryPoint {
 
+	// Creates sound controller and sounds
+	public static final SoundController soundController = new SoundController();
+	public static final Sound errorSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+			"sounds/metallic_error.mp3");
+	public static final Sound successSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+			"sounds/success.mp3");
+	public static final Sound popSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+			"sounds/popup.mp3");
+			
 	private static final int MAGIC_NUMBER = 3;
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
@@ -66,15 +75,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		final ModuleConfiguration min1Config = new ModuleConfiguration();
 		final ModuleConfiguration min2Config = new ModuleConfiguration();
 		min1Config.setMinimumConfigOne();
-		
-		// Creates sound controller and sounds
-		SoundController soundController = new SoundController();
-		final Sound errorSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
-				"sounds/metallic_error.mp3");
-		final Sound successSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
-				"sounds/success.mp3");
-		final Sound popSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
-				"sounds/popup.mp3");
+		min2Config.setMinimumConfigTwo();
 		
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
@@ -170,6 +171,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 		
+		
 		Command loadConfigCmd = new Command() {
 			public void execute() {
 				if (fullConfig.loadConfiguration(FULL_CONFIG)) {
@@ -182,6 +184,14 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 
+		// Command for GPS data transfer.
+		Command gpsDataCmd = new Command() {
+			public void execute() {
+				final GPSDataTransfer data = new GPSDataTransfer(modList);
+				BUS.fireEvent(new AddEvent());
+			}
+		};
+		
 		// Creates the menu for the menu bar.
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
@@ -191,6 +201,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		theMenu.addItem("Save Full Configuration", saveConfigCmd);
 		theMenu.addItem("Load Full Configuration", loadConfigCmd);
 		theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
+		theMenu.addItem("GPS Data Transfer", gpsDataCmd);
 		theMenu.addItem("Clear Modules and Configuration", clearCmd);
 		theMenu.addSeparator();
 		theMenu.addItem("Log off", loginCmd);
@@ -244,6 +255,21 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				}
 			}
 		});
+		
+		// Checks for minimum configs on load.
+		if (modList.getNumOfAirlock() > 0 && modList.getNumOfCanteen() > 0 && modList.getNumOfControl() > 0 &&
+				modList.getNumOfDormitory() > 0 && modList.getNumOfPlain() > 2 && modList.getNumOfPower() > 0 &&
+				modList.getNumOfSanitation() > 0 && modList.getNumOfWater() > 0) {
+				MINIMUM_CONFIG_REACHED = true;
+				
+				// Adds minimum configuration one to the tab.
+				configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
+				configTabs.selectTab(MIN1_INDEX);
+				
+				// Adds minimum configuration two to the tab.
+				configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN2_CONFIG);
+				configTabs.selectTab(MIN2_INDEX);
+		}
 
 		rootPanel.addStyleName("rootPanel");
 	}
