@@ -1,6 +1,9 @@
 <?php
+	header('Content-type: text/javascript');
+	header('Cache-Control: no-cache');
+	header('Pragma: no-cache');
+
 $url = $_GET["url"];
 $content = file_get_contents($url);
-header('Content-type: text/xml');
 echo $content;
 ?>

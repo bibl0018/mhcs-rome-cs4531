@@ -34,6 +34,22 @@
 	background-size: 3120px 1600px;
 }
 
+.wundergroundLogo {
+	margin: 5px;
+}
+
+.weatherPanel {
+	background-color: white;
+	font-size: large;
+	font-weight: bold;
+	margin: 10px;
+}
+
+.rootWeatherPanel {
+	background-color: white;
+	background-size: 3120px 1600px;
+}
+
 /** Example rules used by the template application (remove for your app) */
 h1 {
   font-size: 2em;

@@ -60,7 +60,7 @@ public class Login extends PopupPanel {
 		VerticalPanel panel = new VerticalPanel();
 		panel.add(title);
 		panel.add(loginPanel);
-		panel.setSize("3120px", "1600px");
+		panel.setSize("3120px", "1650px");
 		panel.addStyleName("panel");
 		
 		setWidget(panel);
