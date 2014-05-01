@@ -15,6 +15,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -35,7 +36,12 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			"sounds/success.mp3");
 	public static final Sound popSound = soundController.createSound(Sound.MIME_TYPE_AUDIO_MPEG_MP3,
 			"sounds/popup.mp3");
-			
+	
+	/**
+	 * Change to 864000000 for 10 days.
+	 */
+	protected static final int ALERT_TIME = 120000;
+
 	private static final int MAGIC_NUMBER = 3;
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
@@ -48,11 +54,11 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final int MIN1_INDEX = 2;
 	private static final int MIN2_INDEX = 3;
 	private static final int MAX_TABS = 5;
-	
+
 	private String width = "3120px";
 	private String height = "1610px";
-	
-	
+
+
 	public MarsHabitatConfigurationSystem() {
 
 	}
@@ -66,7 +72,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the module map.
 		//final ModuleMap modMap = new ModuleMap(modList);
-		
+
 		// Creates the weather feed.
 		final Weather weather = new Weather();
 
@@ -76,14 +82,14 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		final ModuleConfiguration min2Config = new ModuleConfiguration();
 		min1Config.setMinimumConfigOne();
 		min2Config.setMinimumConfigTwo();
-		
+
 		// GPS Data object.
 		final GPSDataTransfer dataTransfer = new GPSDataTransfer(modList);
-		
+
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize(this.width, this.height);
-				
+
 		// Default command for menu items.
 		Command cmd = new Command() {
 			public void execute() {
@@ -129,13 +135,13 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				popSound.play();
 			}
 		};
-		
+
 		// Command to calculate full configurations and add to new tabs.
 		Command configurationCmd = new Command() {
 			public void execute() {
 				if (fullConfig.calculateConfiguration(modList)) {	
 					final Grid map = ConfigurationMap.getConfigurationGrid(fullConfig);						
-						
+
 					// Remove the current full configuration if it exists.
 					if (configTabs.getWidgetCount() == MAX_TABS) {
 						configTabs.remove(FULL_INDEX);
@@ -148,12 +154,12 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				}
 			}
 		};
-		
+
 		// Command for clearing the module list and configurations
 		Command clearCmd = new Command() {
 			public void execute() {
 				modList.clearList();
-				
+
 				configTabs.clear();
 				configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
 				configTabs.add(weather, WEATHER_STRING);
@@ -161,7 +167,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				MINIMUM_CONFIG_REACHED = false;
 			}
 		};
-		
+
 		// Command for saving the full configuration.
 		Command saveConfigCmd = new Command() {
 			public void execute() {
@@ -174,8 +180,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				}
 			}
 		};
-		
-		
+
+
 		Command loadConfigCmd = new Command() {
 			public void execute() {
 				if (fullConfig.loadConfiguration(FULL_CONFIG)) {
@@ -195,7 +201,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				BUS.fireEvent(new AddEvent());
 			}
 		};
-		
+
 		// Creates the menu for the menu bar.
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
@@ -229,7 +235,23 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Show login after module has loaded.
 		final Login initialLogin = new Login();
 		initialLogin.show();
-		
+
+		// Start timer to show initial 10 day alert.
+		Timer t = new Timer() {
+			public void run() {
+				final TenDayAlert initialTenDayAlert = new TenDayAlert();
+				initialTenDayAlert.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+					public void setPosition(final int offsetWidth, final int offsetHeight) {
+						int left = (Window.getClientWidth() - offsetWidth) / MAGIC_NUMBER;
+						int top = (Window.getClientHeight() - offsetHeight) / MAGIC_NUMBER;
+						initialTenDayAlert.setPopupPosition(left, top);
+					}
+				});
+			}
+		};
+
+		t.schedule(ALERT_TIME);
+
 		// Set handler for EventBus.
 		BUS.addHandler(AddEvent.TYPE, new AddEventHandler() {
 			public void onEvent(final AddEvent event) {
@@ -239,38 +261,38 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				configTabs.insert(new ModuleMap(modList).asWidget(), MODULE_MAP_STRING, 0);
 				configTabs.selectTab(0);
 				popSound.play();
-				
+
 				// Checks to see if requirements are met for the minimum configuration.
 				// If they are met, the minimum configuration tabs are created and an alert is issued.
 				if (!MINIMUM_CONFIG_REACHED) {
 					if (modList.getNumOfAirlock() > 0 && modList.getNumOfCanteen() > 0 && modList.getNumOfControl() > 0 &&
-						modList.getNumOfDormitory() > 0 && modList.getNumOfPlain() > 2 && modList.getNumOfPower() > 0 &&
-						modList.getNumOfSanitation() > 0 && modList.getNumOfWater() > 0) {
+							modList.getNumOfDormitory() > 0 && modList.getNumOfPlain() > 2 && modList.getNumOfPower() > 0 &&
+							modList.getNumOfSanitation() > 0 && modList.getNumOfWater() > 0) {
 						MINIMUM_CONFIG_REACHED = true;
-						
+
 						// Adds minimum configuration one to the tab.
 						configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
 						configTabs.selectTab(MIN1_INDEX);
-						
+
 						// Adds minimum configuration two to the tab.
 						configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 					}
 				}
 			}
 		});
-				
+
 		// Checks for minimum configs on load.
 		if (modList.getNumOfAirlock() > 0 && modList.getNumOfCanteen() > 0 && modList.getNumOfControl() > 0 &&
 				modList.getNumOfDormitory() > 0 && modList.getNumOfPlain() > 2 && modList.getNumOfPower() > 0 &&
 				modList.getNumOfSanitation() > 0 && modList.getNumOfWater() > 0) {
-				MINIMUM_CONFIG_REACHED = true;
-				
-				// Adds minimum configuration one to the tab.
-				configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
-				configTabs.selectTab(MIN1_INDEX);
-				
-				// Adds minimum configuration two to the tab.
-				configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
+			MINIMUM_CONFIG_REACHED = true;
+
+			// Adds minimum configuration one to the tab.
+			configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
+			configTabs.selectTab(MIN1_INDEX);
+
+			// Adds minimum configuration two to the tab.
+			configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 		}
 
 		rootPanel.addStyleName("rootPanel");
