@@ -20,7 +20,7 @@ public class TenDayAlert extends PopupPanel {
 	/**
 	 * Change to 864000000 for 10 days.
 	 */
-	protected static final int ALERT_TIME = 10000;
+	protected static final int ALERT_TIME = 120000;
 	
 	/**
 	 * 
