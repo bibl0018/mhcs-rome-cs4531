@@ -24,13 +24,16 @@ import mhcs.client.module.ModuleList;
 
 public class GPSDataTransfer {	
 	public ModuleList aModList = new ModuleList();
-
+	
+	public GPSDataTransfer(final ModuleList modList) {
+		this.aModList = modList;
+	}
+	
 	/**
 	 * Default constructor for the new module list.
 	 * @param modList A module list passed in..
 	 */
-	public GPSDataTransfer(final ModuleList modList) {
-		this.aModList = modList;
+	public void getData() {
 		
 		//Connects to the tests through a proxy.
 		String proxy = "http://www.d.umn.edu/~stowe063/war/Proxy.php?url=";
@@ -60,6 +63,7 @@ public class GPSDataTransfer {
 		} catch (RequestException e) {
 			Window.alert("RequestException: Couldn't retrieve JSON");
 		}
+		
 	}
 
 	/**

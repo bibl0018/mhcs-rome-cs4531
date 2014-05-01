@@ -73,9 +73,9 @@ public class AddModulePopup extends PopupPanel {
 		final HorizontalPanel statusPanel = new HorizontalPanel();
 		final Label statusLabel = new Label("Status:");
 		final ListBox statusBox = new ListBox();
-		statusBox.addItem("UNDAMAGED");
-		statusBox.addItem("DAMAGED");
-		statusBox.addItem("UNCERTAIN");
+		statusBox.addItem("undamaged");
+		statusBox.addItem("repairable");
+		statusBox.addItem("damaged");
 		statusBox.setWidth(LIST_BOX_WIDTH);
 		statusPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		statusPanel.add(statusLabel);

@@ -65,7 +65,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		final TabLayoutPanel configTabs = new TabLayoutPanel(2, Unit.EM);
 
 		// Creates the module map.
-		final ModuleMap modMap = new ModuleMap(modList);
+		//final ModuleMap modMap = new ModuleMap(modList);
 		
 		// Creates the weather feed.
 		final Weather weather = new Weather();
@@ -77,10 +77,13 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		min1Config.setMinimumConfigOne();
 		min2Config.setMinimumConfigTwo();
 		
+		// GPS Data object.
+		final GPSDataTransfer dataTransfer = new GPSDataTransfer(modList);
+		
 		// Creates the root panel and sizes it.
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize(this.width, this.height);
-
+				
 		// Default command for menu items.
 		Command cmd = new Command() {
 			public void execute() {
@@ -152,9 +155,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				modList.clearList();
 				
 				configTabs.clear();
-				configTabs.add(modMap, MODULE_MAP_STRING);
+				configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
 				configTabs.add(weather, WEATHER_STRING);
 				configTabs.selectTab(0);
+				MINIMUM_CONFIG_REACHED = false;
 			}
 		};
 		
@@ -187,7 +191,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command for GPS data transfer.
 		Command gpsDataCmd = new Command() {
 			public void execute() {
-				final GPSDataTransfer data = new GPSDataTransfer(modList);
+				dataTransfer.getData();
 				BUS.fireEvent(new AddEvent());
 			}
 		};
@@ -213,7 +217,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		menu.setWidth(this.width);
 
 		// Creates the tabs for the various configurations and module map.
-		configTabs.add(modMap, MODULE_MAP_STRING);
+		configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
 		configTabs.add(weather, WEATHER_STRING);
 		configTabs.setHeight(this.height);
 		configTabs.setWidth(this.width);
@@ -225,14 +229,14 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Show login after module has loaded.
 		final Login initialLogin = new Login();
 		initialLogin.show();
-
+		
 		// Set handler for EventBus.
 		BUS.addHandler(AddEvent.TYPE, new AddEventHandler() {
 			public void onEvent(final AddEvent event) {
 
 				// "Refreshes" the module map by removing and re-adding the tab
 				configTabs.remove(0);
-				configTabs.insert(modMap, MODULE_MAP_STRING, 0);
+				configTabs.insert(new ModuleMap(modList).asWidget(), MODULE_MAP_STRING, 0);
 				configTabs.selectTab(0);
 				popSound.play();
 				
@@ -249,13 +253,12 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 						configTabs.selectTab(MIN1_INDEX);
 						
 						// Adds minimum configuration two to the tab.
-						configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN2_CONFIG);
-						configTabs.selectTab(MIN2_INDEX);
+						configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 					}
 				}
 			}
 		});
-		
+				
 		// Checks for minimum configs on load.
 		if (modList.getNumOfAirlock() > 0 && modList.getNumOfCanteen() > 0 && modList.getNumOfControl() > 0 &&
 				modList.getNumOfDormitory() > 0 && modList.getNumOfPlain() > 2 && modList.getNumOfPower() > 0 &&
@@ -267,8 +270,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				configTabs.selectTab(MIN1_INDEX);
 				
 				// Adds minimum configuration two to the tab.
-				configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN2_CONFIG);
-				configTabs.selectTab(MIN2_INDEX);
+				configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 		}
 
 		rootPanel.addStyleName("rootPanel");
