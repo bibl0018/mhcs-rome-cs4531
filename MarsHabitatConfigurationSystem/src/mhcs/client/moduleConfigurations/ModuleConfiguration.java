@@ -21,10 +21,10 @@ import com.google.gwt.storage.client.Storage;
 public class ModuleConfiguration{
 	
 	// Instance fields for the calculateConfiguration method.
-		public static final int CENTER = 12;
-		public static final int SIZE = 25;
-		public static final int WEST_LIMIT = 10;
-		public static final int EAST_LIMIT = 14;
+		public static final int CENTER = 20;
+		public static final int SIZE = 40;
+		public static final int WEST_LIMIT = 18;
+		public static final int EAST_LIMIT = 22;
 		public static final int ONE = 1;
 		public static final int TWO = 2;
 		public static final int THREE = 3;
@@ -263,7 +263,7 @@ public class ModuleConfiguration{
 			
 			for (int k = 0; k < array.size(); k += 1) {
 				JSONObject object = (JSONObject) array.get(k);
-				string = (JSONString) object.get("code");
+				string = (JSONString) object.get("type");
 				type = string.stringValue();
 				
 				number = (JSONNumber) object.get("X");
@@ -307,8 +307,6 @@ public class ModuleConfiguration{
 	public boolean calculateConfiguration(final ModuleList modules) {
 		
 		Type[][] config = new Type[SIZE][SIZE];
-		// For testing, fills module list with every module
-		//modules.populateList();
 		int plain = modules.getNumOfPlain();
 		int airlock = modules.getNumOfAirlock();
 		int power = modules.getNumOfPower();
@@ -441,7 +439,7 @@ public class ModuleConfiguration{
 			} else if (i == TWO && (southTip + 1) < CENTER){
 				config[southTip + 1][CENTER + 1] = Type.POWER;
 			} else if (i == THREE && (westTip + 1) > WEST_LIMIT) {
-				config[CENTER - 1][westTip + 1] = Type.POWER;
+				config[CENTER + 1][westTip + 1] = Type.POWER;
 			}
 		}
 		
@@ -507,9 +505,9 @@ public class ModuleConfiguration{
 			} else if (i == THREE && (southTip + THREE) < CENTER) {
 				config[southTip + THREE][CENTER - 1] = Type.SANITATION;
 			} else if (i == FOUR && (northTip - FIVE) > CENTER){
-				config[northTip - FIVE][CENTER + 1] = Type.SANITATION;
+				config[northTip - FIVE][CENTER - 1] = Type.SANITATION;
 			} else if (i == FIVE && (southTip + FIVE) < CENTER) {
-				config[southTip + FIVE][CENTER - 1] = Type.SANITATION;
+				config[southTip + FIVE][CENTER + 1] = Type.SANITATION;
 			} else if (i == SIX && (westTip + SIX) < WEST_LIMIT){
 				config[CENTER - 1][westTip + SIX] = Type.SANITATION;
 			} else if (i == SEVEN && (eastTip - SIX) > EAST_LIMIT) {
@@ -614,18 +612,7 @@ public class ModuleConfiguration{
 	 * Sets the values of this ModuleConfiguration to match that of the first minimum configuration.
 	 */
 	public void setMinimumConfigOne() {
-		
-		// Clear all lists.
-		this.airlockModules.clear();
-		this.canteenModules.clear();
-		this.controlModules.clear();
-		this.dormitoryModules.clear();
-		this.foodAndWaterModules.clear();
-		this.gymAndRelaxationModules.clear();
-		this.medicalModules.clear();
-		this.plainModules.clear();
-		this.powerModules.clear();
-		this.sanitationModules.clear();
+		this.clearConfig();
 		
 		// Add coordinates to appropriate module lists.
 		this.addAirlock(TWENTYTWO, TWENTYFOUR);
@@ -644,18 +631,7 @@ public class ModuleConfiguration{
 	 * Sets the values of this ModuleConfiguration to match that of the second minimum configuration.
 	 */
 	public void setMinimumConfigTwo() {
-		
-		// Clear all lists.
-		this.airlockModules.clear();
-		this.canteenModules.clear();
-		this.controlModules.clear();
-		this.dormitoryModules.clear();
-		this.foodAndWaterModules.clear();
-		this.gymAndRelaxationModules.clear();
-		this.medicalModules.clear();
-		this.plainModules.clear();
-		this.powerModules.clear();
-		this.sanitationModules.clear();
+		this.clearConfig();
 		
 		// Add coordinates to appropriate module lists.
 		this.addAirlock(TWENTYTHREE, TWENTYTWO);
@@ -668,6 +644,20 @@ public class ModuleConfiguration{
 		this.addPlain(TWENTYTHREE, TWENTYTHREE);
 		this.addPower(TWENTYFOUR, TWENTYTHREE);
 		this.addSanitation(TWENTYTWO, TWENTYTHREE);
+	}
+	
+	public void clearConfig() {
+		// Clear all lists.
+				this.airlockModules.clear();
+				this.canteenModules.clear();
+				this.controlModules.clear();
+				this.dormitoryModules.clear();
+				this.foodAndWaterModules.clear();
+				this.gymAndRelaxationModules.clear();
+				this.medicalModules.clear();
+				this.plainModules.clear();
+				this.powerModules.clear();
+				this.sanitationModules.clear();
 	}
 	
 }

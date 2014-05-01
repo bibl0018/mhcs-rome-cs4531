@@ -50,10 +50,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final String MIN1_CONFIG = "Minimum Configuration 1";
 	private static final String MIN2_CONFIG = "Minimum Configuration 2";
 	private static boolean MINIMUM_CONFIG_REACHED;
-	private static final int FULL_INDEX = 4;
-	private static final int MIN1_INDEX = 2;
-	private static final int MIN2_INDEX = 3;
-	private static final int MAX_TABS = 5;
+	private static final int FULL_INDEX = 3;
+	private static final int MIN1_INDEX = 1;
+	private static final int MIN2_INDEX = 2;
+	private static final int MAX_TABS = 4;
 
 	private String width = "3120px";
 	private String height = "1610px";
@@ -138,15 +138,21 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command to calculate full configurations and add to new tabs.
 		Command configurationCmd = new Command() {
 			public void execute() {
+				modList.populateList();
 				if (fullConfig.calculateConfiguration(modList)) {	
-					final Grid map = ConfigurationMap.getConfigurationGrid(fullConfig);						
 
 					// Remove the current full configuration if it exists.
 					if (configTabs.getWidgetCount() == MAX_TABS) {
 						configTabs.remove(FULL_INDEX);
 					}
-					configTabs.add(map, FULL_CONFIG);
+					
+					// Add the minimum and full configuration tabs
+					configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN1_CONFIG);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig), FULL_CONFIG);
 					configTabs.selectTab(FULL_INDEX);
+					successSound.play();
+					Window.alert("Full Configuration Available!");
 				} else {
 					errorSound.play();
 					Window.alert("Unable to calculate full configuration!");
@@ -154,14 +160,22 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 
+		// For testing the full configuration.
+		// Fills the module list will all possible modules.
+		Command populateCmd = new Command () {
+			public void execute() {
+				modList.populateList();
+			}
+		};
+		
 		// Command for clearing the module list and configurations
 		Command clearCmd = new Command() {
 			public void execute() {
 				modList.clearList();
-
+				fullConfig.clearConfig();
+				
 				configTabs.clear();
 				configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
-				configTabs.add(weather, WEATHER_STRING);
 				configTabs.selectTab(0);
 				MINIMUM_CONFIG_REACHED = false;
 			}
@@ -180,10 +194,11 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 
-
+		// Command for loading the full configuration.
 		Command loadConfigCmd = new Command() {
 			public void execute() {
 				if (fullConfig.loadConfiguration(FULL_CONFIG)) {
+					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig), FULL_CONFIG);
 					successSound.play();
 					Window.alert("Full Configuration loaded!");
 				} else {
@@ -209,7 +224,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		theMenu.addItem("Calculate Full Configuration", configurationCmd);
 		theMenu.addItem("Save Full Configuration", saveConfigCmd);
 		theMenu.addItem("Load Full Configuration", loadConfigCmd);
-		theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
+		//theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
 		theMenu.addItem("GPS Data Transfer", gpsDataCmd);
 		theMenu.addItem("Clear Modules and Configuration", clearCmd);
 		theMenu.addSeparator();
@@ -223,7 +238,6 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the tabs for the various configurations and module map.
 		configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
-		//configTabs.add(weather, WEATHER_STRING);
 		configTabs.setHeight(this.height);
 		configTabs.setWidth(this.width);
 
@@ -247,6 +261,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 						initialTenDayAlert.setPopupPosition(left, top);
 					}
 				});
+				popSound.play();
 			}
 		};
 
@@ -260,7 +275,6 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				configTabs.remove(0);
 				configTabs.insert(new ModuleMap(modList).asWidget(), MODULE_MAP_STRING, 0);
 				configTabs.selectTab(0);
-				popSound.play();
 
 				// Checks to see if requirements are met for the minimum configuration.
 				// If they are met, the minimum configuration tabs are created and an alert is issued.
@@ -276,6 +290,9 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 						// Adds minimum configuration two to the tab.
 						configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
+						
+						successSound.play();
+						Window.alert("Minimum Configurations Available!");
 					}
 				}
 			}
@@ -289,7 +306,6 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 			// Adds minimum configuration one to the tab.
 			configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
-			configTabs.selectTab(MIN1_INDEX);
 
 			// Adds minimum configuration two to the tab.
 			configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);

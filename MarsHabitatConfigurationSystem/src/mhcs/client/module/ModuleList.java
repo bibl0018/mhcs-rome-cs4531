@@ -264,38 +264,38 @@ public class ModuleList {
 	/**
 	 * Fills the module list with every module. For testing the configuration map.
 	 */
-//	public void populateList() {
-//		this.clearList();
-//		for (int i = 1; i <= 40; i++) {
-//			addModule(new Module(i, i, 1, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 20; i++) {
-//			addModule(new Module(60 + i, i, 2, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 10; i++) {
-//			addModule(new Module(90 + i, i, 3, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 10; i++) {
-//			addModule(new Module(110 + i, i, 4, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 4; i++) {
-//			addModule(new Module(130 + i, i, 5, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 4; i++) {
-//			addModule(new Module(140 + i, i, 6, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 4; i++) {
-//			addModule(new Module(150 + i, i, 7, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 4; i++) {
-//			addModule(new Module(160 + i, i, 8, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 4; i++) {
-//			addModule(new Module(170 + i, i, 9, 0, Module.UNDAMAGED));
-//		}
-//		for (int i = 1; i <= 4; i++) {
-//			addModule(new Module(180 + i, i, 10, 0, Module.UNDAMAGED));
-//		}
-//		
-//	}
+	public void populateList() {
+		this.clearList();
+		for (int i = 1; i <= 40; i++) {
+			addModule(new Module(i, i, 1, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 20; i++) {
+			addModule(new Module(60 + i, i, 2, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 10; i++) {
+			addModule(new Module(90 + i, i, 3, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 10; i++) {
+			addModule(new Module(110 + i, i, 4, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 4; i++) {
+			addModule(new Module(130 + i, i, 5, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 4; i++) {
+			addModule(new Module(140 + i, i, 6, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 4; i++) {
+			addModule(new Module(150 + i, i, 7, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 4; i++) {
+			addModule(new Module(160 + i, i, 8, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 4; i++) {
+			addModule(new Module(170 + i, i, 9, 0, Module.UNDAMAGED));
+		}
+		for (int i = 1; i <= 4; i++) {
+			addModule(new Module(180 + i, i, 10, 0, Module.UNDAMAGED));
+		}
+		
+	}
 } 
