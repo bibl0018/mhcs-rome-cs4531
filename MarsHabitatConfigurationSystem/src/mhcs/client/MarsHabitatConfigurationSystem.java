@@ -87,8 +87,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		final GPSDataTransfer dataTransfer = new GPSDataTransfer(modList);
 
 		// Creates the root panel and sizes it.
-		RootPanel rootPanel = RootPanel.get();
-		rootPanel.setSize(this.width, this.height);
+		RootPanel.get().setSize(this.width, this.height);
 
 		// Default command for menu items.
 		Command cmd = new Command() {
@@ -224,13 +223,14 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates the tabs for the various configurations and module map.
 		configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
-		configTabs.add(weather, WEATHER_STRING);
+		//configTabs.add(weather, WEATHER_STRING);
 		configTabs.setHeight(this.height);
 		configTabs.setWidth(this.width);
 
 		// Adds everything to the root panel.
-		rootPanel.add(menu);
-		rootPanel.add(configTabs);
+		RootPanel.get().add(menu);
+		RootPanel.get().add(weather);
+		RootPanel.get().add(configTabs);
 
 		// Show login after module has loaded.
 		final Login initialLogin = new Login();
@@ -295,7 +295,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 		}
 
-		rootPanel.addStyleName("rootPanel");
+		RootPanel.get().addStyleName("rootPanel");
 	}
 
 }
