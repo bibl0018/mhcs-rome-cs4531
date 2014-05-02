@@ -50,17 +50,17 @@ public class TenDayAlert extends PopupPanel {
 			}
 		};
 		
-		ClickHandler cancelHandler = new ClickHandler() {
-			public void onClick(final ClickEvent event) {
-				hide();
-			}
-		};
+//		ClickHandler cancelHandler = new ClickHandler() {
+//			public void onClick(final ClickEvent event) {
+//				hide();
+//			}
+//		};
 		
 		final HorizontalPanel buttonPanel = new HorizontalPanel();
 		final Button calibrateButton = new Button("Alert in 10 days", calibrateHandler);
-		final Button cancelButton = new Button("Cancel", cancelHandler);
+		//final Button cancelButton = new Button("Cancel", cancelHandler);
 		buttonPanel.add(calibrateButton);
-		buttonPanel.add(cancelButton);
+		//buttonPanel.add(cancelButton);
 		buttonPanel.setSpacing(MAGIC_NUMBER_10);
 		
 		VerticalPanel mainPanel = new VerticalPanel();
