@@ -39,8 +39,8 @@ public class Weather implements IsWidget {
 		HP.add(logo);
 
 		// Uncomment below for testing on my website.
-		String proxy = "http://d.umn.edu/~dawso172/war/Weather.php?url=";
-		//String proxy = "http://www.d.umn.edu/~stowe063/war/Weather.php?url="; 
+		//String proxy = "http://d.umn.edu/~dawso172/war/Weather.php?url=";
+		String proxy = "http://www.d.umn.edu/~stowe063/war/Weather.php?url="; 
 		String url = proxy+"http://api.wunderground.com/api/0a4dcfa0929f5d9b/conditions/q/55812.json";
 		String url2 = proxy+"http://api.wunderground.com/api/0a4dcfa0929f5d9b/astronomy/q/55812.json";
 
