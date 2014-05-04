@@ -253,6 +253,16 @@ public class ModuleList {
 			this.deleteModule(i);
 		}
 		
+		this.airlock = 0;
+		this.canteen = 0;
+		this.control = 0;
+		this.dormitory = 0;
+		this.gym = 0;
+		this.medical = 0;
+		this.plain = 0;
+		this.power = 0;
+		this.sanitation = 0;
+		
 		Storage store = Storage.getLocalStorageIfSupported();
 		
 		if (store != null) {

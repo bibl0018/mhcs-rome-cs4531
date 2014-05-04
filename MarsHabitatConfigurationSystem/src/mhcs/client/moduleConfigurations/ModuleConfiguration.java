@@ -21,10 +21,8 @@ import com.google.gwt.storage.client.Storage;
 public class ModuleConfiguration{
 	
 	// Instance fields for the calculateConfiguration method.
-		public static final int CENTER = 20;
-		public static final int SIZE = 40;
-		public static final int WEST_LIMIT = 18;
-		public static final int EAST_LIMIT = 22;
+		public static final int ROW_SIZE = 50;
+		public static final int COLUMN_SIZE = 100;
 		public static final int ONE = 1;
 		public static final int TWO = 2;
 		public static final int THREE = 3;
@@ -300,13 +298,16 @@ public class ModuleConfiguration{
 	}
 	
 	/**
-	 * Function for constructing a configuration give a module list. 
+	 * Function for constructing a configuration given a module list. If successful,
+	 * the object that called this method will contain the full configuration.
 	 * @param modules The module list
+	 * @param centerRow The middle piece of the configuration will reside in this row.
+	 * @param centerColumn The middle piece of the configuration will reside in this column.
 	 * @return true if the configuration was calculated 
 	 */
-	public boolean calculateConfiguration(final ModuleList modules) {
+	public boolean calculateConfiguration(final ModuleList modules, final int centerColumn, final int centerRow) {
 		
-		Type[][] config = new Type[SIZE][SIZE];
+		Type[][] config = new Type[COLUMN_SIZE][ROW_SIZE];
 		int plain = modules.getNumOfPlain();
 		int airlock = modules.getNumOfAirlock();
 		int power = modules.getNumOfPower();
@@ -317,18 +318,14 @@ public class ModuleConfiguration{
 		int gym = modules.getNumOfGym();
 		int medical = modules.getNumOfMedical();
 		int control = modules.getNumOfControl();
+		int eastLimit = centerColumn + 2;
+		int westLimit = centerColumn - 2;
 		int northTip = 0;
 		int southTip = 0;
 		int eastTip = 0;
 		int westTip = 0;
 		boolean value = false;
 		
-		// Check for minimum module requirement
-		// 1 Airlock, 1 Control, 1 Power, 1 Food & water storage, 1 Dormitory, 1 Canteen, 1 Sanitation, and 3 Plain.
-		if (airlock < 1 || control < 1 || power < 1 || water < 1 || dormitory < 1 || canteen < 1 ||
-			sanitation < 1 || plain < THREE) {
-			return value;
-		}
 		
 		/*
 		 * Places all modules in this formation:
@@ -357,216 +354,220 @@ public class ModuleConfiguration{
 		 *            A
 		 */
 		
-		
-		// Places the first plain module in the center of the map.
-		if (plain > 0) {
-			config[CENTER][CENTER] = Type.PLAIN;
-			plain -= 1;
-		}
-		
-		// Places the remaining plain modules in four wings in a cross formation.
-		for (int wings = FOUR; wings > 0; wings -= 1) {
-			int i = 0;
-			if (wings == FOUR) {
-				for (i = 0; i < (plain/wings); i += 1) {
-					config[CENTER + i + 1][CENTER] = Type.PLAIN;
-				}
-				northTip = CENTER + i;
-			} else if (wings == THREE) {
-				for (i = 0; i < (plain/wings); i += 1) {
-					config[CENTER][CENTER + i + 1] = Type.PLAIN;
-				}
-				eastTip = CENTER + i;
-			} else if (wings == TWO) {
-				for (i = 0; i < (plain/wings); i += 1) {
-					config[CENTER - i - 1][CENTER] = Type.PLAIN;
+		try { 
+			// Places the first plain module in the center of the map.
+			if (plain > 0) {
+				config[centerColumn][centerRow] = Type.PLAIN;
+				plain -= 1;
+			}
+			
+			// Places the remaining plain modules in four wings in a cross formation.
+			for (int wings = FOUR; wings > 0; wings -= 1) {
+				int i = 0;
+				if (wings == FOUR) {
+					for (i = 0; i < (plain/wings); i += 1) {
+						config[centerColumn][centerRow + i + 1] = Type.PLAIN;
 					}
-				southTip = CENTER - i;
-			} else if (wings == ONE) {
-				for (i = 0; i < (plain/wings); i += 1) {
-					config[CENTER][CENTER - i - 1] = Type.PLAIN;
+					northTip = centerRow + i;
+				} else if (wings == THREE) {
+					for (i = 0; i < (plain/wings); i += 1) {
+						config[centerColumn + i + 1][centerRow] = Type.PLAIN;
+					}
+					eastTip = centerColumn + i;
+				} else if (wings == TWO) {
+					for (i = 0; i < (plain/wings); i += 1) {
+						config[centerColumn][centerRow - i - 1] = Type.PLAIN;
+						}
+					southTip = centerRow - i;
+				} else if (wings == ONE) {
+					for (i = 0; i < (plain/wings); i += 1) {
+						config[centerColumn - i - 1][centerRow] = Type.PLAIN;
+					}
+					westTip = centerColumn - i;
 				}
-				westTip = CENTER - i;
+				plain -= i;
 			}
-			plain -= i;
+			
+			// Place airlocks in each wing.
+			for (int i = 0; i < airlock; i += 1) {
+				if (i == 0) {
+					config[centerColumn][westTip - 1] = Type.AIRLOCK;
+				} else if (i == 1){
+					config[centerColumn][eastTip + 1] = Type.AIRLOCK;
+				} else if (i == TWO){
+					config[southTip - 1][centerRow] = Type.AIRLOCK;
+				} else if (i == THREE) {
+					config[northTip + 1][centerRow] = Type.AIRLOCK;
+				}
+			}
+			
+			// Place medical modules by the airlocks.
+			for (int i = 0; i < medical; i += 1) {
+				if (i == 0) {
+					config[northTip][centerRow - 1] = Type.MEDICAL;
+				} else if (i == 1 && eastTip > eastLimit){
+					config[centerColumn + 1][eastTip] = Type.MEDICAL;
+				} else if (i == TWO){
+					config[southTip][centerRow + 1] = Type.MEDICAL;
+				} else if (i == THREE && westTip < westLimit) {
+					config[centerColumn - 1][westTip] = Type.MEDICAL;
+				}
+			}
+			
+			// Place control modules by the airlocks and across from medical.
+			for (int i = 0; i < control; i += 1) {
+				if (i == 0) {
+					config[northTip][centerRow + 1] = Type.CONTROL;
+				} else if (i == 1 && eastTip > eastLimit){
+					config[centerColumn - 1][eastTip] = Type.CONTROL;
+				} else if (i == TWO){
+					config[southTip][centerRow - 1] = Type.CONTROL;
+				} else if (i == THREE && westTip < westLimit) {
+					config[centerColumn + 1][westTip] = Type.CONTROL;
+				}
+			}
+			
+			// Place power modules in each wing next to medical.
+			for (int i = 0; i < power; i += 1) {
+				if (i == 0 && (northTip - 1) > centerRow) {
+					config[northTip - 1][centerRow - 1] = Type.POWER;
+				} else if (i == 1 && (eastTip - 1) > eastLimit){
+					config[centerColumn + 1][eastTip - 1] = Type.POWER;
+				} else if (i == TWO && (southTip + 1) < centerRow){
+					config[southTip + 1][centerRow + 1] = Type.POWER;
+				} else if (i == THREE && (westTip + 1) > westLimit) {
+					config[centerColumn + 1][westTip + 1] = Type.POWER;
+				}
+			}
+			
+			// Place canteen modules in east and west wings.
+			for (int i = 0; i < canteen; i += 1) {
+				if (i == 0 && (eastTip - 1) > eastLimit) {
+					config[centerColumn - 1][eastTip - 1] = Type.CANTEEN;
+				} else if (i == 1 && (westTip + 1) < westLimit){
+					config[centerColumn + 1][westTip + 1] = Type.CANTEEN;
+				} else if (i == TWO && (eastTip - THREE) > eastLimit){
+					config[centerColumn - 1][eastTip - THREE] = Type.CANTEEN;
+				} else if (i == THREE && (westTip + THREE) < westLimit) {
+					config[centerColumn + 1][westTip + THREE] = Type.CANTEEN;
+				}
+			}
+			
+			// Place food and water modules in east and west wings
+			for (int i = 0; i < water; i += 1) {
+				if (i == 0 && (westTip + TWO) < westLimit) {
+					config[centerColumn + 1][westTip + TWO] = Type.FOOD_WATER;
+				} else if (i == 1 && (eastTip - TWO) > eastLimit){
+					config[centerColumn + 1][eastTip - TWO] = Type.FOOD_WATER;
+				} else if (i == TWO && (westTip + TWO) < westLimit){
+					config[centerColumn - 1][westTip + TWO] = Type.FOOD_WATER;
+				} else if (i == THREE && (eastTip - TWO) > eastLimit) {
+					config[centerColumn - 1][eastTip - TWO] = Type.FOOD_WATER;
+				} else if (i == FOUR && (westTip + THREE) < westLimit) {
+					config[centerColumn - 1][westTip + THREE] = Type.FOOD_WATER;
+				} else if (i == FIVE && (eastTip - THREE) > eastLimit){
+					config[centerColumn + 1][eastTip - THREE] = Type.FOOD_WATER;
+				} else if (i == SIX && (westTip + FOUR) < westLimit){
+					config[centerColumn - 1][westTip + FOUR] = Type.FOOD_WATER;
+				} else if (i == SEVEN && (eastTip - FOUR) > eastLimit) {
+					config[centerColumn - 1][eastTip - FOUR] = Type.FOOD_WATER;
+				} else if (i == EIGHT && (westTip + FOUR) < westLimit) {
+					config[centerColumn + 1][westTip + FOUR] = Type.FOOD_WATER;
+				} else if (i == NINE && (eastTip - FOUR) > eastLimit){
+					config[centerColumn + 1][eastTip - FOUR] = Type.FOOD_WATER;
+				}
+			}
+			
+			// Place gym modules in each wing
+			for (int i = 0; i < gym; i += 1) {
+				if (i == 0 && (northTip - 2) > centerRow) {
+					config[northTip - 2][centerRow + 1] = Type.GYM_RELAXATION;
+				} else if (i == 1 && (eastTip - SIX) > eastLimit){
+					config[centerColumn + 1][eastTip - SIX] = Type.GYM_RELAXATION;
+				} else if (i == TWO && (southTip + 2) < centerRow){
+					config[southTip + 2][centerRow - 1] = Type.GYM_RELAXATION;
+				} else if (i == THREE && (westTip + SIX) < westLimit) {
+					config[centerColumn + 1][westTip + SIX] = Type.GYM_RELAXATION;
+				}
+			}
+			
+			// Place sanitation modules. 1 in east and west, 4 in north and south
+			for (int i = 0; i < sanitation; i += 1) {
+				if (i == 0 && (northTip - 1) > centerRow) {
+					config[northTip - 1][centerRow + 1] = Type.SANITATION;
+				} else if (i == 1 && (southTip + 1) < centerRow){
+					config[southTip + 1][centerRow - 1] = Type.SANITATION;
+				} else if (i == TWO && (northTip - THREE) > centerRow){
+					config[northTip - THREE][centerRow + 1] = Type.SANITATION;
+				} else if (i == THREE && (southTip + THREE) < centerRow) {
+					config[southTip + THREE][centerRow - 1] = Type.SANITATION;
+				} else if (i == FOUR && (northTip - FIVE) > centerRow){
+					config[northTip - FIVE][centerRow - 1] = Type.SANITATION;
+				} else if (i == FIVE && (southTip + FIVE) < centerRow) {
+					config[southTip + FIVE][centerRow + 1] = Type.SANITATION;
+				} else if (i == SIX && (westTip + SIX) < westLimit){
+					config[centerColumn - 1][westTip + SIX] = Type.SANITATION;
+				} else if (i == SEVEN && (eastTip - SIX) > eastLimit) {
+					config[centerColumn - 1][eastTip - SIX] = Type.SANITATION;
+				} else if (i == EIGHT && (northTip - SIX) > centerRow){
+					config[northTip - SIX][centerRow + 1] = Type.SANITATION;
+				} else if (i == NINE && (southTip + SIX) < centerRow) {
+					config[southTip + SIX][centerRow - 1] = Type.SANITATION;
+				}
+			}
+			
+			// Place dormitory modules. 2 in east and west, 8 in north and south.
+			for (int i = 0; i < dormitory; i += 1) {
+				if (i == 0 && (northTip - TWO) > centerRow) {
+					config[northTip - TWO][centerRow - 1] = Type.DORMITORY;
+				} else if (i == 1 && (southTip + TWO) < centerRow){
+					config[southTip + TWO][centerRow + 1] = Type.DORMITORY;
+				} else if (i == TWO && (northTip - THREE) > centerRow){
+					config[northTip - THREE][centerRow - 1] = Type.DORMITORY;
+				} else if (i == THREE && (southTip + THREE) < centerRow) {
+					config[southTip + THREE][centerRow + 1] = Type.DORMITORY;
+				} else if (i == FOUR && (northTip - FOUR) > centerRow){
+					config[northTip - FOUR][centerRow + 1] = Type.DORMITORY;
+				} else if (i == FIVE && (southTip + FOUR) < centerRow) {
+					config[southTip + FOUR][centerRow - 1] = Type.DORMITORY;
+				} else if (i == SIX && (northTip - FOUR) > centerRow){
+					config[northTip - FOUR][centerRow - 1] = Type.DORMITORY;
+				} else if (i == SEVEN && (southTip + FOUR) < centerRow) {
+					config[southTip + FOUR][centerRow + 1] = Type.DORMITORY;
+				} else if (i == EIGHT && (westTip + FIVE) < westLimit){
+					config[centerColumn - 1][westTip + FIVE] = Type.DORMITORY;
+				} else if (i == NINE && (eastTip - FIVE) > eastLimit) {
+					config[centerColumn + 1][eastTip - FIVE] = Type.DORMITORY;
+				} else if (i == TEN && (westTip + FIVE) < westLimit){
+					config[centerColumn + 1][westTip + FIVE] = Type.DORMITORY;
+				} else if (i == ELEVEN && (eastTip - FIVE) > eastLimit) {
+					config[centerColumn - 1][eastTip - FIVE] = Type.DORMITORY;
+				} else if (i == TWELVE && (northTip - FIVE) > centerRow){
+					config[northTip - FIVE][centerRow + 1] = Type.DORMITORY;
+				} else if (i == THIRTEEN && (southTip + FIVE) < centerRow) {
+					config[southTip + FIVE][centerRow - 1] = Type.DORMITORY;
+				} else if (i == FOURTEEN && (northTip - SIX) > centerRow){
+					config[northTip - SIX][centerRow - 1] = Type.DORMITORY;
+				} else if (i == FIFTEEN && (southTip + SIX) < centerRow) {
+					config[southTip + SIX][centerRow + 1] = Type.DORMITORY;
+				} else if (i == SIXTEEN && (northTip - SEVEN) > centerRow){
+					config[northTip - SEVEN][centerRow - 1] = Type.DORMITORY;
+				} else if (i == SEVENTEEN && (southTip + SEVEN) < centerRow) {
+					config[southTip + SEVEN][centerRow + 1] = Type.DORMITORY;
+				} else if (i == EIGHTEEN && (northTip - SEVEN) > centerRow){
+					config[northTip - SEVEN][centerRow + 1] = Type.DORMITORY;
+				} else if (i == NINETEEN && (southTip + SEVEN) < centerRow) {
+					config[southTip + SEVEN][centerRow - 1] = Type.DORMITORY;
+				}
+			}
+		} catch (IndexOutOfBoundsException e) {
+			return false;
 		}
 		
-		// Place airlocks at tips of wings.
-		for (int i = 0; i < airlock; i += 1) {
-			if (i == 0) {
-				config[northTip + 1][CENTER] = Type.AIRLOCK;
-			} else if (i == 1){
-				config[CENTER][eastTip + 1] = Type.AIRLOCK;
-			} else if (i == TWO){
-				config[southTip - 1][CENTER] = Type.AIRLOCK;
-			} else if (i == THREE) {
-				config[CENTER][westTip - 1] = Type.AIRLOCK;
-			}
-		}
-		
-		// Place medical modules by the airlocks.
-		for (int i = 0; i < medical; i += 1) {
-			if (i == 0) {
-				config[northTip][CENTER - 1] = Type.MEDICAL;
-			} else if (i == 1 && eastTip > EAST_LIMIT){
-				config[CENTER + 1][eastTip] = Type.MEDICAL;
-			} else if (i == TWO){
-				config[southTip][CENTER + 1] = Type.MEDICAL;
-			} else if (i == THREE && westTip < WEST_LIMIT) {
-				config[CENTER - 1][westTip] = Type.MEDICAL;
-			}
-		}
-		
-		// Place control modules by the airlocks and across from medical.
-		for (int i = 0; i < control; i += 1) {
-			if (i == 0) {
-				config[northTip][CENTER + 1] = Type.CONTROL;
-			} else if (i == 1 && eastTip > EAST_LIMIT){
-				config[CENTER - 1][eastTip] = Type.CONTROL;
-			} else if (i == TWO){
-				config[southTip][CENTER - 1] = Type.CONTROL;
-			} else if (i == THREE && westTip < WEST_LIMIT) {
-				config[CENTER + 1][westTip] = Type.CONTROL;
-			}
-		}
-		
-		// Place power modules in each wing next to medical.
-		for (int i = 0; i < power; i += 1) {
-			if (i == 0 && (northTip - 1) > CENTER) {
-				config[northTip - 1][CENTER - 1] = Type.POWER;
-			} else if (i == 1 && (eastTip - 1) > EAST_LIMIT){
-				config[CENTER + 1][eastTip - 1] = Type.POWER;
-			} else if (i == TWO && (southTip + 1) < CENTER){
-				config[southTip + 1][CENTER + 1] = Type.POWER;
-			} else if (i == THREE && (westTip + 1) > WEST_LIMIT) {
-				config[CENTER + 1][westTip + 1] = Type.POWER;
-			}
-		}
-		
-		// Place canteen modules in east and west wings.
-		for (int i = 0; i < canteen; i += 1) {
-			if (i == 0 && (eastTip - 1) > EAST_LIMIT) {
-				config[CENTER - 1][eastTip - 1] = Type.CANTEEN;
-			} else if (i == 1 && (westTip + 1) < WEST_LIMIT){
-				config[CENTER + 1][westTip + 1] = Type.CANTEEN;
-			} else if (i == TWO && (eastTip - THREE) > EAST_LIMIT){
-				config[CENTER - 1][eastTip - THREE] = Type.CANTEEN;
-			} else if (i == THREE && (westTip + THREE) < WEST_LIMIT) {
-				config[CENTER + 1][westTip + THREE] = Type.CANTEEN;
-			}
-		}
-		
-		// Place food and water modules in east and west wings
-		for (int i = 0; i < water; i += 1) {
-			if (i == 0 && (westTip + TWO) < WEST_LIMIT) {
-				config[CENTER + 1][westTip + TWO] = Type.FOOD_WATER;
-			} else if (i == 1 && (eastTip - TWO) > EAST_LIMIT){
-				config[CENTER + 1][eastTip - TWO] = Type.FOOD_WATER;
-			} else if (i == TWO && (westTip + TWO) < WEST_LIMIT){
-				config[CENTER - 1][westTip + TWO] = Type.FOOD_WATER;
-			} else if (i == THREE && (eastTip - TWO) > EAST_LIMIT) {
-				config[CENTER - 1][eastTip - TWO] = Type.FOOD_WATER;
-			} else if (i == FOUR && (westTip + THREE) < WEST_LIMIT) {
-				config[CENTER - 1][westTip + THREE] = Type.FOOD_WATER;
-			} else if (i == FIVE && (eastTip - THREE) > EAST_LIMIT){
-				config[CENTER + 1][eastTip - THREE] = Type.FOOD_WATER;
-			} else if (i == SIX && (westTip + FOUR) < WEST_LIMIT){
-				config[CENTER - 1][westTip + FOUR] = Type.FOOD_WATER;
-			} else if (i == SEVEN && (eastTip - FOUR) > EAST_LIMIT) {
-				config[CENTER - 1][eastTip - FOUR] = Type.FOOD_WATER;
-			} else if (i == EIGHT && (westTip + FOUR) < WEST_LIMIT) {
-				config[CENTER + 1][westTip + FOUR] = Type.FOOD_WATER;
-			} else if (i == NINE && (eastTip - FOUR) > EAST_LIMIT){
-				config[CENTER + 1][eastTip - FOUR] = Type.FOOD_WATER;
-			}
-		}
-		
-		// Place gym modules in each wing
-		for (int i = 0; i < gym; i += 1) {
-			if (i == 0 && (northTip - 2) > CENTER) {
-				config[northTip - 2][CENTER + 1] = Type.GYM_RELAXATION;
-			} else if (i == 1 && (eastTip - SIX) > EAST_LIMIT){
-				config[CENTER + 1][eastTip - SIX] = Type.GYM_RELAXATION;
-			} else if (i == TWO && (southTip + 2) < CENTER){
-				config[southTip + 2][CENTER - 1] = Type.GYM_RELAXATION;
-			} else if (i == THREE && (westTip + SIX) < WEST_LIMIT) {
-				config[CENTER + 1][westTip + SIX] = Type.GYM_RELAXATION;
-			}
-		}
-		
-		// Place sanitation modules. 1 in east and west, 4 in north and south
-		for (int i = 0; i < sanitation; i += 1) {
-			if (i == 0 && (northTip - 1) > CENTER) {
-				config[northTip - 1][CENTER + 1] = Type.SANITATION;
-			} else if (i == 1 && (southTip + 1) < CENTER){
-				config[southTip + 1][CENTER - 1] = Type.SANITATION;
-			} else if (i == TWO && (northTip - THREE) > CENTER){
-				config[northTip - THREE][CENTER + 1] = Type.SANITATION;
-			} else if (i == THREE && (southTip + THREE) < CENTER) {
-				config[southTip + THREE][CENTER - 1] = Type.SANITATION;
-			} else if (i == FOUR && (northTip - FIVE) > CENTER){
-				config[northTip - FIVE][CENTER - 1] = Type.SANITATION;
-			} else if (i == FIVE && (southTip + FIVE) < CENTER) {
-				config[southTip + FIVE][CENTER + 1] = Type.SANITATION;
-			} else if (i == SIX && (westTip + SIX) < WEST_LIMIT){
-				config[CENTER - 1][westTip + SIX] = Type.SANITATION;
-			} else if (i == SEVEN && (eastTip - SIX) > EAST_LIMIT) {
-				config[CENTER - 1][eastTip - SIX] = Type.SANITATION;
-			} else if (i == EIGHT && (northTip - SIX) > CENTER){
-				config[northTip - SIX][CENTER + 1] = Type.SANITATION;
-			} else if (i == NINE && (southTip + SIX) < CENTER) {
-				config[southTip + SIX][CENTER - 1] = Type.SANITATION;
-			}
-		}
-		
-		// Place dormitory modules. 2 in east and west, 8 in north and south.
-		for (int i = 0; i < dormitory; i += 1) {
-			if (i == 0 && (northTip - TWO) > CENTER) {
-				config[northTip - TWO][CENTER - 1] = Type.DORMITORY;
-			} else if (i == 1 && (southTip + TWO) < CENTER){
-				config[southTip + TWO][CENTER + 1] = Type.DORMITORY;
-			} else if (i == TWO && (northTip - THREE) > CENTER){
-				config[northTip - THREE][CENTER - 1] = Type.DORMITORY;
-			} else if (i == THREE && (southTip + THREE) < CENTER) {
-				config[southTip + THREE][CENTER + 1] = Type.DORMITORY;
-			} else if (i == FOUR && (northTip - FOUR) > CENTER){
-				config[northTip - FOUR][CENTER + 1] = Type.DORMITORY;
-			} else if (i == FIVE && (southTip + FOUR) < CENTER) {
-				config[southTip + FOUR][CENTER - 1] = Type.DORMITORY;
-			} else if (i == SIX && (northTip - FOUR) > CENTER){
-				config[northTip - FOUR][CENTER - 1] = Type.DORMITORY;
-			} else if (i == SEVEN && (southTip + FOUR) < CENTER) {
-				config[southTip + FOUR][CENTER + 1] = Type.DORMITORY;
-			} else if (i == EIGHT && (westTip + FIVE) < WEST_LIMIT){
-				config[CENTER - 1][westTip + FIVE] = Type.DORMITORY;
-			} else if (i == NINE && (eastTip - FIVE) > EAST_LIMIT) {
-				config[CENTER + 1][eastTip - FIVE] = Type.DORMITORY;
-			} else if (i == TEN && (westTip + FIVE) < WEST_LIMIT){
-				config[CENTER + 1][westTip + FIVE] = Type.DORMITORY;
-			} else if (i == ELEVEN && (eastTip - FIVE) > EAST_LIMIT) {
-				config[CENTER - 1][eastTip - FIVE] = Type.DORMITORY;
-			} else if (i == TWELVE && (northTip - FIVE) > CENTER){
-				config[northTip - FIVE][CENTER + 1] = Type.DORMITORY;
-			} else if (i == THIRTEEN && (southTip + FIVE) < CENTER) {
-				config[southTip + FIVE][CENTER - 1] = Type.DORMITORY;
-			} else if (i == FOURTEEN && (northTip - SIX) > CENTER){
-				config[northTip - SIX][CENTER - 1] = Type.DORMITORY;
-			} else if (i == FIFTEEN && (southTip + SIX) < CENTER) {
-				config[southTip + SIX][CENTER + 1] = Type.DORMITORY;
-			} else if (i == SIXTEEN && (northTip - SEVEN) > CENTER){
-				config[northTip - SEVEN][CENTER - 1] = Type.DORMITORY;
-			} else if (i == SEVENTEEN && (southTip + SEVEN) < CENTER) {
-				config[southTip + SEVEN][CENTER + 1] = Type.DORMITORY;
-			} else if (i == EIGHTEEN && (northTip - SEVEN) > CENTER){
-				config[northTip - SEVEN][CENTER + 1] = Type.DORMITORY;
-			} else if (i == NINETEEN && (southTip + SEVEN) < CENTER) {
-				config[southTip + SEVEN][CENTER - 1] = Type.DORMITORY;
-			}
-		}
 		
 		// Places each coord in this configuration.
-		for (int i = 0; i < SIZE; i += 1) {
-			for (int k = 0; k < SIZE; k += 1) {
+		for (int i = 0; i < COLUMN_SIZE; i += 1) {
+			for (int k = 0; k < ROW_SIZE; k += 1) {
 				Type type = config[i][k];
 				
 				if (type != null) {
@@ -611,53 +612,133 @@ public class ModuleConfiguration{
 	/**
 	 * Sets the values of this ModuleConfiguration to match that of the first minimum configuration.
 	 */
-	public void setMinimumConfigOne() {
+	public boolean setMinimumConfigOne(final int centerColumn, final int centerRow) {
 		this.clearConfig();
 		
-		// Add coordinates to appropriate module lists.
-		this.addAirlock(TWENTYTWO, TWENTYFOUR);
-		this.addCanteen(TWENTYFOUR, TWENTYFIVE);
-		this.addControl(TWENTYTHREE, TWENTYFIVE);
-		this.addDormitory(TWENTYFIVE, TWENTYTHREE);
-		this.addFoodAndWater(TWENTYFIVE, TWENTYFIVE);
-		this.addPlain(TWENTYTHREE, TWENTYFOUR);
-		this.addPlain(TWENTYFOUR, TWENTYFOUR);
-		this.addPlain(TWENTYFIVE, TWENTYFOUR);
-		this.addPower(TWENTYTHREE, TWENTYTHREE);
-		this.addSanitation(TWENTYFOUR, TWENTYTHREE);
+		Type[][] config = new Type[COLUMN_SIZE][ROW_SIZE];
+		
+		try {
+			config[centerColumn][centerRow] = Type.PLAIN;
+			config[centerColumn - 1][centerRow] = Type.PLAIN;
+			config[centerColumn + 1][centerRow] = Type.PLAIN;
+			config[centerColumn - 2][centerRow] = Type.AIRLOCK;
+			config[centerColumn][centerRow + 1] = Type.CANTEEN;
+			config[centerColumn - 1][centerRow + 1] = Type.CONTROL;
+			config[centerColumn - 1][centerRow - 1] = Type.SANITATION;
+			config[centerColumn][centerRow - 1] = Type.POWER;
+			config[centerColumn + 1][centerRow + 1] = Type.FOOD_WATER;
+			config[centerColumn + 1][centerRow - 1] = Type.DORMITORY;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
+		
+		// Places each coord in this configuration.
+		for (int i = 0; i < COLUMN_SIZE; i += 1) {
+			for (int k = 0; k < ROW_SIZE; k += 1) {
+				Type type = config[i][k];
+				
+				if (type != null) {
+					if (type.equals(Type.AIRLOCK)) {
+						this.addAirlock(i, k);
+					} else if (type.equals(Type.CANTEEN)) {
+						this.addCanteen(i, k);
+					} else if (type.equals(Type.CONTROL)) {
+						this.addControl(i, k);
+					} else if (type.equals(Type.DORMITORY)) {
+						this.addDormitory(i, k);
+					} else if (type.equals(Type.FOOD_WATER)) {
+						this.addFoodAndWater(i, k);
+					} else if (type.equals(Type.GYM_RELAXATION)) {
+						this.addGymAndRelaxation(i, k);
+					} else if (type.equals(Type.MEDICAL)) {
+						this.addMedical(i, k);
+					} else if (type.equals(Type.PLAIN)) {
+						this.addPlain(i, k);
+					} else if (type.equals(Type.POWER)) {
+						this.addPower(i, k);
+					} else if (type.equals(Type.SANITATION)) {
+						this.addSanitation(i, k);
+					}
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	/**
 	 * Sets the values of this ModuleConfiguration to match that of the second minimum configuration.
 	 */
-	public void setMinimumConfigTwo() {
+	public boolean setMinimumConfigTwo(final int centerColumn, final int centerRow) {
 		this.clearConfig();
 		
-		// Add coordinates to appropriate module lists.
-		this.addAirlock(TWENTYTHREE, TWENTYTWO);
-		this.addCanteen(TWENTYTHREE, TWENTYFIVE);
-		this.addControl(TWENTYTWO, TWENTYFOUR);
-		this.addDormitory(TWENTYFIVE, TWENTYFOUR);
-		this.addFoodAndWater(TWENTYFOUR, TWENTYFIVE);
-		this.addPlain(TWENTYFOUR, TWENTYFOUR);
-		this.addPlain(TWENTYTHREE, TWENTYFOUR);
-		this.addPlain(TWENTYTHREE, TWENTYTHREE);
-		this.addPower(TWENTYFOUR, TWENTYTHREE);
-		this.addSanitation(TWENTYTWO, TWENTYTHREE);
+		Type[][] config = new Type[COLUMN_SIZE][ROW_SIZE];
+		
+		try {
+			config[centerColumn][centerRow] = Type.PLAIN;
+			config[centerColumn][centerRow - 1] = Type.PLAIN;
+			config[centerColumn + 1][centerRow] = Type.PLAIN;
+			config[centerColumn][centerRow - 2] = Type.AIRLOCK;
+			config[centerColumn][centerRow + 1] = Type.CANTEEN;
+			config[centerColumn - 1][centerRow] = Type.CONTROL;
+			config[centerColumn - 1][centerRow - 1] = Type.SANITATION;
+			config[centerColumn + 1][centerRow - 1] = Type.POWER;
+			config[centerColumn + 1][centerRow + 1] = Type.FOOD_WATER;
+			config[centerColumn + 2][centerRow] = Type.DORMITORY;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
+		
+		// Places each coord in this configuration.
+		for (int i = 0; i < COLUMN_SIZE; i += 1) {
+			for (int k = 0; k < ROW_SIZE; k += 1) {
+				Type type = config[i][k];
+				
+				if (type != null) {
+					if (type.equals(Type.AIRLOCK)) {
+						this.addAirlock(i, k);
+					} else if (type.equals(Type.CANTEEN)) {
+						this.addCanteen(i, k);
+					} else if (type.equals(Type.CONTROL)) {
+						this.addControl(i, k);
+					} else if (type.equals(Type.DORMITORY)) {
+						this.addDormitory(i, k);
+					} else if (type.equals(Type.FOOD_WATER)) {
+						this.addFoodAndWater(i, k);
+					} else if (type.equals(Type.GYM_RELAXATION)) {
+						this.addGymAndRelaxation(i, k);
+					} else if (type.equals(Type.MEDICAL)) {
+						this.addMedical(i, k);
+					} else if (type.equals(Type.PLAIN)) {
+						this.addPlain(i, k);
+					} else if (type.equals(Type.POWER)) {
+						this.addPower(i, k);
+					} else if (type.equals(Type.SANITATION)) {
+						this.addSanitation(i, k);
+					}
+				}
+			}
+		}
+		
+		return true;
 	}
 	
+	
+	/**
+	 * Clears all lists in this configuration.
+	 */
 	public void clearConfig() {
 		// Clear all lists.
-				this.airlockModules.clear();
-				this.canteenModules.clear();
-				this.controlModules.clear();
-				this.dormitoryModules.clear();
-				this.foodAndWaterModules.clear();
-				this.gymAndRelaxationModules.clear();
-				this.medicalModules.clear();
-				this.plainModules.clear();
-				this.powerModules.clear();
-				this.sanitationModules.clear();
+		this.airlockModules.clear();
+		this.canteenModules.clear();
+		this.controlModules.clear();
+		this.dormitoryModules.clear();
+		this.foodAndWaterModules.clear();
+		this.gymAndRelaxationModules.clear();
+		this.medicalModules.clear();
+		this.plainModules.clear();
+		this.powerModules.clear();
+		this.sanitationModules.clear();
 	}
 	
 }

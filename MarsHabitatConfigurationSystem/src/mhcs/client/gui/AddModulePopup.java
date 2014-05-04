@@ -168,7 +168,6 @@ public class AddModulePopup extends PopupPanel {
 		mainPanel.add(buttonPanel);
 		mainPanel.setSpacing(MAIN_SPACE);
 		
-		
 		setWidget(mainPanel);
 	}
 }
