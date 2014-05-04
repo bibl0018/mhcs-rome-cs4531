@@ -24,9 +24,12 @@ import mhcs.client.module.ModuleList;
 
 public class GPSDataTransfer {	
 	public ModuleList aModList = new ModuleList();
+	public String stringURL;
 	
-	public GPSDataTransfer(final ModuleList modList) {
+	public GPSDataTransfer(final ModuleList modList, final String incomingURL) {
+//	public GPSDataTransfer(final ModuleList modList) {
 		this.aModList = modList;
+		this.stringURL = incomingURL;
 	}
 	
 	/**
@@ -35,9 +38,10 @@ public class GPSDataTransfer {
 	 */
 	public void getData() {
 		
-		//Connects to the tests through a proxy.
+		//Connects to the tests through a proxy
 		String proxy = "http://www.d.umn.edu/~stowe063/war/Proxy.php?url=";
-		String url = proxy + "http://www.d.umn.edu/~abrooks/SomeTests.php?q=1";
+
+		String url = proxy + this.stringURL;
 		url = URL.encode(url);
 		
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);

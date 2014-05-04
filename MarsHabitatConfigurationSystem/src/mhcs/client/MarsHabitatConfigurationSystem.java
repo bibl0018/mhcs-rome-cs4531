@@ -1,6 +1,7 @@
 package mhcs.client;
 
 import mhcs.client.gui.AddModulePopup;
+import mhcs.client.gui.GPSDataPopup;
 import mhcs.client.gui.Login;
 import mhcs.client.gui.TenDayAlert;
 import mhcs.client.module.ModuleList;
@@ -84,7 +85,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		min2Config.setMinimumConfigTwo();
 
 		// GPS Data object.
-		final GPSDataTransfer dataTransfer = new GPSDataTransfer(modList);
+//		final GPSDataTransfer dataTransfer = new GPSDataTransfer(modList);
 
 		// Creates the root panel and sizes it.
 		RootPanel.get().setSize(this.width, this.height);
@@ -132,6 +133,21 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 					}
 				});
 				popSound.play();
+			}
+		};
+		
+		//Command to show the GPS Data Transfer popup.
+		Command gpsDataPopupCmd = new Command() {
+			public void execute(){
+				final GPSDataPopup gpsPopup = new GPSDataPopup(modList, BUS);
+				gpsPopup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+					public void setPosition(final int offsetWidth, final int offsetHeight) {
+						int left = (Window.getClientWidth() - offsetWidth) / MAGIC_NUMBER;
+						int top = (Window.getClientHeight() - offsetHeight) / MAGIC_NUMBER;
+						gpsPopup.setPopupPosition(left, top);
+					}
+				});
+				popSound.play();	
 			}
 		};
 
@@ -208,13 +224,13 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 
-		// Command for GPS data transfer.
-		Command gpsDataCmd = new Command() {
-			public void execute() {
-				dataTransfer.getData();
-				BUS.fireEvent(new AddEvent());
-			}
-		};
+//		// Command for GPS data transfer.
+//		Command gpsDataCmd = new Command() {
+//			public void execute() {
+//				dataTransfer.getData();
+//				BUS.fireEvent(new AddEvent());
+//			}
+//		};
 
 		// Creates the menu for the menu bar.
 		MenuBar theMenu = new MenuBar(true);
@@ -225,7 +241,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		theMenu.addItem("Save Full Configuration", saveConfigCmd);
 		theMenu.addItem("Load Full Configuration", loadConfigCmd);
 		//theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
-		theMenu.addItem("GPS Data Transfer", gpsDataCmd);
+//		theMenu.addItem("GPS Data Transfer", gpsDataCmd);
+		theMenu.addItem("GPS Data Transfer", gpsDataPopupCmd);
 		theMenu.addItem("Clear Modules and Configuration", clearCmd);
 		theMenu.addSeparator();
 		theMenu.addItem("Log off", loginCmd);
