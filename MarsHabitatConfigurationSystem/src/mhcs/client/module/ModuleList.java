@@ -1,5 +1,7 @@
 package mhcs.client.module;
 
+import mhcs.client.moduleConfigurations.Coordinates;
+
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -269,6 +271,52 @@ public class ModuleList {
 			store.clear();
 		}
 		
+	}
+	
+	/**
+	 * Calculates the center of gravity for the initial landing positions of every modules.
+	 * @return the center of gravity coordinates.
+	 */
+	public Coordinates getCenterOfGravity() {
+		int column = 0;
+		int row = 0;
+		int total = 0;
+		
+		// Sum every x and y coordinate
+		for (int i = 1; i < SIZE; i += 1) {
+			if (this.modules[i] != null && !Module.DAMAGED.equals(this.modules[i].getStatus()) ) {
+				column += this.modules[i].getXCoord();
+				row += this.modules[i].getYCoord();
+				total += 1;
+			}
+		}
+		
+		// Divide by total modules to get center.
+		column = column / total;
+		row = row / total;
+		
+		return new Coordinates(column, row);
+	}
+	
+	/**
+	 * Calculates the total distance to move every module.
+	 * @param centerColumn The x center of gravity for a configuration
+	 * @param centerRow The y center of gravity for a configuration
+	 * @return the total size of moving task.
+	 */
+	public double getSizeOfMovingTask(final int centerColumn, final int centerRow) {
+		double size = 0;
+		
+		for (int i = 1; i < SIZE; i += 1) {
+			if (this.modules[i] != null && !Module.DAMAGED.equals(this.modules[i].getStatus()) ) {
+				final int xSize = Math.abs(this.modules[i].getXCoord() - centerColumn);
+				final int ySize = Math.abs(this.modules[i].getYCoord() - centerRow);
+				
+				size = size + xSize + ySize;
+			}
+		}
+		
+		return size;
 	}
 	
 	/**

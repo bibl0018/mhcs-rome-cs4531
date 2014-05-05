@@ -1,7 +1,7 @@
 package mhcs.client.moduleConfigurations;
 
 import mhcs.client.module.Module.Type;
-import mhcs.client.moduleConfigurations.ModuleConfiguration.Coordinates;
+import mhcs.client.moduleConfigurations.Coordinates;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
@@ -52,55 +52,44 @@ public class ConfigurationMap {
 	    for (int i = 0; i < config.airlockModules.size(); i += 1) {
 	    	Coordinates coord = config.airlockModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.AIRLOCK);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.canteenModules.size(); i += 1) {
 	    	Coordinates coord = config.canteenModules.get(i);
-	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.CANTEEN);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
+	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.CANTEEN);		
 	    }
 	    for (int i = 0; i < config.controlModules.size(); i += 1) {
 	    	Coordinates coord = config.controlModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.CONTROL);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.dormitoryModules.size(); i += 1) {
 	    	Coordinates coord = config.dormitoryModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.DORMITORY);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.foodAndWaterModules.size(); i += 1) {
 	    	Coordinates coord = config.foodAndWaterModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.FOOD_WATER);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.gymAndRelaxationModules.size(); i += 1) {
 	    	Coordinates coord = config.gymAndRelaxationModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.GYM_RELAXATION);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.medicalModules.size(); i += 1) {
 	    	Coordinates coord = config.medicalModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.MEDICAL);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.plainModules.size(); i += 1) {
 	    	Coordinates coord = config.plainModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.PLAIN);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.powerModules.size(); i += 1) {
 	    	Coordinates coord = config.powerModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.POWER);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    for (int i = 0; i < config.sanitationModules.size(); i += 1) {
 	    	Coordinates coord = config.sanitationModules.get(i);
 	    	g = setImage(g, (ROWS - 1) - (coord.yCoord - 1), coord.xCoord - 1, Type.SANITATION);	
-			g.getCellFormatter().setStyleName(coord.xCoord, coord.yCoord, STYLE);	
 	    }
 	    
-		//RootPanel.get().add(g);
 		return g;		
 	}
 
