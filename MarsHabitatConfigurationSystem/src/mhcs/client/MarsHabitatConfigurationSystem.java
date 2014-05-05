@@ -2,10 +2,13 @@ package mhcs.client;
 
 import mhcs.client.gui.AddModulePopup;
 import mhcs.client.gui.GPSDataPopup;
+import mhcs.client.gui.GravityPopup;
 import mhcs.client.gui.Login;
+import mhcs.client.gui.MovingTaskPopup;
 import mhcs.client.gui.TenDayAlert;
 import mhcs.client.module.ModuleList;
 import mhcs.client.moduleConfigurations.ConfigurationMap;
+import mhcs.client.moduleConfigurations.Coordinates;
 import mhcs.client.moduleConfigurations.ModuleConfiguration;
 import mhcs.client.moduleMap.ModuleMap;
 import mhcs.client.weather.Weather;
@@ -18,7 +21,6 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -46,15 +48,14 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final int MAGIC_NUMBER = 3;
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
-	private static final String WEATHER_STRING = "Weather";
 	private static final String FULL_CONFIG = "Full Configuration";
 	private static final String MIN1_CONFIG = "Minimum Configuration 1";
 	private static final String MIN2_CONFIG = "Minimum Configuration 2";
 	private static boolean MINIMUM_CONFIG_REACHED;
 	private static final int FULL_INDEX = 3;
 	private static final int MIN1_INDEX = 1;
-	private static final int MIN2_INDEX = 2;
 	private static final int MAX_TABS = 4;
+	private static final GravityPopup gravityPopup = new GravityPopup(BUS);
 
 	private String width = "3120px";
 	private String height = "1610px";
@@ -81,36 +82,14 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		final ModuleConfiguration fullConfig = new ModuleConfiguration();
 		final ModuleConfiguration min1Config = new ModuleConfiguration();
 		final ModuleConfiguration min2Config = new ModuleConfiguration();
-		min1Config.setMinimumConfigOne();
-		min2Config.setMinimumConfigTwo();
+		min1Config.setMinimumConfigOne(modList);
+		min2Config.setMinimumConfigTwo(modList);
 
 		// GPS Data object.
-//		final GPSDataTransfer dataTransfer = new GPSDataTransfer(modList);
+		//final GPSDataTransfer dataTransfer = new GPSDataTransfer(modList);
 
 		// Creates the root panel and sizes it.
 		RootPanel.get().setSize(this.width, this.height);
-
-		// Default command for menu items.
-		Command cmd = new Command() {
-			public void execute() {
-				Window.alert("You selected a menu item!");
-			}
-		};
-
-		// Command to show ten day alert.
-		Command tenDayAlertCmd = new Command() {
-			public void execute() {
-				final TenDayAlert tenDayAlert = new TenDayAlert();
-				tenDayAlert.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-					public void setPosition(final int offsetWidth, final int offsetHeight) {
-						int left = (Window.getClientWidth() - offsetWidth) / MAGIC_NUMBER;
-						int top = (Window.getClientHeight() - offsetHeight) / MAGIC_NUMBER;
-						tenDayAlert.setPopupPosition(left, top);
-					}
-				});
-				popSound.play();
-			}
-		};
 
 		// Command to show login.
 		Command loginCmd = new Command() {
@@ -135,52 +114,43 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				popSound.play();
 			}
 		};
-		
+
 		//Command to show the GPS Data Transfer popup.
 		Command gpsDataPopupCmd = new Command() {
 			public void execute(){
 				final GPSDataPopup gpsPopup = new GPSDataPopup(modList, BUS);
-				gpsPopup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+					gpsPopup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 					public void setPosition(final int offsetWidth, final int offsetHeight) {
 						int left = (Window.getClientWidth() - offsetWidth) / MAGIC_NUMBER;
 						int top = (Window.getClientHeight() - offsetHeight) / MAGIC_NUMBER;
 						gpsPopup.setPopupPosition(left, top);
 					}
 				});
-				popSound.play();	
+				popSound.play();
 			}
 		};
-
+		
 		// Command to calculate full configurations and add to new tabs.
 		Command configurationCmd = new Command() {
 			public void execute() {
-				modList.populateList();
-				if (fullConfig.calculateConfiguration(modList)) {	
-
+				Coordinates center = fullConfig.findBestCenterOfGravity(modList);
+				
+				if (fullConfig.calculateConfiguration(modList, center.getX(), center.getY())) {
+					MarsHabitatConfigurationSystem.successSound.play();	
+					
 					// Remove the current full configuration if it exists.
 					if (configTabs.getWidgetCount() == MAX_TABS) {
 						configTabs.remove(FULL_INDEX);
 					}
 					
-					// Add the minimum and full configuration tabs
-					configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
-					configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN1_CONFIG);
 					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig), FULL_CONFIG);
 					configTabs.selectTab(FULL_INDEX);
-					successSound.play();
+					
 					Window.alert("Full Configuration Available!");
 				} else {
-					errorSound.play();
-					Window.alert("Unable to calculate full configuration!");
+					MarsHabitatConfigurationSystem.errorSound.play();
+					Window.alert("Full Configuration not Available!");
 				}
-			}
-		};
-
-		// For testing the full configuration.
-		// Fills the module list will all possible modules.
-		Command populateCmd = new Command () {
-			public void execute() {
-				modList.populateList();
 			}
 		};
 		
@@ -224,25 +194,61 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			}
 		};
 
-//		// Command for GPS data transfer.
+		// Command for GPS data transfer.
 //		Command gpsDataCmd = new Command() {
 //			public void execute() {
 //				dataTransfer.getData();
 //				BUS.fireEvent(new AddEvent());
 //			}
 //		};
+		
+		// Command for changing the center of gravity.
+		Command gravityCmd = new Command() {
+			public void execute() {
+				gravityPopup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+					public void setPosition(final int offsetWidth, final int offsetHeight) {
+						int left = (Window.getClientWidth() - offsetWidth) / MAGIC_NUMBER;
+						int top = (Window.getClientHeight() - offsetHeight) / MAGIC_NUMBER;
+						gravityPopup.setPopupPosition(left, top);
+					}
+				});
+				popSound.play();
+			}
+		};
+		
+		// Command for getting the size of moving task.
+		Command movingTaskCmd = new Command() {
+			public void execute() {
+				// DELETE THIS
+				modList.populateList();
+				
+				
+				final MovingTaskPopup popup = new MovingTaskPopup(
+						modList.getSizeOfMovingTask(fullConfig.getCenterColumn(), fullConfig.getCenterRow()));
+				popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+					public void setPosition(final int offsetWidth, final int offsetHeight) {
+						int left = (Window.getClientWidth() - offsetWidth) / MAGIC_NUMBER;
+						int top = (Window.getClientHeight() - offsetHeight) / MAGIC_NUMBER;
+						popup.setPopupPosition(left, top);
+					}
+				});
+				popSound.play();
+			}
+		};
 
 		// Creates the menu for the menu bar.
 		MenuBar theMenu = new MenuBar(true);
 		theMenu.setAnimationEnabled(true);
 		theMenu.addItem("Add Module", addModulePopupCmd);
-		theMenu.addItem("Minumum Resource Path", cmd);
+		theMenu.addItem("GPS Data Transfer", gpsDataPopupCmd);
+		theMenu.addSeparator();
 		theMenu.addItem("Calculate Full Configuration", configurationCmd);
+		theMenu.addItem("Change Center of Gravity", gravityCmd);
 		theMenu.addItem("Save Full Configuration", saveConfigCmd);
 		theMenu.addItem("Load Full Configuration", loadConfigCmd);
-		//theMenu.addItem("Milometer Device Calibration Alert", tenDayAlertCmd);
-//		theMenu.addItem("GPS Data Transfer", gpsDataCmd);
-		theMenu.addItem("GPS Data Transfer", gpsDataPopupCmd);
+		theMenu.addSeparator();
+		theMenu.addItem("Size of Moving Task", movingTaskCmd);
+		theMenu.addSeparator();
 		theMenu.addItem("Clear Modules and Configuration", clearCmd);
 		theMenu.addSeparator();
 		theMenu.addItem("Log off", loginCmd);
@@ -284,7 +290,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		t.schedule(ALERT_TIME);
 
-		// Set handler for EventBus.
+		// Set handler for EventBus when new modules are added.
 		BUS.addHandler(AddEvent.TYPE, new AddEventHandler() {
 			public void onEvent(final AddEvent event) {
 
@@ -314,6 +320,33 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 				}
 			}
 		});
+		
+		// Set handler for when the center of gravity is changed.
+		BUS.addHandler(GravityEvent.TYPE, new GravityEventHandler() {
+			public void onEvent(final GravityEvent event) {
+				ModuleConfiguration newFullConfig = new ModuleConfiguration();
+				
+				// If the center of gravity can be changed to specified coordinates.
+				if (newFullConfig.calculateConfiguration(modList, event.xcoord, event.ycoord)) {
+					MarsHabitatConfigurationSystem.successSound.play();	
+					gravityPopup.hide();
+					
+					// Remove the current full configuration if it exists.
+					if (configTabs.getWidgetCount() == MAX_TABS) {
+						configTabs.remove(FULL_INDEX);
+					}
+					
+					fullConfig.calculateConfiguration(modList, event.xcoord, event.ycoord);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig), FULL_CONFIG);
+					configTabs.selectTab(FULL_INDEX);
+					
+					Window.alert("Center of Gravity Changed!");
+				} else {
+					MarsHabitatConfigurationSystem.errorSound.play();
+					Window.alert("Configuration can not move to that location!");
+				}
+			}
+		});
 
 		// Checks for minimum configs on load.
 		if (modList.getNumOfAirlock() > 0 && modList.getNumOfCanteen() > 0 && modList.getNumOfControl() > 0 &&
@@ -330,5 +363,4 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		RootPanel.get().addStyleName("rootPanel");
 	}
-
 }
