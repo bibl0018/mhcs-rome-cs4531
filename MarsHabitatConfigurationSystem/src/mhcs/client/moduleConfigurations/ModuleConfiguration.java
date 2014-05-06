@@ -60,6 +60,21 @@ public class ModuleConfiguration{
 	private static int centerRow = TWENTYTWO;
 	private static int centerColumn = TWENTYTWO;
 	
+	/**
+	 * An array list for each module type. This allows Array List 
+	 * methods to be called on each list, such as .isEmpty() or .add().
+	 */
+	public ArrayList<Coordinates> plainModules;
+	public ArrayList<Coordinates> dormitoryModules;
+	public ArrayList<Coordinates> sanitationModules;
+	public ArrayList<Coordinates> controlModules;
+	public ArrayList<Coordinates> foodAndWaterModules;
+	public ArrayList<Coordinates> gymAndRelaxationModules;
+	public ArrayList<Coordinates> canteenModules;
+	public ArrayList<Coordinates> powerModules;
+	public ArrayList<Coordinates> airlockModules;
+	public ArrayList<Coordinates> medicalModules;
+	
 	private int plain;
 	private int airlock;
 	private int power;
@@ -75,20 +90,7 @@ public class ModuleConfiguration{
 	private int eastLength;
 	private int westLength;
 	
-	/**
-	 * An array list for each module type. This allows Array List 
-	 * methods to be called on each list, such as .isEmpty() or .add().
-	 */
-	public ArrayList<Coordinates> plainModules;
-	public ArrayList<Coordinates> dormitoryModules;
-	public ArrayList<Coordinates> sanitationModules;
-	public ArrayList<Coordinates> controlModules;
-	public ArrayList<Coordinates> foodAndWaterModules;
-	public ArrayList<Coordinates> gymAndRelaxationModules;
-	public ArrayList<Coordinates> canteenModules;
-	public ArrayList<Coordinates> powerModules;
-	public ArrayList<Coordinates> airlockModules;
-	public ArrayList<Coordinates> medicalModules;
+	
 
 	/**
 	 * Default constructor.
@@ -390,7 +392,6 @@ public class ModuleConfiguration{
 		this.sanitation -= 1;
 		this.airlock -= 1;
 		this.control -= 1;
-		westWing = this.generateWing(westWing);
 		
 		eastWing[0] = Type.CANTEEN;
 		eastWing[eastWing.length / 2] = Type.DORMITORY;
@@ -398,21 +399,16 @@ public class ModuleConfiguration{
 		this.canteen -= 1;
 		this.dormitory -= 1;
 		this.water -= 1;
-		eastWing = this.generateWing(eastWing);
 		
 		southWing[southWing.length / 2] = Type.POWER;
 		this.power -= 1;
-		if (this.southLength > 2) {
-			southWing = this.generateWing(southWing);
-		}
 		
-		if (this.medical > 0) {
-			northWing[northWing.length / 2] = Type.MEDICAL;
-			this.medical -= 1;
+		westWing = this.generateWing(westWing, 0);
+		eastWing = this.generateWing(eastWing, 0);
+		if (this.southLength > 2) {
+			southWing = this.generateWing(southWing, 1);
 		}
-		if (this.northLength > 2) {
-			northWing = this.generateWing(northWing);
-		}
+		northWing = this.generateWing(northWing, 1);
 		
 		
 		// Places modules from each wing list.
@@ -423,7 +419,7 @@ public class ModuleConfiguration{
 			placeModule(type1, xCoord - i, yCoord - 1);
 			placeModule(type2, xCoord - i, yCoord + 1);
 		}
-		placeModule(westWing[this.westLength / 2], xCoord - this.westLength - 1, yCoord);
+		placeModule(westWing[westWing.length / 2], xCoord - this.westLength - 1, yCoord);
 		
 		for (int i = 1; i <= this.eastLength; i += 1) {
 			Type type1 = eastWing[i - 1];
@@ -432,7 +428,7 @@ public class ModuleConfiguration{
 			placeModule(type1, xCoord + i, yCoord - 1);
 			placeModule(type2, xCoord + i, yCoord + 1);
 		}
-		placeModule(eastWing[this.eastLength / 2], xCoord + this.eastLength + 1, yCoord);
+		placeModule(eastWing[eastWing.length / 2], xCoord + this.eastLength + 1, yCoord);
 		
 		if (this.northLength > 2) {
 			for (int i = 1; i <= this.northLength - 2; i += 1) {
@@ -442,7 +438,7 @@ public class ModuleConfiguration{
 				placeModule(type1, xCoord - 1, yCoord + i + 2);
 				placeModule(type2, xCoord + 1, yCoord + i + 2);
 			}
-			placeModule(northWing[this.northLength / 2], xCoord, yCoord + this.northLength + 1);
+			placeModule(northWing[northWing.length / 2], xCoord, yCoord + this.northLength + 1);
 		} else {
 			placeModule(northWing[0], xCoord, yCoord + this.northLength + 1);
 		}
@@ -455,9 +451,9 @@ public class ModuleConfiguration{
 				placeModule(type1, xCoord - 1, yCoord - i - 2);
 				placeModule(type2, xCoord + 1, yCoord - i - 2);
 			}
-			placeModule(southWing[this.southLength / 2], xCoord, yCoord - this.southLength - 1);
+			placeModule(southWing[southWing.length / 2], xCoord, yCoord - this.southLength - 1);
 		} else {
-			placeModule(northWing[0], xCoord, yCoord + this.southLength + 1);
+			placeModule(southWing[0], xCoord, yCoord + this.southLength + 1);
 		}
 		
 		// Check that the generated configuration has the minimum number of required modules.
@@ -474,6 +470,9 @@ public class ModuleConfiguration{
 			value = false;
 		}
 		
+		centerRow = yCoord;
+		centerColumn = xCoord;
+		
 		return value;
 	}
 	
@@ -481,9 +480,10 @@ public class ModuleConfiguration{
 	/**
 	 * Generates a wing and adheres to most layout rules
 	 * @param wing The wing to be added to
+	 * @param direction North/South = 1; East/West = 0;
 	 * @return The full wing.
 	 */
-	private Type[] generateWing(final Type[] wing) {
+	private Type[] generateWing(final Type[] wing, final int direction) {
 		int dorm = 0;
 		int san = 0;
 		int air = 0;
@@ -492,6 +492,11 @@ public class ModuleConfiguration{
 		int med = 0;
 		int food = 0;
 		int can = 0;
+		int dormLimit = wing.length / 2;
+		
+		if (dormLimit % 2 == 1) {
+			dormLimit += 1;
+		}
 		
 		for (int i = 0; i < wing.length; i += 1) {
 			if (Type.AIRLOCK.equals(wing[i])) {
@@ -512,29 +517,31 @@ public class ModuleConfiguration{
 		}
 		
 		
-		for (int i = 1; i < wing.length - 1; i += 1) {
+		for (int i = 1 - direction; i < wing.length - 1 + direction; i += 1) {
 			Type before = wing[i - 1];
 			Type after = wing[i + 1];
 			
 			if (i != wing.length / 2) {
 			
-				if ( !Type.AIRLOCK.equals(before) && !Type.AIRLOCK.equals(after) && 
-						this.dormitory > 0 && ((double) dorm / san) < 2 && dorm < TEN) {
-					wing[i] = Type.DORMITORY;
-					dorm += 1;
-					this.dormitory -= 1;
-				} else if ( (!Type.CANTEEN.equals(before) && !Type.FOOD_WATER.equals(before)) && 
-						    (!Type.CANTEEN.equals(after) && !Type.FOOD_WATER.equals(after)) &&
-						    this.sanitation > 0 && ((double) dorm / san) > 2) {
-					wing[i] = Type.SANITATION;
-					san += 1;
-					this.sanitation -= 1;
-				} else if ( Type.SANITATION.equals(before) || Type.SANITATION.equals(after) && this.gym > 0) {
-					wing[i] = Type.GYM_RELAXATION;
-				} else if ( Type.AIRLOCK.equals(before) || Type.AIRLOCK.equals(after) && this.medical > 0 && med < 1) {
+				if ( (Type.AIRLOCK.equals(before) || Type.AIRLOCK.equals(after) ||
+						 i + 1 == wing.length - 1 + direction) && this.medical > 0 && med < 1) {
 					wing[i] = Type.MEDICAL;
 					this.medical -= 1;
 					med += 1;
+				} else if ( (Type.SANITATION.equals(before) || Type.SANITATION.equals(after)) && this.gym > 0) {
+					wing[i] = Type.GYM_RELAXATION;
+					this.gym -= 1;
+				} else if ( (!Type.CANTEEN.equals(before) && !Type.FOOD_WATER.equals(before)) && 
+					    (!Type.CANTEEN.equals(after) && !Type.FOOD_WATER.equals(after)) &&
+					    this.sanitation > 0 && ((double) dorm / san) > 2) {
+					wing[i] = Type.SANITATION;
+					san += 1;
+					this.sanitation -= 1;
+				} else if ( !Type.AIRLOCK.equals(before) && !Type.AIRLOCK.equals(after) && 
+						this.dormitory > 0 && (san == 0 || dorm / (san * 2) <= 1) && dorm < dormLimit) {
+					wing[i] = Type.DORMITORY;
+					dorm += 1;
+					this.dormitory -= 1;
 				} else if ( !Type.DORMITORY.equals(before) && !Type.DORMITORY.equals(after) && this.airlock > 0 && air < 1) {
 					wing[i] = Type.AIRLOCK;
 					this.airlock -= 1;
@@ -547,12 +554,14 @@ public class ModuleConfiguration{
 					wing[i] = Type.POWER;
 					this.power -= 1;
 					pow += 1;
-				} else if (this.canteen > 0 && food > 0) {
+				} else if (this.canteen > 0 && food > 0 && ((double) can / food) < ((double) food / this.water) ) {
 					wing[i] = Type.CANTEEN;
 					this.canteen -= 1;
+					can += 1;
 				} else if (this.water > 0) {
 					wing[i] = Type.FOOD_WATER;
 					this.water -= 1;
+					food += 1;
 				}
 				
 			}
@@ -668,13 +677,13 @@ public class ModuleConfiguration{
 	}
 	
 	/**
-	 * Sets the values of this ModuleConfiguration to match that of the first minimum configuration.
+	 * Configures the first minimum configuration.
+	 * @param centerColumn The center of gravity coordinates
+	 * @param centerRow
 	 */
-	public boolean setMinimumConfigOne(final ModuleList modList) {
-		this.clearConfig();
-		Coordinates coords = modList.getCenterOfGravity();
-		int bestColumn = coords.getX();
-		int bestRow = coords.getY();
+	public void setMinimumConfigOne(final int column, final int row) {
+		int bestColumn = column;
+		int bestRow = row;
 		int west = 2;
 		int north = 1;
 		int south = 1;
@@ -729,19 +738,26 @@ public class ModuleConfiguration{
 		this.placeModule(Type.POWER, bestColumn, bestRow - 1);
 		this.placeModule(Type.FOOD_WATER, bestColumn + 1, bestRow + 1);
 		this.placeModule(Type.DORMITORY, bestColumn + 1, bestRow - 1);
-		
-		return true;
 	}
 	
 	/**
-	 * Sets the values of this ModuleConfiguration to match that of the second minimum configuration.
+	 * Sets the values of this ModuleConfiguration to match that of the first minimum configuration.
+	 * @param modList The module list to find the best center of gravity.
 	 */
-	public boolean setMinimumConfigTwo(final ModuleList modList) {
+	public void setMinimumConfigOne(final ModuleList modList) {
 		this.clearConfig();
-		
 		Coordinates coords = modList.getCenterOfGravity();
-		int bestColumn = coords.getX();
-		int bestRow = coords.getY();
+		this.setMinimumConfigOne(coords.getX(), coords.getY());
+	}
+	
+	/**
+	 * Configures the second minimum configuration.
+	 * @param centerColumn The center of gravity coordinates
+	 * @param centerRow
+	 */
+	public void setMinimumConfigTwo(final int column, final int row) {
+		int bestColumn = column;
+		int bestRow = row;
 		int west = 1;
 		int north = 1;
 		int south = 2;
@@ -796,8 +812,15 @@ public class ModuleConfiguration{
 		this.placeModule(Type.POWER, bestColumn + 1, bestRow - 1);
 		this.placeModule(Type.FOOD_WATER, bestColumn + 1, bestRow + 1);
 		this.placeModule(Type.DORMITORY, bestColumn + 2, bestRow);
-		
-		return true;
+	}
+	
+	/**
+	 * Sets the values of this ModuleConfiguration to match that of the second minimum configuration.
+	 */
+	public void setMinimumConfigTwo(final ModuleList modList) {
+		this.clearConfig();
+		Coordinates coords = modList.getCenterOfGravity();
+		this.setMinimumConfigTwo(coords.getX(), coords.getY());
 	}
 	
 	/**
@@ -815,13 +838,13 @@ public class ModuleConfiguration{
 		this.calculateConfiguration(modList, DEFAULT_COLUMN, DEFAULT_ROW);
 		
 		// Move x and y position if out of bounds
-		while (bestColumn < this.westLength + 1) {
+		while (bestColumn <= this.westLength + 1) {
 			bestColumn += 1;
 		}
 		while (COLUMN_SIZE - bestColumn < this.eastLength + 1) {
 			bestColumn -= 1;
 		}
-		while (bestRow < this.southLength + 1) {
+		while (bestRow <= this.southLength + 1) {
 			bestRow += 1;
 		}
 		while (ROW_SIZE - bestRow < this.northLength + 1) {

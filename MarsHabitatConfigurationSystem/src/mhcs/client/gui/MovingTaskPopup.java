@@ -15,15 +15,18 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class MovingTaskPopup extends PopupPanel {
 
 	private static final int MAIN_SPACE = 5;
+	private static final int FIVE = 5;
+	private static final int KILO = 1000;
 	
 	/**
+	 * 
 	 * Constructs the popup.
 	 * @param size The size to be output in the label.
 	 */
 	public MovingTaskPopup(final double size) {
 		
 		// Creates a title for the popup.
-		final Label title = new Label("Center of Gravity: " + Double.toString(size));
+		final Label title = new Label("Size of Moving Task: " + Double.toString(size * FIVE / KILO) + "km");
 		
 		// Creates a button for hiding the panel.
 		final Button okButton = new Button("OK");

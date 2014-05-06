@@ -133,6 +133,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command to calculate full configurations and add to new tabs.
 		Command configurationCmd = new Command() {
 			public void execute() {
+				// DELETE THIS
+				//modList.populateList();
+				
+				
 				Coordinates center = fullConfig.findBestCenterOfGravity(modList);
 				
 				if (fullConfig.calculateConfiguration(modList, center.getX(), center.getY())) {
@@ -219,10 +223,6 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command for getting the size of moving task.
 		Command movingTaskCmd = new Command() {
 			public void execute() {
-				// DELETE THIS
-				modList.populateList();
-				
-				
 				final MovingTaskPopup popup = new MovingTaskPopup(
 						modList.getSizeOfMovingTask(fullConfig.getCenterColumn(), fullConfig.getCenterRow()));
 				popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
@@ -331,12 +331,14 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 					MarsHabitatConfigurationSystem.successSound.play();	
 					gravityPopup.hide();
 					
-					// Remove the current full configuration if it exists.
-					if (configTabs.getWidgetCount() == MAX_TABS) {
-						configTabs.remove(FULL_INDEX);
-					}
-					
 					fullConfig.calculateConfiguration(modList, event.xcoord, event.ycoord);
+					min1Config.setMinimumConfigOne(event.xcoord, event.ycoord);
+					min2Config.setMinimumConfigTwo(event.xcoord, event.ycoord);
+					
+					configTabs.clear();
+					configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig), FULL_CONFIG);
 					configTabs.selectTab(FULL_INDEX);
 					
