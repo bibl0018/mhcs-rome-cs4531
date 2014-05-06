@@ -48,7 +48,8 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 	private static final int MAGIC_NUMBER = 3;
 	private static final SimpleEventBus BUS = new SimpleEventBus();
 	private static final String MODULE_MAP_STRING = "Module Map";
-	private static final String FULL_CONFIG = "Full Configuration";
+	private static final String FULL_CONFIG = "Full Configuration 1";
+	private static final String FULL_CONFIG2 = "Full Configuration 2";
 	private static final String MIN1_CONFIG = "Minimum Configuration 1";
 	private static final String MIN2_CONFIG = "Minimum Configuration 2";
 	private static boolean MINIMUM_CONFIG_REACHED;
@@ -80,6 +81,7 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 
 		// Creates configuration map.
 		final ModuleConfiguration fullConfig = new ModuleConfiguration();
+		final ModuleConfiguration fullConfig2 = new ModuleConfiguration();
 		final ModuleConfiguration min1Config = new ModuleConfiguration();
 		final ModuleConfiguration min2Config = new ModuleConfiguration();
 		min1Config.setMinimumConfigOne(modList);
@@ -133,21 +135,19 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command to calculate full configurations and add to new tabs.
 		Command configurationCmd = new Command() {
 			public void execute() {
-				// DELETE THIS
-				//modList.populateList();
+				Coordinates center = fullConfig.findBestCenterOfGravity(modList, ModuleConfiguration.FOUR);
+				Coordinates center2 = fullConfig2.findBestCenterOfGravity(modList, ModuleConfiguration.THREE);
 				
-				
-				Coordinates center = fullConfig.findBestCenterOfGravity(modList);
-				
-				if (fullConfig.calculateConfiguration(modList, center.getX(), center.getY())) {
+				if (fullConfig.calculateConfiguration(modList, center.getX(), center.getY(), ModuleConfiguration.FOUR)) {
+					fullConfig2.calculateConfiguration(modList, center2.getX(), center2.getY(), ModuleConfiguration.THREE);
 					MarsHabitatConfigurationSystem.successSound.play();	
 					
-					// Remove the current full configuration if it exists.
-					if (configTabs.getWidgetCount() == MAX_TABS) {
-						configTabs.remove(FULL_INDEX);
-					}
-					
+					configTabs.clear();
+					configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig), FULL_CONFIG);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig2), FULL_CONFIG2);
 					configTabs.selectTab(FULL_INDEX);
 					
 					Window.alert("Full Configuration Available!");
@@ -174,12 +174,22 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		// Command for saving the full configuration.
 		Command saveConfigCmd = new Command() {
 			public void execute() {
-				if (fullConfig.saveConfiguration(FULL_CONFIG)) {
-					successSound.play();
-					Window.alert("Full Configuration Saved!");
-				} else {
-					errorSound.play();
-					Window.alert("No Full Configuration Exists!");
+				if (configTabs.getSelectedIndex() == FULL_INDEX) {
+					if (fullConfig.saveConfiguration(FULL_CONFIG)) {
+						successSound.play();
+						Window.alert("Full Configuration Saved!");
+					} else {
+						errorSound.play();
+						Window.alert("No Full Configuration Exists!");
+					}
+				} else if (configTabs.getSelectedIndex() == FULL_INDEX + 1) {
+					if (fullConfig2.saveConfiguration(FULL_CONFIG)) {
+						successSound.play();
+						Window.alert("Full Configuration Saved!");
+					} else {
+						errorSound.play();
+						Window.alert("No Full Configuration Exists!");
+					}
 				}
 			}
 		};
@@ -325,21 +335,31 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 		BUS.addHandler(GravityEvent.TYPE, new GravityEventHandler() {
 			public void onEvent(final GravityEvent event) {
 				ModuleConfiguration newFullConfig = new ModuleConfiguration();
+				int wings;
+				
+				if (configTabs.getSelectedIndex() == FULL_INDEX) {
+					wings = ModuleConfiguration.FOUR;
+				} else {
+					wings = ModuleConfiguration.THREE;
+				}
 				
 				// If the center of gravity can be changed to specified coordinates.
-				if (newFullConfig.calculateConfiguration(modList, event.xcoord, event.ycoord)) {
+				if (newFullConfig.calculateConfiguration(modList, event.xcoord, event.ycoord, wings)) {
 					MarsHabitatConfigurationSystem.successSound.play();	
 					gravityPopup.hide();
 					
-					fullConfig.calculateConfiguration(modList, event.xcoord, event.ycoord);
-					min1Config.setMinimumConfigOne(event.xcoord, event.ycoord);
-					min2Config.setMinimumConfigTwo(event.xcoord, event.ycoord);
+					if (wings == ModuleConfiguration.FOUR) {
+						fullConfig.calculateConfiguration(modList, event.xcoord, event.ycoord, wings);
+					} else {
+						fullConfig2.calculateConfiguration(modList, event.xcoord, event.ycoord, wings);
+					}
 					
 					configTabs.clear();
 					configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
 					configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
 					configTabs.add(ConfigurationMap.getConfigurationGrid(min2Config), MIN2_CONFIG);
 					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig), FULL_CONFIG);
+					configTabs.add(ConfigurationMap.getConfigurationGrid(fullConfig2), FULL_CONFIG2);
 					configTabs.selectTab(FULL_INDEX);
 					
 					Window.alert("Center of Gravity Changed!");

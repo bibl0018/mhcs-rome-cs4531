@@ -312,9 +312,10 @@ public class ModuleConfiguration{
 	 * @param modules The module list
 	 * @param centerRow The middle piece of the configuration will reside in this row.
 	 * @param centerColumn The middle piece of the configuration will reside in this column.
+	 * @param numWings the number of wings this configuration will build, must be between 1-4 inclusive.
 	 * @return true if the configuration was calculated 
 	 */
-	public boolean calculateConfiguration(final ModuleList modules, final int xCoord, final int yCoord) {
+	public boolean calculateConfiguration(final ModuleList modules, final int xCoord, final int yCoord, final int numWings) {
 		this.clearConfig();
 		
 		this.plain = modules.getNumOfPlain();
@@ -341,7 +342,7 @@ public class ModuleConfiguration{
 		}
 		
 		// Places the remaining plain modules in four wings in a cross formation.
-		for (int wings = FOUR; wings > 0; wings -= 1) {
+		for (int wings = numWings; wings > 0; wings -= 1) {
 			int i = 0;
 			if (wings == FOUR) {
 				for (i = 0; i < (this.plain/wings); i += 1) {
@@ -400,15 +401,15 @@ public class ModuleConfiguration{
 		this.dormitory -= 1;
 		this.water -= 1;
 		
-		southWing[southWing.length / 2] = Type.POWER;
+		northWing[northWing.length / 2] = Type.POWER;
 		this.power -= 1;
 		
 		westWing = this.generateWing(westWing, 0);
 		eastWing = this.generateWing(eastWing, 0);
-		if (this.southLength > 2) {
-			southWing = this.generateWing(southWing, 1);
+		if (this.northLength > 2) {
+			northWing = this.generateWing(northWing, 1);
 		}
-		northWing = this.generateWing(northWing, 1);
+		southWing = this.generateWing(southWing, 1);
 		
 		
 		// Places modules from each wing list.
@@ -682,6 +683,7 @@ public class ModuleConfiguration{
 	 * @param centerRow
 	 */
 	public void setMinimumConfigOne(final int column, final int row) {
+		this.clearConfig();
 		int bestColumn = column;
 		int bestRow = row;
 		int west = 2;
@@ -756,6 +758,7 @@ public class ModuleConfiguration{
 	 * @param centerRow
 	 */
 	public void setMinimumConfigTwo(final int column, final int row) {
+		this.clearConfig();
 		int bestColumn = column;
 		int bestRow = row;
 		int west = 1;
@@ -826,16 +829,17 @@ public class ModuleConfiguration{
 	/**
 	 * Finds the optimal center of gravity for the mars habitat.
 	 * @param modList The list of all modules.
+	 * @param numWings the number of wings for the configuration
 	 * @return the coordinates of the center of gravity.
 	 */
-	public Coordinates findBestCenterOfGravity(final ModuleList modList) {
+	public Coordinates findBestCenterOfGravity(final ModuleList modList, final int numWings) {
 		Coordinates coords = modList.getCenterOfGravity();
 		int initialColumn = coords.getX();
 		int initialRow = coords.getY();
 		int bestColumn = initialColumn;
 		int bestRow = initialRow;
 		
-		this.calculateConfiguration(modList, DEFAULT_COLUMN, DEFAULT_ROW);
+		this.calculateConfiguration(modList, DEFAULT_COLUMN, DEFAULT_ROW, numWings);
 		
 		// Move x and y position if out of bounds
 		while (bestColumn <= this.westLength + 1) {
