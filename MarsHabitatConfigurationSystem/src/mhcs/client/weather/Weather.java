@@ -80,8 +80,8 @@ public class Weather implements IsWidget {
 
 					sVisibility = sVisibility.replaceAll("\"", "");
 
-					HP.add(new Label(sTemp + " C" + ", Visibility: " + sVisibility + " km "));
-
+					HP.add(new Label(sTemp + " C" + "|Visibility: " + sVisibility + " km"));
+					
 				} 
 			}); 
 		}
@@ -126,7 +126,7 @@ public class Weather implements IsWidget {
 					sHour = sHour.replaceAll("\"", "");
 					sMinute = sMinute.replaceAll("\"", "");
 
-					HP.add(new Label("Time of Sunset: " + sHour + ":" + sMinute + ", "));
+					HP.add(new Label("|" + "Time of Sunset: " + sHour + ":" + sMinute + "|"));
 
 				} 
 			}); 
@@ -136,6 +136,7 @@ public class Weather implements IsWidget {
 		}
 
 		HP.addStyleName("weatherPanel");
+		HP.setSpacing(2);
 		return HP;
 	}
 
