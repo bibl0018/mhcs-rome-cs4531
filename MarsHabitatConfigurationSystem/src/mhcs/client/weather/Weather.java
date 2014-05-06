@@ -23,6 +23,8 @@ public class Weather implements IsWidget {
 	private static final HorizontalPanel HP = new HorizontalPanel();
 	private static final String JSON_ERROR_MESSAGE = "onError: Couldn't retrieve JSON";
 	private static final String JSON_ERROR_MESSAGE2 = "RequestException: Couldn't retrieve JSON";
+	private static final String JSON_ALERT_FIRST_HALF = "Couldn't retrieve JSON (";
+	private static final String JSON_ALERT_SECOND_HALF = ")";
 	private static final String QUOTATION = "\"";
 	private static final String VERTICAL_BAR = "|";
 
@@ -64,7 +66,7 @@ public class Weather implements IsWidget {
 						this.update(rt);
 					}
 					else { 
-						Window.alert("Couldn't retrieve JSON (" + response.getStatusCode() + ")"); 
+						Window.alert(JSON_ALERT_FIRST_HALF + response.getStatusCode() + JSON_ALERT_SECOND_HALF); 
 					} 
 				}
 
@@ -106,7 +108,7 @@ public class Weather implements IsWidget {
 						this.update(rt);
 					}
 					else { 
-						Window.alert("Couldn't retrieve JSON (" + response.getStatusCode() + ")"); 
+						Window.alert(JSON_ALERT_FIRST_HALF + response.getStatusCode() + JSON_ALERT_SECOND_HALF); 
 					} 
 				}
 
