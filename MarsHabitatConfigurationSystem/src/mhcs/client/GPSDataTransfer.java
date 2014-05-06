@@ -27,7 +27,6 @@ public class GPSDataTransfer {
 	public String stringURL;
 	
 	public GPSDataTransfer(final ModuleList modList, final String incomingURL) {
-//	public GPSDataTransfer(final ModuleList modList) {
 		this.aModList = modList;
 		this.stringURL = incomingURL;
 	}

@@ -108,7 +108,7 @@ public class GPSDataPopup extends PopupPanel{
 				
 					//Creates a new GPS Data Transfer object
 					GPSDataTransfer gps = new GPSDataTransfer(modList, URL);
-					
+					gps.getData();
 					
 				}
 				catch (IndexOutOfBoundsException e) {
