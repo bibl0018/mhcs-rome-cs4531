@@ -767,7 +767,7 @@ public class ModuleConfiguration{
 		int east = 2;
 		
 		// Move x and y position if out of bounds
-		while (bestColumn < west+ 1) {
+		while (bestColumn < west + 1) {
 			bestColumn += 1;
 		}
 		while (COLUMN_SIZE - bestColumn < east + 1) {

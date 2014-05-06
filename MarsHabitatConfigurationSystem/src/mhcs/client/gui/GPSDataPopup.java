@@ -1,15 +1,11 @@
 package mhcs.client.gui;
 
-import mhcs.client.AddEvent;
 import mhcs.client.GPSDataTransfer;
-import mhcs.client.MarsHabitatConfigurationSystem;
-import mhcs.client.module.Module;
 import mhcs.client.module.ModuleList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -78,54 +74,34 @@ public class GPSDataPopup extends PopupPanel{
 		//Click handler for the submit button
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(final ClickEvent event) {
-				boolean valid = true;
+				String URL = "http://www.d.umn.edu/~abrooks/SomeTests.php?q=";
 				
-				try {
+				if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC1)) {
+					URL = URL + "1";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC2)) {
+					URL = URL + "2";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC3)) {
+					URL = URL + "3";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC4)) {
+					URL = URL + "4";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC5)) {
+					URL = URL + "5";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC6)) {
+					URL = URL + "6";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC7)) {
+					URL = URL + "7";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC8)) {
+					URL = URL + "8";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC9)) {
+					URL = URL + "9";
+				} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC10)) {
+					URL = URL + "10";
+				} 
+			
+				//Creates a new GPS Data Transfer object
+				GPSDataTransfer gps = new GPSDataTransfer(modList, URL, bus);
+				hide();
 				
-					String URL = "http://www.d.umn.edu/~abrooks/SomeTests.php?q=";
-					
-					if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC1)) {
-						URL = URL + "1";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC2)) {
-						URL = URL + "2";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC3)) {
-						URL = URL + "3";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC4)) {
-						URL = URL + "4";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC5)) {
-						URL = URL + "5";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC6)) {
-						URL = URL + "6";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC7)) {
-						URL = URL + "7";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC8)) {
-						URL = URL + "8";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC9)) {
-						URL = URL + "9";
-					} else if (testCaseBox.getItemText(testCaseBox.getSelectedIndex()).equals(TC10)) {
-						URL = URL + "10";
-					} 
-				
-					//Creates a new GPS Data Transfer object
-					GPSDataTransfer gps = new GPSDataTransfer(modList, URL);
-					gps.getData();
-					
-				}
-				catch (IndexOutOfBoundsException e) {
-					MarsHabitatConfigurationSystem.errorSound.play();
-					Window.alert(e.getMessage());
-					valid = false;
-				}
-				catch (IllegalArgumentException e) {
-					MarsHabitatConfigurationSystem.errorSound.play();
-					Window.alert(e.getMessage());
-					valid = false;
-				}
-				
-				if (valid) {
-					bus.fireEvent(new AddEvent());
-					hide();
-				}
 			}			
 		});
 		

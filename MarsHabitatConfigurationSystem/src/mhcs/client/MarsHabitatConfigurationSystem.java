@@ -305,10 +305,10 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 			public void onEvent(final AddEvent event) {
 
 				// "Refreshes" the module map by removing and re-adding the tab
-				configTabs.remove(0);
-				configTabs.insert(new ModuleMap(modList).asWidget(), MODULE_MAP_STRING, 0);
-				configTabs.selectTab(0);
-
+				configTabs.clear();
+				configTabs.add(new ModuleMap(modList), MODULE_MAP_STRING);
+				MINIMUM_CONFIG_REACHED = false;
+				
 				// Checks to see if requirements are met for the minimum configuration.
 				// If they are met, the minimum configuration tabs are created and an alert is issued.
 				if (!MINIMUM_CONFIG_REACHED) {
@@ -317,6 +317,9 @@ public class MarsHabitatConfigurationSystem implements EntryPoint {
 							modList.getNumOfSanitation() > 0 && modList.getNumOfWater() > 0) {
 						MINIMUM_CONFIG_REACHED = true;
 
+						min1Config.setMinimumConfigOne(modList);
+						min2Config.setMinimumConfigTwo(modList);
+						
 						// Adds minimum configuration one to the tab.
 						configTabs.add(ConfigurationMap.getConfigurationGrid(min1Config), MIN1_CONFIG);
 						configTabs.selectTab(MIN1_INDEX);

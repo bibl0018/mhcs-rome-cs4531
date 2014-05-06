@@ -6,6 +6,7 @@ package mhcs.client;
  * @author Jeremiah Wilhelmy
  */
 
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -18,29 +19,19 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Window;
+
 import mhcs.client.module.Module;
 import mhcs.client.module.ModuleList;
 
 
 public class GPSDataTransfer {	
-	public ModuleList aModList = new ModuleList();
-	public String stringURL;
 	
-	public GPSDataTransfer(final ModuleList modList, final String incomingURL) {
-		this.aModList = modList;
-		this.stringURL = incomingURL;
-	}
-	
-	/**
-	 * Default constructor for the new module list.
-	 * @param modList A module list passed in..
-	 */
-	public void getData() {
+	public GPSDataTransfer(final ModuleList modList, final String incomingURL, final SimpleEventBus bus) {
 		
 		//Connects to the tests through a proxy
 		String proxy = "http://www.d.umn.edu/~stowe063/war/Proxy.php?url=";
 
-		String url = proxy + this.stringURL;
+		String url = proxy + incomingURL;
 		url = URL.encode(url);
 		
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
@@ -55,8 +46,10 @@ public class GPSDataTransfer {
 				//Displays an alert with the error code if JSON retrieval is unsuccessful.
 				public void onResponseReceived(final Request request, final Response response) {
 					if (200 == response.getStatusCode()) {
+						modList.clearList();
 						String rt = response.getText();
-						update(rt);
+						update(rt, modList);
+						bus.fireEvent(new AddEvent());
 					} else {
 						Window.alert("Couldn't retrieve JSON (" + response.getStatusText() + ")");
 					}
@@ -73,7 +66,7 @@ public class GPSDataTransfer {
 	 * Converts the string into multiple modules and adds them to the module list.
 	 * @param rt The string received from the web server.
 	 */
-	public void update(final String rt) {
+	public void update(final String rt, final ModuleList modList) {
 		String sAll = rt;
 		JSONArray jA = (JSONArray) JSONParser.parseLenient(sAll);
 		
@@ -106,7 +99,7 @@ public class GPSDataTransfer {
 			//A new module is created with the information from the string, 
 			//then added to the module list.
 			Module module = new Module(code, xCoord, yCoord, turns, status);
-			this.aModList.addModule(module);
+			modList.addModule(module);
 		}		
 	}
 	
