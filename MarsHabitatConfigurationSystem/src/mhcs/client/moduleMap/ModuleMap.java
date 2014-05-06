@@ -9,9 +9,13 @@ package mhcs.client.moduleMap;
 import mhcs.client.module.ModuleList;
 import mhcs.client.module.Module;
 
+import com.allen_sauer.gwt.dnd.client.PickupDragController;
+import com.allen_sauer.gwt.dnd.client.drop.GridConstrainedDropController;
+import com.allen_sauer.gwt.dnd.client.drop.IndexedDropController;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -32,6 +36,11 @@ public class ModuleMap implements IsWidget{
 		this.modList = moduleList;
 	}
 	
+	//PickupDragController dragController = new PickupDragController(RootPanel.get(), false);
+	//GridConstrainedDropController dropController;
+	//IndexedDropController dropController = new IndexedDropController();
+	//dragController.registerDropController(dropController);
+	
 	/**
 	 * Constructs the grid and loads all modules on to the grid.
 	 * @param moduleList The list of pre-sorted modules.
@@ -41,7 +50,7 @@ public class ModuleMap implements IsWidget{
 		Grid g = new Grid(ROWS, COLUMNS);
 		int xCoord;
 		int yCoord;
-		
+
 		
 		//Set the height and width of each cell in the grid,
 		//can be changed if we need to fit it on a smaller screen.
@@ -72,7 +81,6 @@ public class ModuleMap implements IsWidget{
 			}	
 		}
 		
-		//RootPanel.get().add(g);
 		return g;		
 	}
 
@@ -93,51 +101,61 @@ public class ModuleMap implements IsWidget{
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			//image.setStyleName(STYLE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.DORMITORY)){
 			Image image = new Image("images/Dormitory.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.SANITATION)){
 			Image image = new Image("images/Sanitation.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.FOOD_WATER)){
 			Image image = new Image("images/Food.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.GYM_RELAXATION)){
 			Image image = new Image("images/Gym.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.CANTEEN)){
 			Image image = new Image("images/Canteen.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.POWER)){
 			Image image = new Image("images/Power.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.CONTROL)){
 			Image image = new Image("images/Control.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.MEDICAL)){
 			Image image = new Image("images/Medical.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		else if (module.getType().equals(Module.Type.AIRLOCK)){
 			Image image = new Image("images/Airlock.jpg");
 			image.setPixelSize(HOR_IMAGE_SIZE, VER_IMAGE_SIZE);
 			g.setWidget(row, col, image);
+			//dragController.makeDraggable(image);
 		}
 		return g;
 		
