@@ -11,32 +11,29 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * 
+ * Creates the 10 day alert popup which will continue to popup every 10 days.
  * @author Logan Dawson
  *
  */
 public class TenDayAlert extends PopupPanel {
 
 	/**
-	 * Change to 864000000 for 10 days.
+	 * 864000000 milliseconds == 10 days.
 	 */
-	protected static final int ALERT_TIME = 120000;
-	
-	/**
-	 * 
-	 */
+	protected static final int ALERT_TIME = 864000000;
 	private static final int MAGIC_NUMBER_10 = 5;
-	
-	/**
-	 * 
-	 */
 	private static final int MAGIC_NUMBER_5 = 5;
 
+	/**
+	 * Function responsible for putting together the 10 day alert popup.
+	 */
 	public TenDayAlert() {
 		super(true);
 
+		// Title of the popup.
 		final Label title = new Label("Recalibrate Milometer Device");
 		
+		// Click handler for "Alert in 10 days" button.
 		ClickHandler calibrateHandler = new ClickHandler() {
 			public void onClick(final ClickEvent event) {
 				hide();
@@ -50,19 +47,13 @@ public class TenDayAlert extends PopupPanel {
 			}
 		};
 		
-//		ClickHandler cancelHandler = new ClickHandler() {
-//			public void onClick(final ClickEvent event) {
-//				hide();
-//			}
-//		};
-		
+		// The panel for the button.
 		final HorizontalPanel buttonPanel = new HorizontalPanel();
 		final Button calibrateButton = new Button("Alert in 10 days", calibrateHandler);
-		//final Button cancelButton = new Button("Cancel", cancelHandler);
 		buttonPanel.add(calibrateButton);
-		//buttonPanel.add(cancelButton);
 		buttonPanel.setSpacing(MAGIC_NUMBER_10);
 		
+		// The panel for the title and button panel.
 		VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		mainPanel.add(title);
@@ -70,7 +61,11 @@ public class TenDayAlert extends PopupPanel {
 		mainPanel.setSpacing(MAGIC_NUMBER_5);
 		
 		setWidget(mainPanel);
+		
+		// Makes sure the user doesn't click out of the popup on accident.
 		setAutoHideEnabled(false);
+		
+		// For CSS purposes.
 		addStyleName("tenDayAlertPanel");
 	}
 }
