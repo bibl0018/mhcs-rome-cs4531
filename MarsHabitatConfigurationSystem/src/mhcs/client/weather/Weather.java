@@ -17,6 +17,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Creates a horizontal panel to store weather data.
+ * @author Logan Dawson
+ *
+ */
 public class Weather implements IsWidget {
 
 	private static final int STATUS_CODE_OK = 200;
@@ -28,20 +33,29 @@ public class Weather implements IsWidget {
 	private static final String QUOTATION = "\"";
 	private static final String VERTICAL_BAR = "|";
 
+	/**
+	 * Default constructor, does nothing.
+	 */
 	public Weather() {
 	}
 
+	/**
+	 * Method responsible for creating the horizontal panel and requesting the data.
+	 */
 	@Override
 	public Widget asWidget() {
 
+		// Centers the text
 		HP.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
+		// Gets the logo ready and adds it to the panel.
 		final Image logo = new Image("images/wundergroundLogo_4c_horz.jpg");
 		logo.setWidth("90px");
 		logo.setHeight("21px");
 		logo.addStyleName("wundergroundLogo");
 		HP.add(logo);
 
+		// URLS for getting weather data.
 		// Uncomment below for testing on my website.
 		//String proxy = "http://d.umn.edu/~dawso172/war/Weather.php?url=";
 		String proxy = "http://www.d.umn.edu/~stowe063/war/Weather.php?url="; 
@@ -51,6 +65,7 @@ public class Weather implements IsWidget {
 		url = URL.encode(url); 
 		url2 = URL.encode(url2);
 
+		// Gets the temperature and visibility.
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url); 
 
 		try { 
@@ -93,6 +108,7 @@ public class Weather implements IsWidget {
 			Window.alert(JSON_ERROR_MESSAGE2); 
 		}
 		
+		// Gets the time of sunset.
 		RequestBuilder builder2 = new RequestBuilder(RequestBuilder.GET, url2); 
 
 		try { 
@@ -139,8 +155,10 @@ public class Weather implements IsWidget {
 			Window.alert(JSON_ERROR_MESSAGE2); 
 		}
 
+		// For CSS purposes.
 		HP.addStyleName("weatherPanel");
-		HP.setSpacing(2);
+		
+		// Returns the horizontal panel with weather data.
 		return HP;
 	}
 
