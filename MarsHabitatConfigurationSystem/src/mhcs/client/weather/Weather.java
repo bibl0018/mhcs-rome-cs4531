@@ -10,9 +10,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -23,6 +21,10 @@ public class Weather implements IsWidget {
 
 	private static final int STATUS_CODE_OK = 200;
 	private static final HorizontalPanel HP = new HorizontalPanel();
+	private static final String JSON_ERROR_MESSAGE = "onError: Couldn't retrieve JSON";
+	private static final String JSON_ERROR_MESSAGE2 = "RequestException: Couldn't retrieve JSON";
+	private static final String QUOTATION = "\"";
+	private static final String VERTICAL_BAR = "|";
 
 	public Weather() {
 	}
@@ -53,7 +55,7 @@ public class Weather implements IsWidget {
 			Request request = builder.sendRequest(null, new RequestCallback() { 
 
 				public void onError(final Request request, final Throwable exception) { 
-					Window.alert("onError: Couldn't retrieve JSON"); 
+					Window.alert(JSON_ERROR_MESSAGE); 
 				} 
 
 				public void onResponseReceived(final Request request, final Response response) { 
@@ -78,7 +80,7 @@ public class Weather implements IsWidget {
 					String sTemp = temp.toString(); 
 					String sVisibility = visibility.toString(); 
 
-					sVisibility = sVisibility.replaceAll("\"", "");
+					sVisibility = sVisibility.replaceAll(QUOTATION, "");
 
 					HP.add(new Label(sTemp + " C" + "|Visibility: " + sVisibility + " km"));
 					
@@ -86,7 +88,7 @@ public class Weather implements IsWidget {
 			}); 
 		}
 		catch (RequestException e) { 
-			Window.alert("RequestException: Couldn't retrieve JSON"); 
+			Window.alert(JSON_ERROR_MESSAGE2); 
 		}
 		
 		RequestBuilder builder2 = new RequestBuilder(RequestBuilder.GET, url2); 
@@ -95,7 +97,7 @@ public class Weather implements IsWidget {
 			Request request2 = builder2.sendRequest(null, new RequestCallback() { 
 
 				public void onError(final Request request, final Throwable exception) { 
-					Window.alert("onError: Couldn't retrieve JSON"); 
+					Window.alert(JSON_ERROR_MESSAGE); 
 				} 
 
 				public void onResponseReceived(final Request request, final Response response) { 
@@ -123,16 +125,16 @@ public class Weather implements IsWidget {
 					String sHour = hour.toString(); 
 					String sMinute = minute.toString(); 
 
-					sHour = sHour.replaceAll("\"", "");
-					sMinute = sMinute.replaceAll("\"", "");
+					sHour = sHour.replaceAll(QUOTATION, "");
+					sMinute = sMinute.replaceAll(QUOTATION, "");
 
-					HP.add(new Label("|" + "Time of Sunset: " + sHour + ":" + sMinute + "|"));
+					HP.add(new Label(VERTICAL_BAR + "Time of Sunset: " + sHour + ":" + sMinute + VERTICAL_BAR));
 
 				} 
 			}); 
 		}
 		catch (RequestException e) { 
-			Window.alert("RequestException: Couldn't retrieve JSON"); 
+			Window.alert(JSON_ERROR_MESSAGE2); 
 		}
 
 		HP.addStyleName("weatherPanel");
